@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-12 15:20:33
- * @LastEditTime: 2021-03-20 10:41:37
+ * @LastEditTime: 2021-03-21 21:29:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\数字图像处理\DigitalImageProcessing.md
@@ -28,3 +28,60 @@
   - `假设`上图是一个长宽各为240个像素,颜色数为16色的彩色图像
     - 每个颜色都用RGB来直接表示的话,由于RGB每个分量都有256个级别,要用8位(bit)即1字节(byte)表示,每个像素用3byte,整个图像需要$240 \times 240 \times 3 \approx 168KB$显示缓存空间
     - 若用调色板的方法,就能用一个16行24位(24=8*3)的表,每行记录一种颜色的RGB值;16种状态可以用4位二进制数表示,所以一个像素用0.5byte(=4bit),整个图像用$240 \times 240 \times 0.5 \approx 28KB$,占用的字节数约为前面的1/6
+
+---
+## 2.4 Image Sampling and Quantization
+
+
+---
+### Image Interpolation(图像插值)
+- [参考链接@CSDN:Effend](https://blog.csdn.net/Effend/article/details/82870144)
+
+---
+#### Matlab自带插值函数
+- 图像缩放函数：
+  ```Matlab
+  J = imresize(I, rate, method);
+  ```
+  - `I`:原图像矩阵
+  - `rate`:缩放比例;>1为放大，<1为缩小；
+  - `method`:选择插值方法;默认为`nearest`（最近邻插值），还有`bilinear`（双线性插值）、`bicubic`（双三次插值）。
+  > 双三次插值可能生成在原始范围之外的像素值
+
+---
+#### 最邻近插值
+- 查找原始图像中最近的像素，并将其灰度分配给网格中的新像素
+- `Pixel replication`是最邻近插值的重要步骤
+- 当我们想要将图像的大小增加整数倍时，`Pixel replication`是适用的。
+- $srcX = dstX \times \frac{srcWidth}{dstWidth} \\ srcY = dstY \times \frac{srcHeight}{dstHeight}$
+- 中心对齐(OpenCV也是如此):  
+  $SrcX = (dstX + 0.5) \times \frac{srcWidth}{dstWidth} - 0.5 \\ SrcY = (dstY + 0.5) \times \frac{srcHeight}{dstHeight} - 0.5$
+- 使用近邻插值的缩放图像具有严重的马赛克、棋盘效果和缩小图像的严重失真
+
+
+---
+#### 双线性插值
+- [参考链接@CSDN:Effend](https://blog.csdn.net/Effend/article/details/82996871)
+- [参考链接@CSDN:kill2013110](https://blog.csdn.net/kill2013110/article/details/108124737)
+
+  ---
+- 使用一个点的四个最近的临近点来确定灰度
+- $v(x',y') = ax' + by' + cx'y' +d$
+  - `(x',y')` : 放大后的点的坐标
+  - `v(x',y')` : 放大后点的灰度 
+  - 四个系数由四个未知方程中的四个方程确定，这些方程可以使用点的四个最近的临近点来构造
+- 双线性插值通过两个方向上的线性变换来计算待插值像素点的值，而非第最邻近插值中直接插入相同的值。在双线性插值中，一般先对水平/垂直方向上进行线性插值，再合并两个线性插值来得到最终插入的像素值。
+  - 计算量和复杂度较最邻近插值方法大
+  - 然而由于是以4个相邻映射像素点作为计算参考，使得新像素点的颜色能具有不同于最近邻插值算法的简单颜色变化,很大程度上消除了明显的锯齿，图像效果较好，避免了像素不连续的情况
+  - 然而，双线性插值算法仍然具有其短板，简单线性变化会带来边缘模糊化，在颜色变化程度大的边缘处，会明显发现插值的数据在边缘显得不符。另外由于增加了线性权重与像素值相乘，会存在一定的低通滤波性，高频分量会被削弱，在颜色变化程度大的地方可能无法得到正确的像素值。
+
+
+---
+#### 双三次插值
+- 该方法较前两种方法更为复杂，在考虑4个相邻映射像素点的同时，还要考虑到像素的变化率。在双线性插值的基础上，选取待插入点周围更大范围的像素值作三次插值，以克服上面两种方法的不足，计算精度更高，计算量也更大，但图像效果更好。
+
+
+---
+#### 三种插值方法原理总结
+- 三种插值方法从原理上，算法复杂程度递增，后者是基于前者算法的增强和改善，计算量也随之增加。
+
