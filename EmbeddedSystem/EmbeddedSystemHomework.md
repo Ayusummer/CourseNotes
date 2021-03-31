@@ -1,12 +1,12 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-27 15:36:25
- * @LastEditTime: 2021-03-27 21:44:32
+ * @LastEditTime: 2021-03-29 18:27:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\EmbeddedSystem\EmbeddedSystemHomework.md
 -->
-# 作业一（STM32F4体系结构与时钟树）(3.16-3.23)
+# 作业1（STM32F4体系结构与时钟树）(3.16-3.23)
 
 
 ## 1、简述STM32F4与Cortex-M4的关系，STM32F407ZGT6有哪些外设资源？
@@ -121,3 +121,134 @@ RCC_SYSCLKConfig(RCC_SYSCLKSource_HSI);
 RCC_PCLK1Config(RCC_HCLK_Div2);
 ```
 
+---
+# 作业2(GPIO)
+
+---
+## 1、STM32F407ZGT6有哪几组GPIO，共多少I/O引脚？
+- STM32F407ZGT6，包含
+  - 7组16位IO端口（GPIOA~GPIOG，PA~PG）
+  - 1组2位端口GPIOH（GPIOH.0/PH0、GPIOH.1/PH1）
+- STM32F407ZGT6有144个I/O引脚
+> ![20210329074700](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329074700.png)
+
+
+---
+## 2、GPIO除作一般I/O用之外，还可以复用为外设引脚，请问如何实现引脚复用？PA9可以复用为哪些功能？
+- 微控制器的 I/O 引脚通过一个复用器连接到板载外设/模块，该复用器一次仅允许一个外设的复用功能 (AF) 连接到 I/O 引脚，确保共用同一个 I/O 引脚的外设之间不发生冲突,从而实现引脚复用;
+- PA9可以复用为如下功能
+  - USART1_TX(串口1)
+  - TIM1_CH2(定时器TIM1的输出脚2)
+  - I2C3_SMBA(第3组I2C的SMBus alert mode的模式)
+  - DCMI_D0(数字摄像头接口D0)
+  - EVENTOUT(配置用于输出 Cortex™-M4F EVENTOUT 信号的 I/O 引脚)
+  - OTG_FS_VBUS(用于检测USB的连接)
+> ![20210329075026](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329075026.png)
+> ![20210329090501](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329090501.png)
+> ![20210329091009](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329091009.png)
+
+---
+## 3、下图是STM32F4 GPIO的原理图，简述其输入和输出的工作过程？
+- ![20210327220331](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327220331.png)
+  
+  ---
+- [参考链接@CSDN:ATONEMAN](https://blog.csdn.net/weixin_39869569/article/details/93141430)
+  
+  ---
+- 输入的工作过程
+  - 输入模式的信号从引脚传入，进来后，有一个上拉电阻和下拉电阻的选择，是可以控制的（上下拉关闭->浮空;接入上拉电阻->上拉;接入下拉电阻->下拉），之后
+    - 信号可能传入模拟通道（如果开启了ADC设备，信号会被送到ADC中）[模拟输入]
+    - 信号经过TTL施密特触发器，经过TTL施密特触发器整流，信号相对稳定，一些小的波动被忽略了；然后
+      - 信号可以进入复用功能输入通道，如果开启了复用工作模式，相关硬件会来接管这个信号，硬件会自行判断；
+      - 信号进入输入数据寄存器，用户可以访问输入数据寄存器来感知传入的信号是高电平还是低电平了。
+- 输出的工作过程
+  - 信号是从左到右，通过置位/复位寄存器写数据，然后再把置位和复位寄存器里的数据转移到输出数据寄存器中
+  - 接着,输出数据寄存器的数据到了输出控制那里，完成信号的调理、逻辑转换以及选择开楼/推挽模式。同时，复用功能的输出也会对输出进行控制。
+  - 输出控制之后是开关门，通过了逻辑门，信号才会被转化为真正的信号；通过了逻辑门，就到了上拉、下拉电阻接入控制区，在之后，就是输出引脚了。
+
+
+
+---
+## 4、GPIO有哪几种输入方式和哪几种输出方式，简述每种方式的特点？
+- `推挽输出`
+  - 可以输出强高、低电平，连接数字器件;高电平由VDD决定,低电平由VSS决定
+  - 推挽结构指两个三极管受两路互补的信号控制,总是在一个导通的时候另外一个截止,优点是开关效率高,电流大,驱动能力强
+  - 输出高电平时,电流输出到负载,叫灌电流,可以理解为推;
+  - 输出低电平时,负载电流流向芯片,叫拉电流,可以理解为挽
+- `开漏输出`
+  - 只可以输出强低电平，高电平得靠外部电阻拉高。输出端相当于三极管的集电极;
+  - 要得到高电平状态需要上拉电阻才行。
+  - 适合于做电流型的驱动,其吸收电流的能力相对强(一般20mＡ以内)
+  - 开漏输出具有"线与"功能,一个为低,全部为低,多用于I2C和SMBUS总线
+- `复用输出`：数据来自复用外设的输出脚
+
+
+
+---
+## 5、每组GPIO有哪些相关寄存器，每个寄存器的作用是什么？
+- 每组GPIO端口包括10个寄存器
+  - 4个32位配置寄存器
+    - `端口模式寄存器(GPIOx_MODER)` : 配置端口x.y 的I/O方向模式
+    - `端口输出类型寄存器(GPIOx_OTYPER)` : 配置端口x.y的输出类型
+    - `端口输出速度寄存器(GPIOx_OSPEEDR)` : 配置端口x.y的输出速度。
+    - `端口上拉下拉寄存器(GPIOx_PUPDR)` : 端口 x.y上、下拉配置位
+  - 2个32位数据寄存器
+    - `端口输入数据寄存器(GPIOx_IDR)` : 端口x输入数据，只读形式，只能在字模式下访问。包含相应 I/O 端口的输入值。
+    - `端口输出数据寄存器(GPIOx_ODR)` : 端口输出数据，可通过软件读、写。
+  - `端口置位/复位寄存器(GPIOx_BSRR)`
+    - 位 31:16 BRy： 端口 x.y 复位位，只写。0：无操作；1：复位
+    - 位 15:0 BSy： 端口 x.y 置位位，只写。 0：无操作；1：置位 
+    - 如果同时对 BSx 和 BRx 置位，则 BSx 优先。
+  - `端口配置锁存寄存器(GPIOx_LCKR)` : 用于锁定端口位的配置，在一个端口上执行特定的锁定程序后，在下次复位前将不能再更改该端口位的配置。主要用于防止程序跑飞引起灾难性后果。
+  - `复用功能寄存器(GPIOx_AFRL & GPIOx_AFRH)` : 端口x.y的复用功能选择
+
+---
+## 6、GPIO_InitTypeDef结构体有哪些成员，各成员的作用是什么？
+```C
+typedef struct{
+  uint32_t GPIO_Pin              // 指定要初始化的端口
+  GPIOMode_TypeDef GPIO_Mode;    // 端口模式
+  GPIOSpeed_TypeDef GPIO_Speed;  // 速度
+  GPIOOType_TypeDef GPIO_OType;  // 输出类型
+  GPIOPuPd_TypeDef GPIO_PuPd;    // 上拉或者下拉
+}GPIO_InitTypeDef;
+```
+
+
+---
+## 7、用寄存器方式和固件库方式写出GPIOA的初始化程序，将PA.0初始化成50MHZ上拉输入方式，PA.1初始化成100MHZ推挽输出方式。
+> ![20210329094646](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329094646.png)
+
+  ---
+- `寄存器方式`
+
+```C
+void GPIOA_init(void){
+  RCC->AHB1ENR |= 1<<0;     // 打开GPIOA时钟，RCC_AHB1ENR.5  GPIOA->MODER &= ~(3<<2*9);  //GPIOF.9通用输出模式
+  GPIOA->MODER |= 1<<(2*9);
+  GPIOF->OSPEEDR &= ~(3<<2*9); //GPIOF.9速度100MHz
+  GPIOF->OSPEEDR |= 3<<(2*9);
+  GPIOF->PUPDR &= ~(3<<2*9);     //GPIOF.9上拉
+  GPIOF->PUPDR |=1<<(2*9);
+  GPIOF->OTYPER &= ~(1<<9);        //GPIOF.9推挽输出模式
+  GPIOF->OTYPER |=0<<9;
+  GPIOF->ODR|= 1<<9;                      //GPIOF.9=1，熄灭DS0
+
+  GPIOF->MODER &= ~(3<<2*10);        //GPIOF.10设置，同GPIOF.9
+  GPIOF->MODER |= 1<<(2*10);
+  GPIOF->OSPEEDR &= ~(3<<2*10);
+  GPIOF->OSPEEDR |= 3<<(2*10);
+  GPIOF->PUPDR &= ~(3<<2*10);
+  GPIOF->PUPDR |=1<<(2*10);
+  GPIOF->OTYPER &= ~(1<<10);
+  GPIOF->OTYPER |=0<<10;
+  GPIOF->ODR|= 1<<10;
+}
+```
+
+  ---
+- `固件库方式`
+
+```C
+
+```
