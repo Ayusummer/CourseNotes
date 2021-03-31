@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-08 22:01:36
- * @LastEditTime: 2021-03-08 22:23:17
+ * @LastEditTime: 2021-03-31 13:06:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\编译技术\Exercise.md
@@ -38,3 +38,13 @@
     - 合并所有`obj`文件的段,并调整段偏移和段长度,合并符号表
     - 符号解析完成后,分配到虚拟地址
     - 链接核心,符号的重定位
+
+---
+## 3.27作业二
+- 求下列NFA对应的最小DFA。（最下面一行三条弧线上表示a或b）
+  - ![20210329221942](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329221942.png)
+  - ![20210331130247](http:qpokg4i30.hn-bkt.clouddn.com/img/20210331130247.png)
+- 姜老师班的作业
+  ![20210331130336](http:qpokg4i30.hn-bkt.clouddn.com/img/20210331130336.png)
+- 例题
+  ![20210331130604](http:qpokg4i30.hn-bkt.clouddn.com/img/20210331130604.png)
