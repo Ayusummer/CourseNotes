@@ -1,6 +1,11 @@
 
 % 将图像读取为一个矩阵
-data = imread('E:/GithubProject/junior-lessons_second-term/DigitalImageProcessing/resource/pic/lena.jpg');
+%data = imread('E:/GithubProject/junior-lessons_second-term/DigitalImageProcessing/resource/pic/lena.jpg');
+ data = imread('../resource/pic/lena.jpg');  
+
+
+
+
 % 显示data当前值
 data;
 

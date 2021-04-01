@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-19 08:43:43
- * @LastEditTime: 2021-03-21 14:16:53
+ * @LastEditTime: 2021-04-01 08:38:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\DigitalImageProcessing\Matlab\Matlab.md
@@ -78,6 +78,20 @@
 - 重启Matlab即可发现工作目录已变更
 
 ----
+## 使用相对目录来访问文件
+```Matlab
+.       % 当前工作目录
+../     % 当前工作目录上级目录
+../../  % 当前工作目录上级目录的上级目录
+```
+- 与python使用相对目录不同的是,Matlab中的相对路径索引起始点并非当前代码所在的文件,**而是当前的工作目录**(就是每次打开Matlab时左侧显示的当前文件夹)
+- ![20210401083711](http:cdn.ayusummer233.top/img/20210401083711.png)
+- 示例
+  ![20210401083830](http:cdn.ayusummer233.top/img/20210401083830.png)
+
+
+
+----
 ## 常用命令
 - `clc` : 清除命令窗口的内容，对工作环境中的全部变量无任何影响
 - `close`: 关闭当前的Figure窗口
@@ -86,6 +100,7 @@
 - `clear all` : 清除工作空间的所有变量，函数，和MEX文件
 - `doc ***` : ***的帮助文档
 - `open 函数名` : 打开该函数的源码文件
+
 
 -----
 ## 函数
