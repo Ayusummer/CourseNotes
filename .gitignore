@@ -5,6 +5,7 @@ DigitalImageProcessing/OpenCV-python/.idea
 # 测试文件
 DigitalImageProcessing/OpenCV-python/GlobalTest.py
 DigitalImageProcessing/OpenCV-python/main.py
+DigitalImageProcessing/Matlab/GlobalTest.m
 
 # 资源文件与输出文件
 DigitalImageProcessing/output
@@ -25,6 +26,4 @@ bin-release/
 *.ipa
 *.apk
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+
