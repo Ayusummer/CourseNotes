@@ -1,6 +1,12 @@
 # Pycharm配置文件及自动生成的文件
+DigitalImageProcessing/.idea
 DigitalImageProcessing/OpenCV-python/.idea
+ComputerGraphics/Experiment/.idea
+## py3.9虚拟环境
+ComputerGraphics/Experiment/venv    
 
+# VSCode生成文件
+.vscode
 
 # 测试文件
 DigitalImageProcessing/OpenCV-python/GlobalTest.py
