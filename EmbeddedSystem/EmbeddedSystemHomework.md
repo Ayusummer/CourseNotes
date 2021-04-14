@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-27 15:36:25
- * @LastEditTime: 2021-03-29 18:27:20
+ * @LastEditTime: 2021-04-11 15:44:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\EmbeddedSystem\EmbeddedSystemHomework.md
@@ -32,7 +32,7 @@
 
 
 
-> - ![20210327192727](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327192727.png)
+> - ![20210327192727](http:cdn.ayusummer233.top/img/20210327192727.png)
 >   - `IO口`：STM32F407ZGT6: 144引脚  114个IO
 >       - 大部分IO口都耐5V(模拟通道除外)
 >       - 支持调试：SWD和JTAG，SWD只要2根数据线
@@ -40,9 +40,9 @@
 
 
 
-> - ![20210327193954](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327193954.png)
-> - ![20210327193149](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327193149.png)
-> - ![20210327193222](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327193222.png)
+> - ![20210327193954](http:cdn.ayusummer233.top/img/20210327193954.png)
+> - ![20210327193149](http:cdn.ayusummer233.top/img/20210327193149.png)
+> - ![20210327193222](http:cdn.ayusummer233.top/img/20210327193222.png)
 
 
 ---
@@ -66,7 +66,7 @@
 ---
 ### 2）简述锁相环PLL的工作原理。若PLL的输入时钟fin=4MHz，设置分频、倍频因子M=8，N=336，P=2，则PLL的输出时钟fout为多少？
 - $f_{out} = f_{in} \times \frac{N}{M \times P} \\ = 4MHz \times \frac{336}{8 \times 2} \\ = 84MHz$
-> - ![20210327202019](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327202019.png)
+> - ![20210327202019](http:cdn.ayusummer233.top/img/20210327202019.png)
 
 ---
 ## 3、正点原子探索者STM32F4开发板上SYSCLK（系统时钟）、AHB 总线、APB1 总线、APB2 总线、PLL主时钟的时钟频率分别是多少？
@@ -96,15 +96,15 @@ void RCC_APB2PeriphClockCmd(uint32_t
 ---
 ## 5、如何知道某个外设挂接哪个总线上，从而调用相应的时钟使能函数开启外设时钟？
 - `数据手册`:P17：`Figure 5. STM32F40x block diagram`
-  - ![20210327205451](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327205451.png)
+  - ![20210327205451](http:cdn.ayusummer233.top/img/20210327205451.png)
   > [数据手册是](https://wwe.lanzous.com/iEwOLndsnif)`硬件资料->2.芯片资料->2.芯片资料->STM32F407ZGT6.pdf`
 - 查[固件库函数](https://cloud.189.cn/t/6nYBFjmq2iUn)中的参数宏定义:`stm32f4xx_rcc.h`
-> - ![20210327211034](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327211034.png)
+> - ![20210327211034](http:cdn.ayusummer233.top/img/20210327211034.png)
 
 ---
 ## 6、写出使能GPIOA的时钟和使能TIM6的时钟的固件库函数调用语句。
-- ![20210327214322](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327214322.png)
-- ![20210327214343](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327214343.png)
+- ![20210327214322](http:cdn.ayusummer233.top/img/20210327214322.png)
+- ![20210327214343](http:cdn.ayusummer233.top/img/20210327214343.png)
 ```C
 RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);    // 使能TIM6时钟
 
@@ -130,7 +130,7 @@ RCC_PCLK1Config(RCC_HCLK_Div2);
   - 7组16位IO端口（GPIOA~GPIOG，PA~PG）
   - 1组2位端口GPIOH（GPIOH.0/PH0、GPIOH.1/PH1）
 - STM32F407ZGT6有144个I/O引脚
-> ![20210329074700](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329074700.png)
+> ![20210329074700](http:cdn.ayusummer233.top/img/20210329074700.png)
 
 
 ---
@@ -143,13 +143,13 @@ RCC_PCLK1Config(RCC_HCLK_Div2);
   - DCMI_D0(数字摄像头接口D0)
   - EVENTOUT(配置用于输出 Cortex™-M4F EVENTOUT 信号的 I/O 引脚)
   - OTG_FS_VBUS(用于检测USB的连接)
-> ![20210329075026](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329075026.png)
-> ![20210329090501](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329090501.png)
-> ![20210329091009](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329091009.png)
+> ![20210329075026](http:cdn.ayusummer233.top/img/20210329075026.png)
+> ![20210329090501](http:cdn.ayusummer233.top/img/20210329090501.png)
+> ![20210329091009](http:cdn.ayusummer233.top/img/20210329091009.png)
 
 ---
 ## 3、下图是STM32F4 GPIO的原理图，简述其输入和输出的工作过程？
-- ![20210327220331](http:qpokg4i30.hn-bkt.clouddn.com/img/20210327220331.png)
+- ![20210327220331](http:cdn.ayusummer233.top/img/20210327220331.png)
   
   ---
 - [参考链接@CSDN:ATONEMAN](https://blog.csdn.net/weixin_39869569/article/details/93141430)
@@ -217,7 +217,7 @@ typedef struct{
 
 ---
 ## 7、用寄存器方式和固件库方式写出GPIOA的初始化程序，将PA.0初始化成50MHZ上拉输入方式，PA.1初始化成100MHZ推挽输出方式。
-> ![20210329094646](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329094646.png)
+> ![20210329094646](http:cdn.ayusummer233.top/img/20210329094646.png)
 
   ---
 - `寄存器方式`
@@ -252,3 +252,55 @@ void GPIOA_init(void){
 ```C
 
 ```
+
+---
+# 作业3-NVIC与外部中断
+
+---
+## 1、Cortex-M4 NVIC支持多少中断？STM32F407支持多少中断？
+- Cortex-M4支持256个中断
+  - 16个内核中断
+  - 240个可屏蔽中断
+  - 每个I/O口都可以作为中断输入
+
+
+---
+## 2、Cortex-M4 NVIC对中断优先级是如何管理的？其中断嵌套规则是什么？
+
+
+
+---
+## 3、STM32F4 中，若采用中断分组2，则抢占优先级和响应优先级各占几位？若中断a的抢占优先级为2，响应优先级为1；中断b的抢占优先级为3，响应优先级为0；中断c的抢占优先级为2，响应优先级为0；中断d的抢占优先级为1，响应优先级为2；则4个中断的优先级顺序如何，嵌套规则如何？
+
+
+
+
+
+---
+## 4、写出把PB2配置到外部中断线EXTI2的固件库函数调用语句。
+
+
+
+---
+## 5、简述stm32中中断和事件的区别，相比中断使用事件方式有什么好处？
+
+
+---
+## 6、写出设置中断分组2，使能EXTI0，并将其初始化为抢占优先级为2，响应优先级为1的代码。
+
+
+
+
+---
+## 7、将EXTI2设置为上升沿和下降沿均可触发的中断，并将其使能，写出相应的代码。
+
+
+
+
+
+
+
+
+
+---
+## 8、若PA5连接一LED指示灯（PA5为0时灯亮，为1时灯灭），PB5连接一按钮开关（开关闭合时为低电平）。现欲实现开关每按一次，LED的状态翻转一次。请用中断方式编写实现该功能的代码。
