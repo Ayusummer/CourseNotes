@@ -138,9 +138,9 @@ function [y1,…,yN] = myfun(x1,…,xM)
 <div STYLE="page-break-after: always;"></div>
   
 > - 建议总标题放在所有子图都绘制完毕之后,这样不会挡到子图的标题  
->   ![20210320074241](http:qpokg4i30.hn-bkt.clouddn.com/img/20210320074241.png)
+>   ![20210320074241](http:cdn.ayusummer233.top/img/20210320074241.png)
 > - 如果先定义总标题,则可能会遮挡子图表题
->   ![20210320074257](http:qpokg4i30.hn-bkt.clouddn.com/img/20210320074257.png)
+>   ![20210320074257](http:cdn.ayusummer233.top/img/20210320074257.png)
 
 ---
 - 保存图像
@@ -180,8 +180,8 @@ function [y1,…,yN] = myfun(x1,…,xM)
 <div STYLE="page-break-after: always;"></div>
 
 > - 但是当`im2bw`的`level`省略时，默认为 0.5；而`imbinzrize`的阈值默认值使用OTSU方法来得到的。
-> - ![20210319182201](http:qpokg4i30.hn-bkt.clouddn.com/img/20210319182201.png)
-> - ![20210319183250](http:qpokg4i30.hn-bkt.clouddn.com/img/20210319183250.png)
+> - ![20210319182201](http:cdn.ayusummer233.top/img/20210319182201.png)
+> - ![20210319183250](http:cdn.ayusummer233.top/img/20210319183250.png)
 - 阈值 level 的作用为：
   - 用值 1 (白色)替换输入图像中亮度大于 level 比例的所有像素
   - 用值 0 (黑色)替换所有其他像素。

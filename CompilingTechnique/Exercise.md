@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-08 22:01:36
- * @LastEditTime: 2021-04-01 08:13:51
+ * @LastEditTime: 2021-04-14 20:22:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\编译技术\Exercise.md
@@ -42,9 +42,9 @@
 ---
 ## 3.27作业二
 - 求下列NFA对应的最小DFA。（最下面一行三条弧线上表示a或b）
-  - ![20210329221942](http:qpokg4i30.hn-bkt.clouddn.com/img/20210329221942.png)
-  - ![20210331130247](http:qpokg4i30.hn-bkt.clouddn.com/img/20210331130247.png)
+  - ![20210329221942](http:cdn.ayusummer233.top/img/20210329221942.png)
+  - ![20210331130247](http:cdn.ayusummer233.top/img/20210331130247.png)
 - 姜老师班的作业
-  ![20210331130336](http:qpokg4i30.hn-bkt.clouddn.com/img/20210331130336.png)
+  ![20210331130336](http:cdn.ayusummer233.top/img/20210331130336.png)
 - 例题
-  ![20210331130604](http:qpokg4i30.hn-bkt.clouddn.com/img/20210331130604.png)
+  ![20210331130604](http:cdn.ayusummer233.top/img/20210331130604.png)

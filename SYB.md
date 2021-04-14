@@ -47,7 +47,7 @@
 
   ![输入图片说明](https://images.gitee.com/uploads/images/2021/0312/183011_81f62375_7703072.png "屏幕截图.png")
   <!--备用图链
-  ![20210312181730](http:qpokg4i30.hn-bkt.clouddn.com/img/20210312181730.png) 
+  ![20210312181730](http:cdn.ayusummer233.top/img/20210312181730.png) 
   -->
 
 ---
@@ -56,7 +56,7 @@
 - 资金支出:日常消费、赡养老人、孩子等
 - 风险防范:应急备用金
   <!--备用图链
-  ![20210312182037](http:qpokg4i30.hn-bkt.clouddn.com/img/20210312182037.png)
+  ![20210312182037](http:cdn.ayusummer233.top/img/20210312182037.png)
   -->
   ![输入图片说明](https://images.gitee.com/uploads/images/2021/0312/183155_79348880_7703072.png "屏幕截图.png")
 
@@ -228,7 +228,7 @@
 ## 进一步分析企业构思
 
 <!--备用图链
-![20210313130612](http:qpokg4i30.hn-bkt.clouddn.com/img/20210313130612.png)
+![20210313130612](http:cdn.ayusummer233.top/img/20210313130612.png)
 -->
 - ![输入图片说明](https://images.gitee.com/uploads/images/2021/0313/130655_9ce06557_7703072.png "屏幕截图.png")
 
