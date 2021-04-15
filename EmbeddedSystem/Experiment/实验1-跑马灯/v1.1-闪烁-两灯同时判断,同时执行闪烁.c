@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-08 22:26:20
- * @LastEditTime: 2021-04-11 12:18:16
+ * @LastEditTime: 2021-04-15 15:48:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验1-跑马灯\闪烁-两灯同时判断,同时执行闪烁.c
@@ -45,7 +45,8 @@ void led_right(int x)
 		x -= 1;
 	}
 }
-
+/*
+ ******* 没用到的代码	*********
 int max(int a, int b){
     if(a>b) return a;
     else return b;
@@ -61,6 +62,8 @@ int max_i(int a, int b){
     if(a>b) return 0;
     else return 1;
 }
+********************************
+*/
 
 int min_i(int a, int b){
     if(a<b) return 0;
@@ -78,11 +81,11 @@ void led_blink(int bcd_en, int left_times, int right_times)
                 LED1 = 0;
                 delay_ms(300);
                 LED0 = 1;
-                LED0 = 1;
+                LED0 = 1;        
+				delay_ms(300);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                 left_times -= 1;   
                 right_times -= 1;         
             }
-            LED0 = 1;
             while (right_times)
             {
                 LED1 = 0;
@@ -91,7 +94,6 @@ void led_blink(int bcd_en, int left_times, int right_times)
                 delay_ms(300);
                 right_times -= 1;
             }
-            LED1 = 1;
         }
         else{
             while(right_times){
@@ -100,10 +102,10 @@ void led_blink(int bcd_en, int left_times, int right_times)
                 delay_ms(300);
                 LED0 = 1;
                 LED0 = 1;
+				delay_ms(300);
                 left_times -= 1;   
                 right_times -= 1;         
             }
-            LED1 = 1;
             while (left_times)
             {
                 LED0 = 0;
@@ -112,9 +114,7 @@ void led_blink(int bcd_en, int left_times, int right_times)
                 delay_ms(300);
                 left_times -= 1;
             }
-            LED0 = 1;
         }
-        
     }
 
     // 左边灯亮
@@ -123,9 +123,9 @@ void led_blink(int bcd_en, int left_times, int right_times)
 			LED0 = 0;
 			delay_ms(300);
 			LED0 = 1;
+			delay_ms(300);
 			left_times -= 1;
 		}
-		LED0 = 1;
     }
 
     // 右边灯亮
@@ -146,16 +146,15 @@ void led_blink(int bcd_en, int left_times, int right_times)
 	if(bcd_en==3){
         LED0 = LED1 = 1;
 	}
-	
-
 }
 
 // 0-3的数值的显示
+// 四种情况是认为固定的,情况少而且不适合else if,直接全用if即可
 void led_gcd(int x){
 	if (x == 0) LED0 = LED1 = 0;
-	else if (x == 1) LED0 = 0, LED1 = 1;
-	else if (x == 2) LED0 = 1, LED1 = 0;
-	else LED0 = LED1 = 1;
+	if (x == 1) {LED0 = 0; LED1 = 1;}
+	if (x == 2) {LED0 = 1; LED1 = 0;}
+	if (x == 3) {LED0 = LED1 = 1;}
 }
 
 

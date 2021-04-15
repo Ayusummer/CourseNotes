@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-11 12:09:36
- * @LastEditTime: 2021-04-11 12:15:44
+ * @LastEditTime: 2021-04-15 17:54:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验3-按键输入实验\v1.0.2-呼吸灯-简化逻辑-只判断下键右键.c
@@ -72,7 +72,6 @@ int main(void){
             // 若按下KEY1或者KEY1已经按下(flag==1)则熄灯并跳出呼吸循环
             if(led_off(KEY_Scan(1),flag))   break;  
           } // 呼吸灯循环
-          break;//KEY0 -> case -> break
     } // KEY0结束
   } // 整个程序循环体
 } // main()函数
