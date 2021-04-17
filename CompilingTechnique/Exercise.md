@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-08 22:01:36
- * @LastEditTime: 2021-04-14 22:07:38
+ * @LastEditTime: 2021-04-17 17:25:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\编译技术\Exercise.md
@@ -38,6 +38,14 @@
     - 合并所有`obj`文件的段,并调整段偏移和段长度,合并符号表
     - 符号解析完成后,分配到虚拟地址
     - 链接核心,符号的重定位
+
+  ----
+## 姜老师班作业1
+- 画出有符号数(包括整数和实数,不含科学计数法的形式)的状态转换图;  
+  学有余力的同学可以进一步写正规式
+
+
+
 
 ---
 ## 3.27作业二
