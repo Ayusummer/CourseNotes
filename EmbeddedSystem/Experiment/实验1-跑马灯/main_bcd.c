@@ -4,31 +4,31 @@
  * @LastEditTime: 2021-04-08 20:16:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\ÊµÑé1-ÅÜÂíµÆ\mian_bcd.c
+ * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\Êµï¿½ï¿½1-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\main_bcd.c
  */
 #include "sys.h"
 #include "delay.h"
 #include "usart.h"
 #include "led.h"
 
-// ledµÆ×óÒÆ,ÓÒ±ßµÆÁÁ,È»ºóÓÒ±ßµÆÃðµÄÊ±ºò×ó±ßµÆÁÁ,Ñ­»·´ÎÊýÓÉÈë¿Ú²ÎÊý¾ö¶¨
-void led_left(int x)		// x->Ñ­»·´ÎÊý
+// ledï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ò±ßµï¿½ï¿½ï¿½,È»ï¿½ï¿½ï¿½Ò±ßµï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½,Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void led_left(int x)		// x->Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
-	while (x)				// ¿ØÖÆÑ­»·ÌåÖ´ÐÐ´ÎÊýÎªx
+	while (x)				// ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð´ï¿½ï¿½ï¿½Îªx
 	{
-		LED1 = 0;			//  ÓÒ±ßµÆÁÁ
-		LED0 = 1;			// ×ó±ßµÆÃð
-		delay_ms(300);		// ÑÓÊ±300ms
-		LED0 = 0;			// ×ó±ßµÆÁÁ
-		LED1 = 1;			// ÓÒ±ßµÆÃð
-		delay_ms(300);		// ÑÓÊ±300ms
-		LED0 = LED1 = 1;	// ×óÓÒµÆÃð
-		delay_ms(300);		// ÑÓÊ±300ms
-		x -= 1;				// Ñ­»·´ÎÊý-1
+		LED1 = 0;			//  ï¿½Ò±ßµï¿½ï¿½ï¿½
+		LED0 = 1;			// ï¿½ï¿½ßµï¿½ï¿½ï¿½
+		delay_ms(300);		// ï¿½ï¿½Ê±300ms
+		LED0 = 0;			// ï¿½ï¿½ßµï¿½ï¿½ï¿½
+		LED1 = 1;			// ï¿½Ò±ßµï¿½ï¿½ï¿½
+		delay_ms(300);		// ï¿½ï¿½Ê±300ms
+		LED0 = LED1 = 1;	// ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½
+		delay_ms(300);		// ï¿½ï¿½Ê±300ms
+		x -= 1;				// Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-1
 	}
 }
 
-// ÓëÉÏÃæµÄ·´¹ýÀ´¼´¿É,ledÓÒÒÆ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ledï¿½ï¿½ï¿½ï¿½
 void led_right(int x)
 {
 	while (x)
@@ -66,10 +66,10 @@ int min_i(int a, int b){
     else return 1;
 }
 
-// ledÉÁË¸(ºÍÔ­Ê¼´úÂëµÄ±íÏÖÐÎÊ½Ò»ÖÂ)
+// ledï¿½ï¿½Ë¸(ï¿½ï¿½Ô­Ê¼ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½Ê½Ò»ï¿½ï¿½)
 void led_blink(int bcd_en, int left_times, int right_times)
 {
-    // ¶¼ÁÁ
+    // ï¿½ï¿½ï¿½ï¿½
     if(bcd_en==0){
         if(min_i(left_times,right_times) == 0){
             while(left_times){
@@ -116,7 +116,7 @@ void led_blink(int bcd_en, int left_times, int right_times)
         
     }
 
-    // ×ó±ßµÆÁÁ
+    // ï¿½ï¿½ßµï¿½ï¿½ï¿½
     if(bcd_en==1){
 		while(left_times){
 			LED0 = 0;
@@ -127,7 +127,7 @@ void led_blink(int bcd_en, int left_times, int right_times)
 		LED0 = 1;
     }
 
-    // ÓÒ±ßµÆÁÁ
+    // ï¿½Ò±ßµï¿½ï¿½ï¿½
     if(bcd_en==2){
         while (right_times)
 		{
@@ -141,7 +141,7 @@ void led_blink(int bcd_en, int left_times, int right_times)
     }
 
 
-    // ¶¼²»ÁÁ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if(bcd_en==3){
         LED0 = LED1 = 1;
 	}
@@ -149,7 +149,7 @@ void led_blink(int bcd_en, int left_times, int right_times)
 
 }
 
-// 0-3µÄÊýÖµµÄÏÔÊ¾
+// 0-3ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Ê¾
 void led_gcd(int x){
 	if (x == 0) LED0 = LED1 = 0;
 	else if (x == 1) LED0 = 0, LED1 = 1;
@@ -162,17 +162,17 @@ void led_gcd(int x){
 int main(void)
 { 
  
-	delay_init(168);		  	// ³õÊ¼»¯ÑÓÊ±²ÎÊý
-	LED_Init();		        	// ³õÊ¼»¯LED¶Ë¿Ú
+	delay_init(168);		  	// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	LED_Init();		        	// ï¿½ï¿½Ê¼ï¿½ï¿½LEDï¿½Ë¿ï¿½
 	
 	led_left(3);
 
 	led_right(3);
 	
-	led_blink(0,1,3);			// ×ó1ÓÒ3
-	led_blink(1,2,0);			// ×ó1ÓÒ3
-	led_blink(2,0,3);			// ×ó1ÓÒ3
-	led_blink(3,0,0);			// ×ó1ÓÒ3
+	led_blink(0,1,3);			// ï¿½ï¿½1ï¿½ï¿½3
+	led_blink(1,2,0);			// ï¿½ï¿½1ï¿½ï¿½3
+	led_blink(2,0,3);			// ï¿½ï¿½1ï¿½ï¿½3
+	led_blink(3,0,0);			// ï¿½ï¿½1ï¿½ï¿½3
     
 	led_gcd(0);
 	delay_ms(1000);

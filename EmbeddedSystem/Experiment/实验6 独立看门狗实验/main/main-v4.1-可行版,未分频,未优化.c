@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2021-04-17 18:35:06
- * @LastEditTime: 2021-04-17 18:44:46
+ * @LastEditTime: 2021-04-17 18:48:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验6 独立看门狗实验\main\mian-v4.1.c
+ * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验6 独立看门狗实验\main\main-v4.1.c
  */
 /*
  * @Author: your name
