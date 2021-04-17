@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-04-16 07:26:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验6 独立看门狗实验\main-v1.0.c
+ * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验6 独立看门狗实验\mian-v1.0.c
  */
 #include "sys.h"
 #include "delay.h"
