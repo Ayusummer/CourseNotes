@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-15 15:07:22
- * @LastEditTime: 2021-04-15 20:09:51
+ * @LastEditTime: 2021-04-17 19:00:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验5-第4次实验-外部中断实验\exti-v1.0.c
@@ -86,7 +86,7 @@ void EXTI4_IRQHandler(void){
 		if(isBling<2) isBling++;   // 滑窗扩大
 		else {
             if(isBling == 2);
-            else isBling=1; // 滑窗清零
+            else isBling=1; // 滑窗置1
             flag = 0;   // 标志位置0
         }
 	}		 
