@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2021-04-15 22:16:21
- * @LastEditTime: 2021-04-16 09:13:56
+ * @LastEditTime: 2021-04-17 19:07:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验6 独立看门狗实验\mian-v1.0.c
+ * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验6 独立看门狗实验\main-v1.0.c
  */
 #include "sys.h"
 #include "delay.h"

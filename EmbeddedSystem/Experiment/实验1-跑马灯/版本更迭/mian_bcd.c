@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-04-17 18:53:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验1-跑马灯\mian_bcd.c
+ * @FilePath: \junior-lessons_second-term\EmbeddedSystem\Experiment\实验1-跑马灯\main_bcd.c
  */
 #include "sys.h"
 #include "delay.h"
