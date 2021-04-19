@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-10 14:41:47
- * @LastEditTime: 2021-04-10 16:42:25
+ * @LastEditTime: 2021-04-17 20:33:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\DigitalImageProcessing\Experiment.md
@@ -255,6 +255,22 @@
 ## 实验小结
 - 熟悉了基于单像素空域增强方法，理解并掌握了直方图均衡化和规定化实现图像增强
 - 复习了`Matplotlib`,`numpy`库,进一步学习了`OpenCV-python`库
+
+----
+# 分组实验-稻穗分割
+
+----
+## 实验要求
+- 分割图像中的稻穗，方法自选（传统方法），可以是多种方法的结合，结果图像中稻穗区域以白色显示，其他背景黑色显示。
+- 说明：请同学们自由分组，上传解决方案（模板同实验报告），每组仅上传一份即可，在封面处标明小组成员，及成员分工
+- 图像
+  - ![20210417203034](http:cdn.ayusummer233.top/img/20210417203034.png)
+  - ![20210417203202](http:cdn.ayusummer233.top/img/20210417203202.png)
+  - ![20210417203224](http:cdn.ayusummer233.top/img/20210417203224.png)
+  - ![20210417203239](http:cdn.ayusummer233.top/img/20210417203239.png)
+  - ![20210417203253](http:cdn.ayusummer233.top/img/20210417203253.png)
+
+----
 
 
 
