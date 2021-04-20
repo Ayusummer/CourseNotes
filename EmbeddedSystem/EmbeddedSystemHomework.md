@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-27 15:36:25
- * @LastEditTime: 2021-04-20 12:26:35
+ * @LastEditTime: 2021-04-20 12:29:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\EmbeddedSystem\EmbeddedSystemHomework.md
@@ -314,7 +314,7 @@ void GPIOA_init(void){
 - `看门狗的作用`
   - 监测单片机程序运行状态
   - 递减器计数（定时器），溢出时，使系统复位
-
+- STM32F4有独立看门狗和窗口看门狗
 
 ---
 ## 2.结合框图叙述独立看门狗（IWDG）的工作原理。
