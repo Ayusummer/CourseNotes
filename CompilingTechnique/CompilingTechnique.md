@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-07 07:58:00
- * @LastEditTime: 2021-03-11 13:25:15
+ * @LastEditTime: 2021-04-20 19:51:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\编译技术\CompilingTechnique.md
@@ -34,7 +34,7 @@
   - 是另一种常见的语言处理器
   - 它并不通过翻译的方式生成目标程序
   - 从用户的角度来看,解释器直接利用用户提供的输入执行源程序中指定的操作  
-    ![解释器](res/img/解释器.png)
+    ![20210420194927](http:cdn.ayusummer233.top/img/20210420194927.png)
 
 
 ---
@@ -51,7 +51,7 @@
 
 ---
 ### 编译和解释程序
-- ![编译和解释程序](./res/img/编译和解释程序.png)
+- ![20210420195010](http:cdn.ayusummer233.top/img/20210420195010.png)
 - 解释程序和编译程序的区别在于**是否生成目标代码**
 > - 解释程序与编译程序的主要区别是:
 >   - 编译程序将源程序翻译成目标程序后再执行该目标程序
@@ -65,7 +65,7 @@
 ### hybrid compiler(混合编译)
 - 典型代表:Java和python这种能够跨平台的高级语言
 > - 实际上,Java语言的跨平台并非指语言本身,而是指JVM跨平台,java程序编译后生成`.class`字节码文件,运行的时候在相关的硬件平台上安装对应的JVM,运行程序时在JVM上运行,最终得到输出结果
-- ![高级语言程序执行过程](res/img/高级语言程序运行的过程.png)
+- ![20210420195028](http:cdn.ayusummer233.top/img/20210420195028.png)
   - 预处理->编译->汇编->生成可重定位的机器语言->链接,装入
 - ```C++
   // Hello World!程序
@@ -76,8 +76,9 @@
   }
   ```
   - 从`Hello.cpp`编译链接成`Hello.exe`,需要执行以下步骤  
-    ![Helloworld执行过程](res/img/Helloworld程序执行过程.png)
-    ![细化过程](res/img/Helloworld细化执行过程.png)
+    ![20210420195117](http:cdn.ayusummer233.top/img/20210420195117.png)  
+    ![20210420195053](http:cdn.ayusummer233.top/img/20210420195053.png)  
+   
   
 ---
 ### Preprocessors(预处理)
