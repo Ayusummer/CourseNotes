@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-27 15:36:25
- * @LastEditTime: 2021-04-11 15:44:19
+ * @LastEditTime: 2021-04-20 12:26:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\EmbeddedSystem\EmbeddedSystemHomework.md
@@ -304,3 +304,95 @@ void GPIOA_init(void){
 
 ---
 ## 8、若PA5连接一LED指示灯（PA5为0时灯亮，为1时灯灭），PB5连接一按钮开关（开关闭合时为低电平）。现欲实现开关每按一次，LED的状态翻转一次。请用中断方式编写实现该功能的代码。
+
+---
+# 作业4-看门狗WDG
+
+----
+## 1、什么是看门狗？看门狗的作用是什么？STM32F4有哪些看门狗？
+- `什么是看门狗` : 出于对单片机运行状态进行实时监测的考虑，便产生了一种专门用于监测单片机程序运行状态的模块或者芯片，俗称“看门狗”(watchdog)
+- `看门狗的作用`
+  - 监测单片机程序运行状态
+  - 递减器计数（定时器），溢出时，使系统复位
+
+
+---
+## 2.结合框图叙述独立看门狗（IWDG）的工作原理。
+![20210420072310](http:cdn.ayusummer233.top/img/20210420072310.png)  
+![20210420115439](http:cdn.ayusummer233.top/img/20210420115439.png)
+- 在键值寄存器（IWDG_KR）中写入0xCCCC（启动），开始启用独立看门狗。此时计数器开始从其复位值0xFFF递减
+- 重装寄存器(IWDG_RLR​)受写访问保护。这个值由软件设置，每次对IWDR_KR 寄存器写入值 AAAAh （喂狗）时，这个值就会重装载到看门狗计数器中。之后，看门狗计数器便从该值开始递减计数。
+- 状态寄存器(IWDG_SR​)
+  - 位 1 RVU： 看门狗计数器重载值更新，可通过硬件将该位置 1 以指示重载值正在更新。
+  - 位 0 PVU： 看门狗预分频器值更新，可通过硬件将该位置 1 以指示预分频器值正在更新。
+- 预分频寄存器(IWDG_PR​)位 2:0 PR[2:0]：​受写访问保护。,数据传入8位预分频器
+- 低速内部时钟(LSI)经8位预分频器分频触发12位减1计数器
+- 当计数器值计数到尾值0x000时会产生一个复位信号（IWDG_RESET）。​
+- 如果程序异常，就无法正常喂狗，则导致系统复位。​
+
+
+---
+## 3、写出独立看门狗的库函数配置过程。
+- 取消寄存器写保护:
+  ```C
+  IWDG_WriteAccessCmd();​
+  ```
+- 设置独立看门狗的预分频系数，确定时钟: ​
+  ```C
+  IWDG_SetPrescaler();​
+  ```
+- 设置看门狗重装载值，确定溢出时间:​
+  ```C
+  IWDG_SetReload();​
+  ```
+- 使能（启动）看门狗​
+  ```C
+  IWDG_Enable();​
+  ```
+- 应用程序喂狗:​
+  ```C
+  IWDG_ReloadCounter();​
+  ```
+
+
+---
+## 4、结合框图叙述窗口看门狗（WWDG）的工作原理。
+![20210420072333](http:cdn.ayusummer233.top/img/20210420072333.png)  
+![20210420121437](http:cdn.ayusummer233.top/img/20210420121437.png)  
+- PCLK1经过WDG预分频器(WDGTB)再次分频送入6位递减计数器
+- 上窗口就是配置寄存器WWDG->CFR里设定的W[6:0];
+- 下窗口是固定的0x40；
+- 当窗口看门狗的计数器在上窗口值之外，或是低于下窗口值都会触发CMP=1从而写WWDG_CR产生复位。
+
+
+
+---
+## 5、写出窗口看门狗的库函数配置过程。
+- 使能看门狗时钟：​
+  ```C
+  RCC_APB1PeriphClockCmd();​
+  ```
+- 设置分频系数：​
+  ```C
+  WWDG_SetPrescaler();​
+  ```
+- 设置上窗口值：​
+  ```C
+  WWDG_SetWindowValue();​
+  ```
+- 开启提前唤醒中断并对NVIC初始化(可选)：​
+  ```C
+  WWDG_EnableIT();   NVIC_Init();​
+  ```
+- 使能看门狗：​
+  ```C
+  WWDG_Enable();​
+  ```
+- 喂狗:​
+  ```C
+  WWDG_SetCounter();​
+  ```
+- 编写中断服务函数​
+  ```C
+  WWDG_IRQHandler();​
+  ```
