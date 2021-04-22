@@ -199,13 +199,82 @@ int main(void){
 - 011222U (不变)，00011222U (变),00110011222U (变), 001011222U (不变)
 
 ---
-## 常见问题
+## 常见问题 & 建议
 - ![20210417194411](http:cdn.ayusummer233.top/img/20210417194411.png)
+- 原程序中消抖使用的了`delay_ms(10)`,实际效果不好,可以改成`delay_ms(100)`
+- 有时候按键按下去可能并没有检测到,可以在中断服务程序中设计按键按下去之后亮个灯或者蜂鸣器响一下之类以便操作时判断按键是否生效
 
 
 ---
 ## 设计思路
-- 状态转换图
+- 状态转换图  
+  ![20210422093244](http:cdn.ayusummer233.top/img/20210422093244.png)
+
+---
+## 实验程序
+- 中断服务程序
+```C
+int width=0;	// 滑动窗口宽度,用于判断LED0是否到了需要改变状态的时候
+
+// 外部中断4服务程序(KEY0,右键)
+void EXTI4_IRQHandler(void){
+	delay_ms(100);      // 消抖
+	if(KEY0==0){
+        LED1 = !LED1;	// 测试语句,KEY0按下后LED1反相,用于实测时判断是否检测到了KEY0按下
+        			 
+		if(width == 0 || width == 1) width++;   // 滑窗扩大1格,进入下个状态
+		else {                          // width > 1
+            if(width == 2);             // width == 2 时再按KEY0滑窗宽度不在增加
+            else width=1;               // width > 2  时再按KEY0则滑窗宽度置1
+        }
+	}		 
+	EXTI_ClearITPendingBit(EXTI_Line4);	// 清除LINE4上的中断标志位  
+}
+
+
+// 外部中断3服务程序(KEY1,下键)
+void EXTI3_IRQHandler(void){
+	delay_ms(100);	    // 消抖
+	if(KEY1==0){
+        LED1 = !LED1;   // 测试语句,KEY1按下后LED1反相,用于实测时判断是否检测到了KEY1按下
+
+		if(width == 2 || width == 3) width++;   // 只有2,3两种状态(滑窗宽度)下按下KEY1(下键)才会使滑窗宽度增加
+		else width=0;   // 其他情况下按下KEY1(下键)滑窗清零
+	}		 
+	EXTI_ClearITPendingBit(EXTI_Line3);         // 清除LINE3上的中断标志位  
+}
+
+
+// 外部中断2服务程序(KEY2,左键)
+void EXTI2_IRQHandler(void){
+	delay_ms(100);	    // 消抖
+	if(KEY2==0){	
+        LED1 = !LED1;   // 测试语句,KEY2(左键)按下后LED1反相,用于实测时判断是否检测到了KEY2(左键)按下
+        // 当滑窗宽度为4,5,6时按下左键(KEY2)才会使滑窗宽度增加
+		if(width == 4 || width == 5 || width == 6 ) width++;    
+		else width=0;  // 否则滑窗清零
+	}	 
+	EXTI_ClearITPendingBit(EXTI_Line2); // 清除LINE2上的中断标志位 
+}
+
+
+// 外部中断0服务程序(WK_UP, 上键)
+void EXTI0_IRQHandler(void){
+	delay_ms(100);	    // 消抖
+    if(WK_UP==1){       
+        LED1 = !LED1;   // 测试语句,WK_UP(上键)按下后LED1反相,用于实测时判断是否检测到了WK_UP(上键)按下
+        // 只有当滑窗宽度为7时按下上键(WK_UP)才能滑窗宽度增加,状态达到终态,LED0反相
+		if(width==7){
+            width++;
+            LED0=!LED0;
+        }
+        // 其它状态下按下上键只会导致滑窗清零
+		else width=0; 
+	}		
+	EXTI_ClearITPendingBit(EXTI_Line0); 	// 清除LINE0上的中断标志位 
+}	
+```
+
 
 ---
 # 实验5-独立看门狗实验
