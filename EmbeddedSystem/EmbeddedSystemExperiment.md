@@ -333,7 +333,27 @@ void EXTI0_IRQHandler(void){
   - ![20210417195335](http:cdn.ayusummer233.top/img/20210417195335.png)
   - ![20210417195359](http:cdn.ayusummer233.top/img/20210417195359.png)
 
+
+----
+# 实验6-基本定时器实验
+- [参考链接](https://nosteglic.blog.csdn.net/article/details/108704934)
+
+----
+## 实验内容
+- 用定时器3中断方式控制LED0和LED1的闪烁频率；
+- KEY0、KEY1和KEY2工作于中断方式；
+- 用按键KEY0控制LED0启动闪烁，再按一次则LED0停止闪烁，熄灭；
+- 用按键KEY1控制LED1启动闪烁，再按一次则LED1停止闪烁，熄灭；
+- 如果LED0或LED1在闪烁，按KEY2点亮LED0或LED1，原来闪烁的停止，这时按KEY0或KEY1不发生任何改变；再按下KEY2后，恢复原来的状态，即闪烁的继续闪烁，熄灭的依然熄灭。
+
+
 ----
 
+4 注意事项
+改变闪烁频率
+TIM3_Int_Init(arr-1,psc-1);	//改变计数值arr和分频系数psc
+1
+u8：unsigned char
+u16、u32：整型
 
 
