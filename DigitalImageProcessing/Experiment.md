@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-10 14:41:47
- * @LastEditTime: 2021-04-17 20:33:13
+ * @LastEditTime: 2021-04-25 22:39:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\DigitalImageProcessing\Experiment.md
@@ -295,11 +295,364 @@
 - 对一幅带有噪声图像采用空域和频域的滤波方法实现平滑处理，选择一种方法自己编写代码实现，并比较、分析不同窗口大小的滤波方法对其结果的影响
 
     ---
-- 首先我手里并没有一幅带有噪声的图像
+- 首先我手里并没有一幅带有模板噪声的图像,因此要先为现有图像添加噪声,为了方便针对性处理,也为了节约时间
+
+#### 为图像添加椒盐噪声与高斯噪声
+- [参考链接](https://www.cnblogs.com/wojianxin/p/12499928.html)
+
+  ---
+- 噪声干扰一般是随机产生的，分布不规则，大小也不规则。噪声像素的灰度是空间不相关，`与邻近像素显著不同`
+-  在噪声的概念中, 通常采用信噪比（`Signal-Noise Rate, SNR`）衡量图像噪声。SNR越小噪声占比越大。
+- 在信号系统中，计量单位为dB，为10lg(PS/PN), PS和PN分别代表信号和噪声的有效功率。在这里，采用信号像素点的占比充当SNR，以衡量所添加噪声的多少。
+
+
+---
+##### 椒盐噪声
+- 椒盐噪声又称为脉冲噪声，它是一种随机出现的白点（盐噪声）或者黑点（椒噪声）。
+
+  ----
+- 为图像添加椒盐噪声
+```python
+# -*- coding: utf-8 -*-
+# @Time    : 2021/4/21 9:41
+# @Author  : 咸鱼型233(引自https://www.cnblogs.com/wojianxin/p/12499928.html)
+# @File    : 5.2-Salt-and-PepperNoise.py
+# @Software: PyCharm
+# @Function: 椒盐噪声
+import numpy as np
+import random
+import cv2
+from matplotlib import pyplot as plt
+
+
+def sp_noise(image, prob):
+    """
+
+    添加椒盐噪声
+
+    prob:噪声比例
+
+    """
+
+    output = np.zeros(image.shape, np.uint8)
+    thres = 1 - prob
+
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            rdn = random.random()
+            if rdn < prob:
+                output[i][j] = 0
+            elif rdn > thres:
+                output[i][j] = 255
+            else:
+                output[i][j] = image[i][j]
+    return output
+
+
+# ========= 函数测试 ======= #
+# 读取图像
+img = cv2.imread("../../../resource/pic/lena.jpg")
+img_plt = img[:, :, ::-1]   # 重新拼合适用于plt显示的图像
+
+# 添加椒盐噪声，噪声比例为 0.02
+out1 = sp_noise(img_plt, prob=0.02)
+
+# 显示图像
+plt.rcParams['font.family'] = ['SimHei']  # 使用黑体
+plt.figure(1)
+plt.subplot(121)
+plt.axis('off')  # 关闭坐标轴
+plt.title('原图')
+plt.imshow(img_plt)
+
+plt.subplot(122)
+plt.axis('off')
+plt.title('添加椒盐噪声')
+plt.imshow(out1)
+
+plt.show()
+
+
+```
+![20210421141721](http:cdn.ayusummer233.top/img/20210421141721.png)
+
+
+
+
+---
+##### 高斯噪声
+- 高斯噪声是指它的概率密度函数服从高斯分布（即正态分布）的一类噪声。
+
+  ---
+- 为图像添加高斯噪声
+```python
+# -*- coding: utf-8 -*-
+# @Time    : 2021/4/21 9:40
+# @Author  : 咸鱼型233
+# 引自https://www.cnblogs.com/wojianxin/p/12499928.html
+# @File    : 5.2-GaussianNoise.py
+# @Software: PyCharm
+# @Function: 高斯噪声
+import numpy as np
+import random
+import cv2
+from matplotlib import pyplot as plt
+
+
+def gasuss_noise(image, mean=0, var=0.001):
+    """
+    添加高斯噪声
+
+    mean : 均值
+
+    var : 方差
+    """
+
+    image = np.array(image / 255, dtype=float)
+    noise = np.random.normal(mean, var ** 0.5, image.shape)
+    out = image + noise
+    if out.min() < 0:
+        low_clip = -1.
+    else:
+        low_clip = 0.
+    out = np.clip(out, low_clip, 1.0)
+    out = np.uint8(out * 255)
+    # cv.imshow("gasuss", out)
+    return out
+
+
+# ========= 函数测试 ======= #
+# 读取图像
+img = cv2.imread("../../../resource/pic/lena.jpg")
+img_plt = img[:, :, ::-1]  # 重新拼合适用于plt显示的图像
+
+# 添加高斯噪声，均值为0，方差为0.001
+out2 = gasuss_noise(img_plt, mean=0, var=0.001)
+
+# 显示图像
+plt.rcParams['font.family'] = ['SimHei']  # 使用黑体
+plt.figure(1)
+plt.subplot(121)
+plt.axis('off')  # 关闭坐标轴
+plt.title('原图')
+plt.imshow(img_plt)
+
+plt.subplot(122)
+plt.axis('off')
+plt.title('添加高斯噪声')
+plt.imshow(out2)
+
+plt.show()
+
+```
+![20210421142458](http:cdn.ayusummer233.top/img/20210421142458.png)
+
+----
+#### 平滑处理
+- [参考链接](https://blog.csdn.net/weixin_44980490/article/details/107707205)
+
+  ----
+- 为图像添加噪声后就获得了有噪声的图像,接下来进行图像平滑处理
+
+  ----
+##### 均值滤波
+- 均值滤波是典型的线性滤波算法，其采用的主要方法为邻域平均法。它是指在图像上对目标像素给一个模板，该模板包括了其周围的临近像素（以目标像素为中心的周围8个像素，构成一个滤波模板，即包括目标像素本身），再用模板中的全体像素的平均值来代替原来像素值。
+
+```python
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+
+
+# 均值滤波
+def meanFiltering1(img, size):      # img输入，size均值滤波器的尺寸，>=3，且必须为奇数
+    num = int((size - 1) / 2)       # 输入图像需要填充的尺寸
+    img = cv2.copyMakeBorder(img, num, num, num, num, cv2.BORDER_REPLICATE)  # 对传入的图像进行扩充，尺寸为num
+    h1, w1 = img.shape[0:2]
+    # 高斯滤波
+    img1 = np.zeros((h1, w1, 3), dtype="uint8")     # 定义空白图像，用于输出中值滤波后的结果
+    for i in range(num, h1 - num):                  # 对扩充图像中的原图进行遍历
+        for j in range(num, w1 - num):
+            sum = 0
+            sum1 = 0
+            sum2 = 0
+            for k in range(i - num, i + num + 1):  # 求中心像素周围size*size区域内的像素的平均值
+                for l in range(j - num, j + num + 1):
+                    sum = sum + img[k, l][0]    # B通道
+                    sum1 = sum1 + img[k, l][1]  # G通道
+                    sum2 = sum2 + img[k, l][2]  # R通道
+            sum = sum / (size ** 2)             # 除以核尺寸的平方
+            sum1 = sum1 / (size ** 2)
+            sum2 = sum2 / (size ** 2)
+            img1[i, j] = [sum, sum1, sum2]      # 复制给空白图像
+    img1 = img1[(0 + num):(h1 - num), (0 + num):(h1 - num)]  # 从滤波图像中裁剪出原图像
+    return img1
+
+
+# 图像路径定义
+lena_with_saltAndPepperNoise = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                            '../../../resource/pic/pic-with-noise'
+                                                            '/lena_with_GaussianNoise.png'))
+
+# 读取图片
+img = cv2.imread(lena_with_saltAndPepperNoise)
+source = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# 均值滤波
+# result = cv2.blur(source, (5, 5))
+result = meanFiltering1(source, 5)
+
+
+# 显示图像
+plt.rcParams['font.family'] = ['SimHei']  # 使用黑体
+titles = ['原图', '均值滤波']
+images = [source, result]
+
+for i in range(2):
+    plt.subplot(1, 2, i + 1), plt.imshow(images[i], 'gray')
+    plt.title(titles[i])
+    plt.xticks([]), plt.yticks([])
+plt.show()
+```
+![20210425222024](http:cdn.ayusummer233.top/img/20210425222024.png)
+
+
+---
+### 锐化处理
+- [参考链接@CSDN-单曲循环鸭-基于opencv（C++）的图像处理（图像锐化）](https://blog.csdn.net/weixin_45801311/article/details/110246869)
+
+  ---
+- 对上一步经过平滑处理过后的图像进行锐化处理，要求分别采用空域和频域的滤波方法实现锐化处理，并选择一种方法自己编写代码实现；
+
+  ---
+#### 图像锐化的概念
+- 图像锐化(image sharpening)是补偿图像的轮廓，增强图像的边缘及灰度跳变的部分，使图像变得清晰，分为空间域处理和频域处理两类。图像锐化是为了突出图像上地物的边缘、轮廓，或某些线性目标要素的特征。这种滤波方法提高了地物边缘与周围像元之间的反差，因此也被称为边缘增强。
+
+---
+#### 高通滤波
+- [参考链接@知乎-闪电侠的右-https://zhuanlan.zhihu.com/p/162275458]
+
+  ---
+- 高通滤波法采用高通滤波器让高频分量通过，使图像的边缘和线条变得清楚，实现锐化。
+- 高通滤波器而用空域法和频域法实现，在空间域使用卷积方法，模板如  
+  ![20210425223027](http:cdn.ayusummer233.top/img/20210425223027.png)  
+  可以看出和拉普拉斯算子基本相同。
+```python
+import cv2
+import matplotlib.pyplot as plt
+import os
+
+# 图像路径定义
+meanFilter1Img = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                              '../../../resource/pic/Experiment/Ex3-ImageEnhancement/meanFilter1.png'))
+
+plt.subplot(1, 2, 1)
+img = cv2.imread(meanFilter1Img, 0)  # 0为灰度图
+plt.axis('off')             # 关闭坐标轴
+plt.imshow(img, cmap='gray')
+
+plt.subplot(1, 2, 2)
+depth = cv2.CV_16S
+# 求X方向梯度（创建grad_x, grad_y矩阵）
+grad_x = cv2.Sobel(img, depth, 1, 0)
+abs_grad_x = cv2.convertScaleAbs(grad_x)
+
+# 求Y方向梯度
+grad_y = cv2.Sobel(img, depth, 0, 1)
+abs_grad_y = cv2.convertScaleAbs(grad_y)
+
+# 合并梯度
+sobel_img = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
+
+plt.imshow(sobel_img, cmap='gray')
+plt.axis('off')             # 关闭坐标轴
+plt.show()
+```
+![20210425223737](http:cdn.ayusummer233.top/img/20210425223737.png)
+
+
+
+----
+## 调试问题及解决方案记录
+
+----
+### plt显示图像的色差问题
+- [参考链接-@CSDN-善良995](https://blog.csdn.net/weixin_45954454/article/details/114707888)
+-   [本节测试代码文件](./OpenCV-python/Test/abnormal_img_show.py)
+
+  ----
+- 首先我们来看看`彩色图像`的cv显示-plt显示-原图
+  ![20210421102254](http:cdn.ayusummer233.top/img/20210421102254.png)
+  ```python
+  import cv2
+  from matplotlib import pyplot as plt
+
+  # 读取图像
+  img = cv2.imread("../../resource/pic/lena.jpg")
+
+  # cv显示图像
+  cv2.imshow("cv-show", img)
+  cv2.waitKey(0)  # 等待窗口关闭
+
+  # plt显示图像
+  plt.rcParams['font.family'] = ['SimHei']    # 使用黑体
+  plt.axis('off')  # 关闭坐标轴
+  plt.title('plt显示原图')
+  plt.imshow(img)
+  plt.show()
+  ```
+- 使用`cv2.imread()`读取图像时，默认彩色图像的三通道顺序为`B、G、R`，这与我们所熟知的RGB中的R通道和B通道正好互换位置了。
+- 而使用`plt.imshow()`函数却默认显示图像的通道顺序为`R、G、B`，导致图像出现色差发蓝。
+- 解决方案1:cv读取图像后提取通道并按照RGB顺序重新组合图像  
+  ```python
+  # plt显示图像-cv读取图像后提取通道并按照RGB顺序重新组合图像
+  b, g, r = cv2.split(img)            # 分别提取B、G、R通道
+  img_new1 = cv2.merge([r, g, b])     # 重新组合为R、G、B
+  plt.axis('off')  # 关闭坐标轴
+  plt.title('plt显示原图\n-cv读取图像后提取通道并按照RGB顺序重新组合图像\n方案一提取并重组通道')
+  plt.imshow(img_new1)
+  plt.show()
+
+  # img[:,:,0]表示图片的蓝色通道，对一个字符串s进行翻转用的是s[::-1]，同样img[:,:,::-1]就表示BGR通道翻转，变成RGB
+  img_new2 = img[:, :, ::-1]
+  plt.axis('off')  # 关闭坐标轴
+  plt.title('plt显示原图\n-cv读取图像后提取通道并按照RGB顺序重新组合图像\n方案2-类字符串翻转')
+  plt.imshow(img_new2)
+  plt.show()
+
+  ```
+
+---
+- 除了彩色图像外,plt显示灰度图像也存在色差问题
+  - `plt.imshow()`函数默认显示三通道图像，把灰度图当作彩色图显示出来了，所以也会有色差。  
+  ![20210421140950](http:cdn.ayusummer233.top/img/20210421140950.png)
+  ```python
+  # ============ 灰度图像显示 ============ #
+  img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  plt.axis('off')             # 关闭坐标轴
+  plt.title("plt显示灰度图像")
+  plt.imshow(img_gray)
+  plt.show()
+  ```
+
+  ---
+- 要想正常显示灰度图像只需要在调用`plt.imshow()`时设置`cmap`属性为`'gray'`即可
+  ```python
+  # plt正常显示灰度图像
+  plt.axis('off')             # 关闭坐标轴
+  plt.title("plt正常显示灰度图像")
+  plt.imshow(img_gray, cmap='gray')
+  plt.show()
+  ```  
+  ![20210421141352](http:cdn.ayusummer233.top/img/20210421141352.png)
+
+
 
 
 ---
 ## 实验小结
-
+- 进一步了解了图像增强的方法, 对于图像平滑处理以及锐化处理的方法有了原理及其实现方面的理解
+- 进一步熟悉了python的`numpy`,`Matplotlib`, `OpenCV-Python`库的使用方法
 
 

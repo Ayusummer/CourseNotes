@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-12 15:20:33
- * @LastEditTime: 2021-04-07 14:48:39
+ * @LastEditTime: 2021-04-21 22:43:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\数字图像处理\DigitalImageProcessing.md
@@ -100,7 +100,270 @@
   2. 对一幅低对比度分辨率的图像采用直方图均衡 化和规定化方法（单映射或组映射）实现图像增强，分别采用系统函数和自己编写函数实现相应用功能。（图自选）
   3. 写出实验报告。报告要求：**有实验目的，实验内容，实验过程，实验小结和较详细的图文说明**。
 
+----
+# 第3章-亮度变换与空间滤波
+
+---
+## 3.5 平滑滤波器
+- [参考链接@博客园-极客挖掘机-Python图像处理OpenCV(7):图像平滑(滤波)处理](https://www.cnblogs.com/babycomeon/p/13053617.html)
+
+  ----
+### 概念
+- `图像平滑`技术通常也被称为`图像滤波`技术
+- 图像在获取、传输过程中，受干扰的影响，会产生`噪声`，噪声是一种错误的信号，干扰正常信号。造成图像毛糙，需对图像进行`平滑处理`。
+- 图像去噪是一种信号滤波的方法，目的是`保留有用信号，去掉噪音信号`。
+- 每一幅图像都包含某种程度的噪声，噪声可以理解为由一种或者多种原因造成的灰度值的随机变化，如由光子通量的随机性造成的噪声等等。
+- 而图像平滑技术就是用来处理图像上的噪声
+
+----
+### 目的
+- 1.`模糊`：在提取较大目标前,去除太小的细节，或将目标内的`小间断连接`起来。
+- 2.`消除噪声` : 改善图象质量，降低干扰。
+  - 平滑滤波对图像的`低频分量`增强，同时削弱高频分量，用于`消除图像中的随机噪声`，起到`平滑`作用
+
 
 
 ----
-## 第4章-图像增强
+# 第5章-图像复原
+
+
+----
+## 5.2 噪声模型
+- `2021.4.21锚点` : **测试图像增强方法是需要噪声所以临时学习了添加噪声的方法,没有深入理解**
+
+  ---
+- [参考链接-为图像添加高斯噪声与椒盐噪声-python-@博客园-我坚信阳光灿烂](https://www.cnblogs.com/wojianxin/p/12499928.html)
+
+  ---
+- 噪声干扰一般是随机产生的，分布不规则，大小也不规则。噪声像素的灰度是空间不相关，`与邻近像素显著不同`
+-  在噪声的概念中, 通常采用信噪比（`Signal-Noise Rate, SNR`）衡量图像噪声。SNR越小噪声占比越大。
+- 在信号系统中，计量单位为dB，为10lg(PS/PN), PS和PN分别代表信号和噪声的有效功率。在这里，采用信号像素点的占比充当SNR，以衡量所添加噪声的多少。
+
+
+
+-----
+### 椒盐噪声
+
+
+---
+##### 椒盐噪声
+- 椒盐噪声又称为脉冲噪声，它是一种随机出现的白点（盐噪声）或者黑点（椒噪声）。
+
+  ----
+- 为图像添加椒盐噪声
+```python
+# -*- coding: utf-8 -*-
+# @Time    : 2021/4/21 9:41
+# @Author  : 咸鱼型233(引自https://www.cnblogs.com/wojianxin/p/12499928.html)
+# @File    : 5.2-Salt-and-PepperNoise.py
+# @Software: PyCharm
+# @Function: 椒盐噪声
+import numpy as np
+import random
+import cv2
+from matplotlib import pyplot as plt
+
+
+def sp_noise(image, prob):
+    """
+
+    添加椒盐噪声
+
+    prob:噪声比例
+
+    """
+
+    output = np.zeros(image.shape, np.uint8)
+    thres = 1 - prob
+
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            rdn = random.random()
+            if rdn < prob:
+                output[i][j] = 0
+            elif rdn > thres:
+                output[i][j] = 255
+            else:
+                output[i][j] = image[i][j]
+    return output
+
+
+# ========= 函数测试 ======= #
+# 读取图像
+img = cv2.imread("../../../resource/pic/lena.jpg")
+img_plt = img[:, :, ::-1]   # 重新拼合适用于plt显示的图像
+
+# 添加椒盐噪声，噪声比例为 0.02
+out1 = sp_noise(img_plt, prob=0.02)
+
+# 显示图像
+plt.rcParams['font.family'] = ['SimHei']  # 使用黑体
+plt.figure(1)
+plt.subplot(121)
+plt.axis('off')  # 关闭坐标轴
+plt.title('原图')
+plt.imshow(img_plt)
+
+plt.subplot(122)
+plt.axis('off')
+plt.title('添加椒盐噪声')
+plt.imshow(out1)
+
+plt.show()
+
+
+```
+![20210421141721](http:cdn.ayusummer233.top/img/20210421141721.png)
+
+---
+##### 高斯噪声
+- 高斯噪声是指它的概率密度函数服从高斯分布（即正态分布）的一类噪声。
+
+  ---
+- 为图像添加高斯噪声
+```python
+# -*- coding: utf-8 -*-
+# @Time    : 2021/4/21 9:40
+# @Author  : 咸鱼型233
+# 引自https://www.cnblogs.com/wojianxin/p/12499928.html
+# @File    : 5.2-GaussianNoise.py
+# @Software: PyCharm
+# @Function: 高斯噪声
+import numpy as np
+import random
+import cv2
+from matplotlib import pyplot as plt
+
+
+def gasuss_noise(image, mean=0, var=0.001):
+    """
+    添加高斯噪声
+
+    mean : 均值
+
+    var : 方差
+    """
+
+    image = np.array(image / 255, dtype=float)
+    noise = np.random.normal(mean, var ** 0.5, image.shape)
+    out = image + noise
+    if out.min() < 0:
+        low_clip = -1.
+    else:
+        low_clip = 0.
+    out = np.clip(out, low_clip, 1.0)
+    out = np.uint8(out * 255)
+    # cv.imshow("gasuss", out)
+    return out
+
+
+# ========= 函数测试 ======= #
+# 读取图像
+img = cv2.imread("../../../resource/pic/lena.jpg")
+img_plt = img[:, :, ::-1]  # 重新拼合适用于plt显示的图像
+
+# 添加高斯噪声，均值为0，方差为0.001
+out2 = gasuss_noise(img_plt, mean=0, var=0.001)
+
+# 显示图像
+plt.rcParams['font.family'] = ['SimHei']  # 使用黑体
+plt.figure(1)
+plt.subplot(121)
+plt.axis('off')  # 关闭坐标轴
+plt.title('原图')
+plt.imshow(img_plt)
+
+plt.subplot(122)
+plt.axis('off')
+plt.title('添加高斯噪声')
+plt.imshow(out2)
+
+plt.show()
+
+```
+![20210421142458](http:cdn.ayusummer233.top/img/20210421142458.png)
+
+
+
+
+
+---
+### debug记录
+
+----
+#### plt显示图像的色差问题
+- [参考链接-@CSDN-善良995](https://blog.csdn.net/weixin_45954454/article/details/114707888)
+-   [本节测试代码文件](./OpenCV-python/Test/abnormal_img_show.py)
+
+  ----
+- 首先我们来看看`彩色图像`的cv显示-plt显示-原图
+  ![20210421102254](http:cdn.ayusummer233.top/img/20210421102254.png)
+  ```python
+  import cv2
+  from matplotlib import pyplot as plt
+
+  # 读取图像
+  img = cv2.imread("../../resource/pic/lena.jpg")
+
+  # cv显示图像
+  cv2.imshow("cv-show", img)
+  cv2.waitKey(0)  # 等待窗口关闭
+
+  # plt显示图像
+  plt.rcParams['font.family'] = ['SimHei']    # 使用黑体
+  plt.axis('off')  # 关闭坐标轴
+  plt.title('plt显示原图')
+  plt.imshow(img)
+  plt.show()
+  ```
+- 使用`cv2.imread()`读取图像时，默认彩色图像的三通道顺序为`B、G、R`，这与我们所熟知的RGB中的R通道和B通道正好互换位置了。
+- 而使用`plt.imshow()`函数却默认显示图像的通道顺序为`R、G、B`，导致图像出现色差发蓝。
+- 解决方案1:cv读取图像后提取通道并按照RGB顺序重新组合图像  
+  ```python
+  # plt显示图像-cv读取图像后提取通道并按照RGB顺序重新组合图像
+  b, g, r = cv2.split(img)            # 分别提取B、G、R通道
+  img_new1 = cv2.merge([r, g, b])     # 重新组合为R、G、B
+  plt.axis('off')  # 关闭坐标轴
+  plt.title('plt显示原图\n-cv读取图像后提取通道并按照RGB顺序重新组合图像\n方案一提取并重组通道')
+  plt.imshow(img_new1)
+  plt.show()
+
+  # img[:,:,0]表示图片的蓝色通道，对一个字符串s进行翻转用的是s[::-1]，同样img[:,:,::-1]就表示BGR通道翻转，变成RGB
+  img_new2 = img[:, :, ::-1]
+  plt.axis('off')  # 关闭坐标轴
+  plt.title('plt显示原图\n-cv读取图像后提取通道并按照RGB顺序重新组合图像\n方案2-类字符串翻转')
+  plt.imshow(img_new2)
+  plt.show()
+
+  ```
+
+---
+- 除了彩色图像外,plt显示灰度图像也存在色差问题
+  - `plt.imshow()`函数默认显示三通道图像，把灰度图当作彩色图显示出来了，所以也会有色差。  
+  ![20210421140950](http:cdn.ayusummer233.top/img/20210421140950.png)
+  ```python
+  # ============ 灰度图像显示 ============ #
+  img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  plt.axis('off')             # 关闭坐标轴
+  plt.title("plt显示灰度图像")
+  plt.imshow(img_gray)
+  plt.show()
+  ```
+
+  ---
+- 要想正常显示灰度图像只需要在调用`plt.imshow()`时设置`cmap`属性为`'gray'`即可
+  ```python
+  # plt正常显示灰度图像
+  plt.axis('off')             # 关闭坐标轴
+  plt.title("plt正常显示灰度图像")
+  plt.imshow(img_gray, cmap='gray')
+  plt.show()
+  ```  
+  ![20210421141352](http:cdn.ayusummer233.top/img/20210421141352.png)
+
+
+
+
+
+
+
