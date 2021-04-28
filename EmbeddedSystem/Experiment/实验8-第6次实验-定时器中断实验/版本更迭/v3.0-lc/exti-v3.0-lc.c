@@ -16,17 +16,17 @@
 //All rights reserved                                      
 ////////////////////////////////////////////////////////////////////////////////// 
 
-int status_key2=0;          // key2按键状态, 0->按下, 1->未按下
-int status_key1=0;          // key1按键状态, 0->按下, 1->未按下
+int press_key2=0;          // key2按键状态, 0->按下, 1->未按下
+int press_key1=0;          // key1按键状态, 0->按下, 1->未按下
 int status_key0=0;          // key0按键状态, 0->按下, 1->未按下
 
-int oldL0=1;                // LED0原来值
-int oldL1=1;                // LED1原来值
+int L0_old=1;                // LED0原来值
+int L1_old=1;                // LED1原来值
 
 //外部中断4服务程序(KEY0, 右键)
 void EXTI4_IRQHandler(void){
     delay_ms(100);                      // 消抖
-    if(KEY0==0 && (!status_key2)){      // 按KEY0且未按下KEY2
+    if(KEY0==0 && (!press_key2)){      // 按KEY0且未按下KEY2
         status_key0 = !status_key0;     // KET0按键状态改变
     }
     EXTI_ClearITPendingBit(EXTI_Line4); // 清除LINE4上的中断标志位  
@@ -36,8 +36,8 @@ void EXTI4_IRQHandler(void){
 //外部中断3服务程序
 void EXTI3_IRQHandler(void){
     delay_ms(100);                  // 消抖
-    if(KEY1==0&&(!status_key2)){    // 按KEY1且未按下KEY2
-        status_key1=!status_key1;   // KEY1按键状态改变
+    if(KEY1==0&&(!press_key2)){    // 按KEY1且未按下KEY2
+        press_key1=!press_key1;   // KEY1按键状态改变
     }
      EXTI_ClearITPendingBit(EXTI_Line3);  //清除LINE3上的中断标志位  
 }
@@ -47,15 +47,15 @@ void EXTI3_IRQHandler(void){
 void EXTI2_IRQHandler(void){
     delay_ms(100);          // 消抖
     if(KEY2 == 0){
-        status_key2 =! status_key2;
+        press_key2 =! press_key2;
 
-        if(status_key2){
-            oldL0=LED0;     // 将LED状态送给旧值
-            oldL1=LED1;
+        if(press_key2){
+            L0_old=LED0;     // 将LED状态送给旧值
+            L1_old=LED1;
             
         if(status_key0) LED0=0;     // status_key0为1时，LED0正在闪烁，设置成常亮
         else LED0=1;//否则熄灭
-        if(status_key1) LED1=0;
+        if(press_key1) LED1=0;
         else LED1=1;
             
             
@@ -66,8 +66,8 @@ void EXTI2_IRQHandler(void){
         else{
 //            TIM_ITConfig(TIM3,TIM_IT_Update, ENABLE); 
             TIM_Cmd(TIM3,ENABLE);
-            LED0=oldL0;//返回旧值
-            LED1=oldL1;
+            LED0=L0_old;//返回旧值
+            LED1=L1_old;
         }
         
     }         
