@@ -333,6 +333,234 @@ void EXTI0_IRQHandler(void){
   - ![20210417195335](http:cdn.ayusummer233.top/img/20210417195335.png)
   - ![20210417195359](http:cdn.ayusummer233.top/img/20210417195359.png)
 
+----
+## 实验程序
+- `exti.h`
+  ```C
+  #ifndef __EXTI_H
+  #define __EXIT_H	 
+  #include "sys.h"  	
+
+  extern int flag;    
+
+  void EXTIX_Init(void);		 					    
+  #endif
+  ```
+
+  ---
+- 中断服务程序`exti.c`
+  ```C
+  #include "exti.h"
+  #include "delay.h" 
+  #include "led.h" 
+  #include "key.h"
+  #include "beep.h"
+  //////////////////////////////////////////////////////////////////////////////////     
+  //本程序只供学习使用，未经作者许可，不得用于其它任何用途
+  //ALIENTEK STM32F407开发板
+  //外部中断 驱动代码       
+  //正点原子@ALIENTEK
+  //技术论坛:www.openedv.com
+  //创建日期:2014/5/4
+  //版本：V1.0
+  //版权所有，盗版必究。
+  //Copyright(C) 广州市星翼电子科技有限公司 2014-2024
+  //All rights reserved                                      
+  ////////////////////////////////////////////////////////////////////////////////// 
+
+  int flag=0;     // 喂狗标志
+
+  // 外部中断3服务程序(KEY1, 下键-喂狗)
+  void EXTI3_IRQHandler(void){
+      delay_ms(100);        	// 消抖-10ms不太够,100ms差不多
+      if(KEY1==0){
+          IWDG_Feed();    	// 喂狗
+          BEEP=0;         	// 解除蜂鸣器报警
+          LED0=1;         	// 解除LED0闪烁
+          flag=1;         	// 喂狗标记置1-表示已喂狗
+      }         
+      EXTI_ClearITPendingBit(EXTI_Line3);  // 清除LINE3上的中断标志位  
+  }
+
+  // 外部中断0服务程序(WK_UP, 上键-无功能)
+  void EXTI0_IRQHandler(void){
+      delay_ms(100);        // 消抖-10ms不太够,100ms差不多
+      if(WK_UP==1){
+          // do nothing
+      }         
+      EXTI_ClearITPendingBit(EXTI_Line0); //清除LINE0上的中断标志位 
+  }    
+
+  // 外部中断2服务程序(KEY2, 左键-无功能)
+  void EXTI2_IRQHandler(void){
+      delay_ms(100);    //消抖
+      if(KEY2==0){                 
+          LED0=!LED0; 
+      }         
+      EXTI_ClearITPendingBit(EXTI_Line2);//清除LINE2上的中断标志位 
+  }
+
+  // 外部中断4服务程序(KEY0, 右键-无功能)
+  void EXTI4_IRQHandler(void)
+  {
+      delay_ms(100);    //消抖
+      if(KEY0==0){                 
+          // do nothing
+      }         
+      EXTI_ClearITPendingBit(EXTI_Line4);//清除LINE4上的中断标志位  
+  }
+        
+  //外部中断初始化程序
+  //初始化PE2~4,PA0为中断输入.
+  void EXTIX_Init(void){
+      NVIC_InitTypeDef   NVIC_InitStructure;
+      EXTI_InitTypeDef   EXTI_InitStructure;
+      
+      KEY_Init();     // 按键对应的IO口初始化
+  
+      RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);  // 使能SYSCFG时钟
+      
+  
+      SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource2);   // PE2 连接到中断线2
+      SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource3);   // PE3 连接到中断线3
+      SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource4);   // PE4 连接到中断线4
+      SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource0);   // PA0 连接到中断线0
+      
+      /* 配置EXTI_Line0 */
+      EXTI_InitStructure.EXTI_Line = EXTI_Line0;              // LINE0
+      EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;     // 中断事件
+      EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;  // 上升沿触发 
+      EXTI_InitStructure.EXTI_LineCmd = ENABLE;               // 使能LINE0
+      EXTI_Init(&EXTI_InitStructure);                         // 配置
+          
+      /* 配置EXTI_Line2,3,4 */
+      EXTI_InitStructure.EXTI_Line = EXTI_Line2 | EXTI_Line3 | EXTI_Line4;
+      EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;         // 中断事件
+      EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;     // 下降沿触发
+      EXTI_InitStructure.EXTI_LineCmd = ENABLE;                   // 中断线使能
+      EXTI_Init(&EXTI_InitStructure);                             // 配置
+      
+      NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;                // 外部中断0
+      NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;    // 抢占优先级0
+      NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x02;           // 子优先级2
+      NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;                 // 使能外部中断通道
+      NVIC_Init(&NVIC_InitStructure);                                 // 配置
+          
+      NVIC_InitStructure.NVIC_IRQChannel = EXTI2_IRQn;                // 外部中断2
+      NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x03;    // 抢占优先级3
+      NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x02;           // 子优先级2
+      NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;                 // 使能外部中断通道
+      NVIC_Init(&NVIC_InitStructure);                                 // 配置
+          
+          
+      NVIC_InitStructure.NVIC_IRQChannel = EXTI3_IRQn;                // 外部中断3
+      NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x02;    // 抢占优先级2
+      NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x02;           // 子优先级2
+      NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;                 // 使能外部中断通道
+      NVIC_Init(&NVIC_InitStructure);                                 // 配置
+          
+          
+      NVIC_InitStructure.NVIC_IRQChannel = EXTI4_IRQn;                // 外部中断4
+      NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01;    // 抢占优先级1
+      NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x02;           // 子优先级2
+      NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;                 // 使能外部中断通道
+      NVIC_Init(&NVIC_InitStructure);                                 // 配置
+        
+  }
+  ```
+
+  ----
+- 主程序`main.c`
+  ```C
+  #include "sys.h"
+  #include "delay.h"
+  #include "usart.h"
+  #include "led.h"
+  #include "beep.h"
+  #include "key.h"
+  #include "iwdg.h"
+  #include "exti.h"
+
+  // LED闪烁函数
+  void led_blink(u32 t, u32 bright){
+      LED1=0; delay_ms(bright);       // 亮 bright ms
+      LED1=1; delay_ms(t-bright);     // 灭 t-bright ms
+    
+  }
+
+  // 循环自增函数 : x->循环自增变量, limit->循环自增上限
+  int add_circle(int x, int limit){
+      return (x+1) % limit;
+  }
+
+
+  int main(void){ 
+      u16 prer=4;           // 分频系数，预分频系数:4*2^prer=64         
+      u16 rlr=500*5;        // 计数重载值       
+      u16 count=0;          // 计数变量-用于计算喂狗超时
+      NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);     	// 设置系统中断优先级分组2
+      delay_init(168);      // 初始化延时函数
+      LED_Init();           // 初始化LED端口     
+      KEY_Init();           // 初始化按键  
+      BEEP_Init();          // 初始化蜂鸣器      
+      EXTIX_Init();         // 初始化外部中断输入       
+
+      IWDG_Init(prer,rlr);    // 分频系数为64,重载值为500时,溢出时间为1s
+                              // 此实验设计溢出时间为1*5=5s
+      LED1=1; delay_ms(100);  // 绿灯(呼吸灯用灯)熄灭100ms-用于指示新一轮看门狗计时开始         
+
+      while(1){           
+          int i;                  // 计数器
+          int div_alarm = 0;      // 定义报警分频变量
+          int totaltime=1000; 
+          int shorttime=20;
+          int circle=totaltime/shorttime;
+          
+          // 亮->暗
+          for(i=circle; i>=5; i--){  
+              // 报警分频变量循环, 第二个参数为自增上限
+              div_alarm = add_circle(div_alarm, 5);
+              // 如果没喂狗,并且"分频成立",那么超时则红灯反相,蜂鸣器反相(用后面的绿灯闪烁来延时)
+              if(!flag){
+                  if(count>=2 && div_alarm == 4){    
+                      LED0=!LED0;
+                      BEEP=!BEEP;
+                  }
+              }
+              // 如果喂狗了那么喂狗超时计数器置零,喂狗标志位清零
+              else{
+                  count = 0;
+                  flag = 0;
+              }
+              led_blink(shorttime,shorttime*i/circle);
+          }
+          
+          // 暗->亮
+          for( ; i<=circle; i++){
+              // 报警分频变量循环, 第二个参数为自增上限
+              div_alarm = add_circle(div_alarm, 5);
+              // 如果没喂狗,,并且"分频成立",那么超时则红灯反相,蜂鸣器反相(用后面的绿灯闪烁来延时)
+              if(!flag){
+                  if(count>=2 && div_alarm == 4){      
+                      LED0=!LED0;
+                      BEEP=!BEEP;
+                  }
+              }
+              // 如果喂狗了那么喂狗超时计数器置零,喂狗标志位清零
+              else{
+                  flag = 0;
+                  count = 0;
+              }
+              led_blink(shorttime,shorttime*i/circle);
+          }
+          
+          // 一轮呼吸之后喂狗超时计数器+1
+          count++;
+      };
+
+  }
+  ```
+
 
 ----
 # 实验6-基本定时器实验
