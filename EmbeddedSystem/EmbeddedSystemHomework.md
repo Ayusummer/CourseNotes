@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-27 15:36:25
- * @LastEditTime: 2021-04-20 12:29:33
+ * @LastEditTime: 2021-04-26 10:01:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\EmbeddedSystem\EmbeddedSystemHomework.md
@@ -396,3 +396,87 @@ void GPIOA_init(void){
   ```C
   WWDG_IRQHandler();​
   ```
+
+
+---
+# 作业5-定时器
+
+----
+## 1、STM32F4有哪些定时器，有什么区别？
+
+
+
+
+---
+## 2、STM32F4的通用定时器有哪些计数模式，简述其特点。
+
+
+
+
+
+
+
+----
+## 3、写出通用定时器溢出中断的库函数配置流程。
+
+
+
+
+
+
+
+
+
+---
+## 4、下列代码把TIM2通道3配置为输入捕获方式的初始化代码，请将其补充完整
+```C
+void TIM2_CH3_Cap_Init(u32 arr, u16 psc){
+    GPIO_InitTypeDef  GPIO_InitStructure;
+    TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+    TIM_ICInitTypeDef  TIM2_ICInitStructure；
+    NVIC_InitTypeDef  NVIC_InitStructure;
+    //TIM2时钟    
+
+    //GPIO时钟	
+    
+    GPIO_InitStructure.GPIO_Pin =                  ; 
+    GPIO_InitStructure.GPIO_Mode =                ;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz; 
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN; 
+                                                 ; 
+                                                 ; 
+    TIM_TimeBaseStructure.TIM_Prescaler=psc;  
+    TIM_TimeBaseStructure.TIM_CounterMode=TIM_CounterMode_Up; 
+    TIM_TimeBaseStructure.TIM_Period=arr;   
+    TIM_TimeBaseStructure.TIM_ClockDivision=TIM_CKD_DIV1; 
+                                            ;
+    TIM2_ICInitStructure.TIM_Channel =                   ; 
+    TIM2_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+    TIM2_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1
+    TIM2_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;   //不分频
+    TIM2_ICInitStructure.TIM_ICFilter =                ;     //不滤波
+                                                ;
+                                                ;//更新中断，CC1IE捕获中断使能
+                                                ;
+    NVIC_InitStructure.NVIC_IRQChannel =              ;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=2;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority=0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd =           ; 
+    NVIC_Init(&NVIC_InitStructure);
+}
+```
+
+----
+## 5、PWM波有什么作用？简述STM32定时器产生PWM波的原理，PWM波的周期和占空比是如何确定的？
+
+
+
+
+
+
+
+---
+## 6、写出用库函数配置定时器为PWM输出方式的流程（以TIM14的通道1为例）
+
+
