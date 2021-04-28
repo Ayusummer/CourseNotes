@@ -27,8 +27,8 @@
 
 
 extern int flag;
-void led_breath(u32 t,u32 bright);
-void led_breath(u32 t,u32 bright){
+void led_blink(u32 t,u32 bright);
+void led_blink(u32 t,u32 bright){
     delay_ms(bright);
     LED1=1;
     delay_ms(t-bright);
@@ -69,7 +69,7 @@ int main(void)
                 flag = 0;
                 count = 0;
             }
-            led_breath(shorttime,shorttime*i/circle);
+            led_blink(shorttime,shorttime*i/circle);
         }
         for(;i<=circle;i+=1){
             if(!flag){
@@ -82,7 +82,7 @@ int main(void)
                 flag = 0;
                 count = 0;
             }
-            led_breath(shorttime,shorttime*i/circle);
+            led_blink(shorttime,shorttime*i/circle);
         }
         count++;
     };
