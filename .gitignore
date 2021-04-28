@@ -18,6 +18,8 @@ ComputerGraphics/Experiment/GlobalTest.py
 # 辅助性文件
 ## 用于截取实验记录并输出PDF
 tmp.md
+## 用于重排c文件
+TMP.c
 
 # 资源文件与输出文件
 DigitalImageProcessing/output
@@ -40,4 +42,5 @@ bin-release/
 
 
 *.jpg
+
 
