@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-01 09:59:17
- * @LastEditTime: 2021-04-18 22:46:54
+ * @LastEditTime: 2021-04-28 14:37:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\DigitalImageProcessing\OpenCV-python\OpenCV-python.md
@@ -312,3 +312,5 @@ if __name__ == "__main__":
   ```
   pip install freetype-py
   ```
+
+> - 2021.4.28-锚点 : 重新思考了这分文档的必要性,认为不应当将其与主课程分离开来,因此将其合并到数字图像处理的主笔记上,该文档不打算再更新了
