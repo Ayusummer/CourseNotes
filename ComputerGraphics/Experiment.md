@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-09 18:04:11
- * @LastEditTime: 2021-04-09 20:39:14
+ * @LastEditTime: 2021-04-23 10:53:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\ComputerGraphics\Experiment.md
@@ -91,4 +91,35 @@ if __name__ == '__main__':
   - [离线版](https://ayusummer-my.sharepoint.com/:u:/g/personal/233_ayusummer_onmicrosoft_com/EZU2zHoF049HhFajv8Cyx_ABkPKQli9uYtn__fOdWMkN6A?e=eDekIl)
 ---
 
+  
+----
+# 实验2-曲线拟合
 
+---
+## 实验要求
+- 1.绘制三次Bezier曲线
+  - 1.给定四个已知点P1—P4，以此作为控制顶点绘制一段三次Bezier曲线。
+  - 2.给定四个已知点P1—P4，以此作为曲线上的点绘制一段三次Bezier曲线。
+- 2.绘制三次B样条曲线
+  - 给定六个已知点P1—P6，以此作为控制顶点绘制一条三次B样条曲线。
+
+----
+### 相关概念
+
+---
+#### Bezier曲线
+- Bezier曲线通过一组多边折线的各顶点唯一的定义出来。​
+  - 在多边折线的各顶点中，只有`第一点和最后一点在曲线上`，其余的顶点则用来定义曲线的导数，阶次和形状。`第一条边和最后一条边分别和曲线在起点和终点处相切`，曲线的形状趋于多边折线的形状，改变多边折线的顶点位置和曲线形状的变化有着直观的联系。多边折线称为`特征多边形`，其顶点称为`控制点`。​
+
+
+----
+#### B样条曲线
+- B样条曲线是Bezier曲线的拓广，它是用B样条基函数代替了Bezier曲线表达式中的Bernstain基函数。​
+
+
+## debug
+
+### python安装OpenGL
+```
+pip install pyopengl
+```
