@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-29 15:10:00
- * @LastEditTime: 2021-04-29 15:15:13
+ * @LastEditTime: 2021-04-29 15:56:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \JuniorLesson_SecondTerm\EmbeddedSystem\Experiment\实验6 独立看门狗实验\main-v4.1.1.1-重复代码函数封装.c
@@ -19,7 +19,6 @@
 void led_blink(u32 t, u32 bright){
     LED1=0; delay_ms(bright);       // 亮 bright ms
     LED1=1; delay_ms(t-bright);     // 灭 t-bright ms
-   
 }
 
 // 循环自增函数 : x->循环自增变量, limit->循环自增上限
@@ -31,11 +30,17 @@ int add_circle(int x, int limit){
  报警函数(判断及执行)
  (其实功能上并不是报警,仅仅是报警对应LED及蜂鸣器的反相而已,
  结合LED闪烁中的延迟才是完整的报警)
+ count 对应报警计数器(可以参考下面主程序里面的count理解其含义)
+ div_alarm 对应报警分频循环变量,循环上限为上面add_circle函数中的limit,照理来说这两个函数应该是耦合在一起的
 */
 void alarm(int count, int div_alarm){
     // 如果没喂狗,并且"分频成立",那么超时则红灯反相,蜂鸣器反相(用后面的绿灯闪烁来延时)
     if(!flag){
-        if(count>=2 && div_alarm == 4){    
+        /* 
+          前者对应2个呼吸周期时间;
+          后者对应一个报警分频循环计数器的特定值,小于其上限的任意一个值均可;
+        */
+        if(count>=2 && div_alarm == 4){     
             LED0=!LED0;
             BEEP=!BEEP;
         }
@@ -75,7 +80,9 @@ int main(void){
         for(i=circle; i>=5; i--){  
             // 报警分频变量循环, 第二个参数为自增上限
             div_alarm = add_circle(div_alarm, 5);
+            // 报警判断及执行
             alarm(count, div_alarm);
+            // LED闪烁->呼吸灯
             led_blink(shorttime,shorttime*i/circle);
         }
         
