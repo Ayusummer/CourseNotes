@@ -1,3 +1,8 @@
+# 资源文件与输出文件
+DigitalImageProcessing/output
+DigitalImageProcessing/resource
+
+
 # Pycharm配置文件及自动生成的文件
 DigitalImageProcessing/.idea
 DigitalImageProcessing/OpenCV-python/.idea
@@ -21,9 +26,11 @@ tmp.md
 ## 用于重排c文件
 TMP.c
 
-# 资源文件与输出文件
-DigitalImageProcessing/output
-DigitalImageProcessing/resource
+
+
+
+
+
 
 # Build and Release Folders
 bin-debug/
@@ -39,8 +46,6 @@ bin-release/
 *.air
 *.ipa
 *.apk
-
-
 *.jpg
 
 
