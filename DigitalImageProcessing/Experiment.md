@@ -1,15 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-10 14:41:47
- * @LastEditTime: 2021-04-28 14:44:20
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \junior-lessons_second-term\DigitalImageProcessing\Experiment.md
--->
-<!--
- * @Author: your name
- * @Date: 2021-04-10 14:41:47
- * @LastEditTime: 2021-04-10 16:04:54
+ * @LastEditTime: 2021-05-09 14:09:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\DigitalImageProcessing\Experiment.md
@@ -683,7 +675,7 @@ plt.show()
   ![20210428142537](http:cdn.ayusummer233.top/img/20210428142537.png)
 
 -----
-### 分别采用两种阈值选取方法实现图像分割
+### 1.分别采用两种阈值选取方法实现图像分割
 
 ----
 #### Otsu阈值
@@ -795,3 +787,344 @@ if __name__ == "__main__":
 - ![20210418224435](http:cdn.ayusummer233.top/img/20210418224435.png)
 
 ----
+### 2.采用K-means聚类算法实现图像分割
+```python
+
+import sys
+import numpy as np
+import cv2
+from matplotlib import pyplot as plt
+# 导入上级目录里的配置文件中的图像路径
+sys.path.append('../')
+from config import path_Hei
+
+img_origin = cv2.imread(path_Hei)
+img = img_origin/255
+img = img[:, :, ::-1]
+# 构造显示图像
+tmp = img
+
+Z = img.reshape((-1, 3))
+# convert to np.float32
+Z = np.float32(Z)
+
+# define criteria, number of clusters(K) and apply k-means()
+criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+# K = 8
+# K = 3
+# K = 14
+K = 5
+
+ret, label, center = cv2.kmeans(Z, K, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+
+# 分离颜色
+for y in range(len(center)):
+    a1 = []
+    for i, x in enumerate(label.ravel()):
+        if x == y:
+            a1.append(list(Z[i]))
+        else:
+            a1.append([0, 0, 0])
+    a2 = np.array(a1)
+    a3 = a2.reshape(img.shape)
+    # 两张图片横向合并（便于对比显示）
+    tmp = np.hstack((tmp, a3))
+
+
+# plt显示图像
+plt.rcParams['font.family'] = ['SimHei']  # 使用黑体
+plt.axis('off')  # 关闭坐标轴
+plt.title('k-means颜色量化')
+plt.imshow(tmp)
+plt.show()
+```
+![20210509122035](http:cdn.ayusummer233.top/img/20210509122035.png)
+
+
+---
+### 3.分别用Roberts,Sobel和拉普拉斯高斯算子对图像进行边缘检测
+- [参考链接@CSDN:橘也](https://blog.csdn.net/qq_45057749/article/details/110187760)
+- [参考链接@博客园:silence_cho](https://www.cnblogs.com/silence-cho/p/13621975.html)
+
+  ---
+- `scikit-image`是基于`scipy`的一款图像处理包，它将图片作为`numpy`数组进行处理，是非常好的数字图像处理工具。
+  ```
+  pip install scikit-image
+  ```
+
+---
+#### Sobel
+```python
+from skimage import io, filters, img_as_ubyte
+import matplotlib.pyplot as plt
+
+# 导入上级目录里的配置文件中的图像路径
+import sys
+sys.path.append('../')
+from config import path_Hei
+
+# 图像读取
+img = io.imread(path_Hei, as_gray=True)
+
+# sobel边缘检测
+edges = filters.sobel(img)
+# 浮点型转成uint8型
+edges = img_as_ubyte(edges)
+
+
+# sobel 水平方向边缘检测
+edgesh = filters.sobel_h(img)
+edgesh = img_as_ubyte(edgesh)
+
+
+# sobel 竖直方向边缘检测
+edgesv = filters.sobel_v(img)
+edgesv = img_as_ubyte(edgesv)
+
+
+# 显示图像
+plt.rcParams['font.family'] = ['SimHei']
+plt.suptitle('Sobel算子')
+plt.tight_layout()  # 自动调整子图
+
+# 原图灰度图
+plt.subplot(2, 2, 1)  # 2行2列,第1个子图
+plt.title('原图灰度图')
+plt.imshow(img, cmap='gray')
+plt.axis('off')     # 关闭坐标轴
+
+# sobel 边缘检测
+plt.subplot(2, 2, 2)  # 2行2列,第1个子图
+plt.title('sobel 边缘检测')
+plt.imshow(edges, cmap='gray')
+plt.axis('off')     # 关闭坐标轴
+
+# sobel 水平方向边缘检测
+plt.subplot(2, 2, 3)  # 2行2列,第3个子图
+plt.title('sobel 水平方向边缘检测')
+plt.imshow(edgesh, cmap='gray')
+plt.axis('off')     # 关闭坐标轴
+
+# sobel 竖直方向边缘检测
+plt.subplot(2, 2, 4)  # 2行2列,第3个子图
+plt.title('sobel 竖直方向边缘检测')
+plt.imshow(edgesv, cmap='gray')
+plt.axis('off')     # 关闭坐标轴
+
+plt.show()
+```
+![20210509125402](http:cdn.ayusummer233.top/img/20210509125402.png)
+
+
+----
+#### 其他算子
+- 为节省篇幅,只有第一次测试的Sobel算子独立写了一份程序,其他算子的使用方法相似,放在一起也便于比较
+```python
+from skimage import io, filters, img_as_ubyte
+import matplotlib.pyplot as plt
+from skimage import feature  # 含canny算子
+import numpy as np
+from scipy import signal
+import cv2
+
+# 导入上级目录里的配置文件中的图像路径
+import sys
+
+sys.path.append('../')
+from config import path_Hei
+
+
+def createLoGKernel(sigma, size):
+    H, W = size
+    r, c = np.mgrid[0:H:1.0, 0:W:1.0]
+    r -= (H - 1) / 2
+    c -= (W - 1) / 2
+    sigma2 = np.power(sigma, 2.0)
+    norm2 = np.power(r, 2.0) + np.power(c, 2.0)
+    LoGKernel = (norm2 / sigma2 - 2) * np.exp(-norm2 / (2 * sigma2))  # 省略掉了常数系数 1\2πσ4
+
+    # print(LoGKernel)
+    return LoGKernel
+
+
+def LoG(image, sigma, size, _boundary='symm'):
+    LoGKernel = createLoGKernel(sigma, size)
+    edge = signal.convolve2d(image, LoGKernel, 'same', boundary=_boundary)
+    return edge
+
+
+# 图像读取
+img = io.imread(path_Hei, as_gray=True)
+
+# sobel边缘检测
+edges = filters.sobel(img)
+# 浮点型转成uint8型
+edges = img_as_ubyte(edges)
+
+# sobel 水平方向边缘检测
+edgesh = filters.sobel_h(img)
+edgesh = img_as_ubyte(edgesh)
+
+# sobel 竖直方向边缘检测
+edgesv = filters.sobel_v(img)
+edgesv = img_as_ubyte(edgesv)
+
+# Roberts算子
+edges_roberts = filters.roberts(img)
+edges_roberts = img_as_ubyte(edges_roberts)
+
+# prewitt算子
+edges_prewitt = filters.prewitt(img)
+edges_prewitt = img_as_ubyte(edges_prewitt)
+
+edges_prewitt_h = filters.prewitt_h(img)  # 水平方向边缘检测
+edges_prewitt_h = img_as_ubyte(edges_prewitt_h)
+
+edges_prewitt_v = filters.prewitt_v(img)  # 垂直方向边缘检测
+edges_prewitt_v = img_as_ubyte(edges_prewitt_v)
+
+# canny算子
+edges_canny = feature.canny(img, sigma=1.0)  # sigma越小，边缘线条越细小
+edges_canny = img_as_ubyte(edges_canny)
+
+
+# 高斯拉普拉斯
+img1 = cv2.imread(path_Hei, 0)
+
+LoG_edge = LoG(img1, 1, (11, 11))
+LoG_edge[LoG_edge > 255] = 255
+# LoG_edge[LoG_edge>255] = 0
+LoG_edge[LoG_edge < 0] = 0
+LoG_edge = LoG_edge.astype(np.uint8)
+
+LoG_edge1 = LoG(img1, 1, (37, 37))
+LoG_edge1[LoG_edge1 > 255] = 255
+LoG_edge1[LoG_edge1 < 0] = 0
+LoG_edge1 = LoG_edge1.astype(np.uint8)
+
+LoG_edge2 = LoG(img1, 2, (11, 11))
+LoG_edge2[LoG_edge2 > 255] = 255
+LoG_edge2[LoG_edge2 < 0] = 0
+LoG_edge2 = LoG_edge2.astype(np.uint8)
+
+
+# 显示图像
+plt.rcParams['font.family'] = ['SimHei']
+plt.suptitle('边缘检测')
+plt.tight_layout()  # 自动调整子图
+
+# 原图灰度图
+plt.subplot(6, 3, 1)  # 6行3列,第1个子图
+plt.title('原图灰度图')
+plt.imshow(img, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+# sobel 边缘检测
+plt.subplot(6, 3, 4)  # 6行3列,第4个子图
+plt.title('sobel 边缘检测')
+plt.imshow(edges, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+# sobel 水平方向边缘检测
+plt.subplot(6, 3, 5)  # 6行3列,第5个子图
+plt.title('sobel 水平方向边缘检测')
+plt.imshow(edgesh, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+# sobel 竖直方向边缘检测
+plt.subplot(6, 3, 6)
+plt.title('sobel 竖直方向边缘检测')
+plt.imshow(edgesv, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+
+# roberts算子
+plt.subplot(6, 3, 7)
+plt.title('Roberts算子')
+plt.imshow(edges_roberts, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+
+# prewitt算子
+plt.subplot(6, 3, 10)
+plt.title('prewitt算子')
+plt.imshow(edges_prewitt, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+# prewitt 水平
+plt.subplot(6, 3, 11)
+plt.title('prewitt 水平方向边缘检测')
+plt.imshow(edges_prewitt_h, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+# prewitt 竖直
+plt.subplot(6, 3, 12)
+plt.title('prewitt 竖直方向边缘检测')
+plt.imshow(edges_prewitt_v, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+
+# canny算子
+plt.subplot(6, 3, 13)
+plt.title('canny算子')
+plt.imshow(edges_canny, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+
+# 高斯拉普拉斯
+plt.subplot(6, 3, 16)
+plt.title('高斯拉普拉斯算子1')
+plt.imshow(LoG_edge, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+plt.subplot(6, 3, 17)
+plt.title('高斯拉普拉斯算子2')
+plt.imshow(LoG_edge1, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+plt.subplot(6, 3, 18)
+plt.title('高斯拉普拉斯算子3')
+plt.imshow(LoG_edge2, cmap='gray')
+plt.axis('off')  # 关闭坐标轴
+
+
+plt.show()
+
+```
+![20210509135152](http:cdn.ayusummer233.top/img/20210509135152.png)
+- 可以看出cany算子与高斯拉普拉斯算子的边缘检测对噪声比较敏感
+- sobel和Roberts算子对外边缘的检测比较准确
+
+----
+### 4.选择适当方法实现肺的分割
+![20210428142537](http:cdn.ayusummer233.top/img/20210428142537.png)
+- 结果包括两部分：肺（白色显示）和背景（黑色显示）
+
+----
+```python
+import cv2
+import numpy as np
+
+# 导入上级目录里的配置文件中的图像路径
+import sys
+sys.path.append('../')
+from config import path_lungs
+
+
+# TRIANGLE阈值处理
+src = cv2.imread(path_lungs, cv2.IMREAD_GRAYSCALE)
+
+triThe = 0
+maxval = 255
+triThe, dst_tri = cv2.threshold(src, triThe, maxval, cv2.THRESH_OTSU + cv2.THRESH_BINARY)
+triThe1, dst_tri1 = cv2.threshold(src, triThe, maxval, cv2.THRESH_OTSU + cv2.THRESH_BINARY_INV)
+print(triThe)
+print(triThe1)
+
+# 3张图片横向合并（便于对比显示）
+tmp = np.hstack((src, dst_tri, dst_tri1))
+cv2.imshow("OTSUThresholding", tmp)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+![20210509140845](http:cdn.ayusummer233.top/img/20210509140845.png)
