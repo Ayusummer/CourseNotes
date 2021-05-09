@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-09 18:04:11
- * @LastEditTime: 2021-04-23 10:53:22
+ * @LastEditTime: 2021-05-07 08:30:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\ComputerGraphics\Experiment.md
@@ -123,3 +123,10 @@ if __name__ == '__main__':
 ```
 pip install pyopengl
 ```
+
+
+-----
+# 实验3-二维图形变换
+
+----
+## 绘制北极星图案
