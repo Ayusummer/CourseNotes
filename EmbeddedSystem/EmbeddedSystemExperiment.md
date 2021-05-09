@@ -190,7 +190,8 @@ int main(void){
 
 
 ----
-# 实验4-外部中断实验
+# 实验5-外部中断实验
+- 第4次实验
 - [参考链接](https://nosteglic.blog.csdn.net/article/details/108704493)
 
 ----
@@ -276,7 +277,8 @@ void EXTI0_IRQHandler(void){
 
 
 ---
-# 实验5-独立看门狗实验
+# 实验6-独立看门狗实验
+- 第5次实验
 - [参考链接](https://nosteglic.blog.csdn.net/article/details/108704695)
 
 ---
@@ -338,7 +340,8 @@ void EXTI0_IRQHandler(void){
 - 详见`Experiment`文件夹中对应实验目录
 
 ----
-# 实验6-基本定时器实验
+# 实验8-基本定时器实验
+- 第6次实验
 - [参考链接](https://nosteglic.blog.csdn.net/article/details/108704934)
 
 ----
@@ -371,5 +374,8 @@ void EXTI0_IRQHandler(void){
 - 详见`Experiment`文件夹中对应实验目录
 
 ---
+# 实验9-PVM输出实验
+- 第7次实验
 
-
+----
+## 实验内容
