@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-10 14:41:47
- * @LastEditTime: 2021-04-25 22:39:41
+ * @LastEditTime: 2021-04-28 14:44:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \junior-lessons_second-term\DigitalImageProcessing\Experiment.md
@@ -275,7 +275,7 @@
 
 
 ---
-# 第3次实验
+# 第3次实验-图像增强
 
 ---
 ## 实验目的
@@ -656,3 +656,142 @@ plt.show()
 - 进一步熟悉了python的`numpy`,`Matplotlib`, `OpenCV-Python`库的使用方法
 
 
+-----
+# 第4次实验-图像分割
+
+----
+## 实验目的 
+- 1、理解图像分割的基本概念。
+- 2、掌握阈值法、K-means聚类方法、边缘提取及区域增长和分裂方法进行图像分割。
+
+----
+## 实验环境
+- Matlab等
+
+-----
+## 实验内容
+- 1、分别采用两种阈值选取方法实现图像分割（如全局阈值、OTSU等），要求根据阈值选取的思想自己写代码。（分割图像可自由选择）
+
+  ----
+- 2、采用K-means聚类算法实现图像分割，要求根据K-means的思想自己写代码。（分割图像可自由选择）
+
+  ----
+- 3、分别用Roberts,Sobel和拉普拉斯高斯算子对图像进行边缘检测(可使用系统函数)，比较三种算子处理的不同之处。
+
+  ----
+- 4、选择适当方法实现肺的分割，结果包括两部分：肺（白色显示）和背景（黑色显示）。  
+  ![20210428142537](http:cdn.ayusummer233.top/img/20210428142537.png)
+
+-----
+### 分别采用两种阈值选取方法实现图像分割
+
+----
+#### Otsu阈值
+- [参考链接](https://blog.csdn.net/jzwong/article/details/106954097)
+  
+  ---
+- 在之前固定阈值测试中，阈值是随便选的(如127)，要想知道阈值选取地好不好就只能不断尝试，所以这种方法在很多文献中都被称为经验阈值。
+- Otsu阈值法就提供了一种自动高效的二值化方法
+  ```python
+  import cv2
+  import os
+  import numpy as np
+
+  # 原图路径定义
+  file_path_rice_Ear = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                    '../../../resource/pic/riceEar/RiceEar1.png'))
+
+  # TRIANGLE阈值处理
+  src = cv2.imread(file_path_rice_Ear, cv2.IMREAD_GRAYSCALE)
+
+  triThe = 0
+  maxval = 255
+  triThe, dst_tri = cv2.threshold(src, triThe, maxval, cv2.THRESH_OTSU + cv2.THRESH_BINARY)
+  triThe1, dst_tri1 = cv2.threshold(src, triThe, maxval, cv2.THRESH_OTSU + cv2.THRESH_BINARY_INV)
+  print(triThe)
+  print(triThe1)
+
+  # 3张图片横向合并（便于对比显示）
+  tmp = np.hstack((src, dst_tri, dst_tri1))
+  cv2.imshow("OTSUThresholding", tmp)
+  cv2.waitKey(0)
+  cv2.destroyAllWindows()
+  ```
+  ![20210418224039](http:cdn.ayusummer233.top/img/20210418224039.png)
+
+----
+#### 最大熵阈值分割
+- [参考链接](https://blog.csdn.net/u011939755/article/details/88550948)
+
+  ---
+```python
+import numpy as np
+import cv2
+import os
+
+# 原图路径定义
+file_path_rice_Ear = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                  '../../../resource/pic/riceEar/RiceEar1.png'))
+
+
+def segment(img):
+    """
+    最大熵分割
+    :param img:
+    :return:
+    """
+
+    def calculate_current_entropy(hist, threshold):
+        data_hist = hist.copy()
+        background_sum = 0.
+        target_sum = 0.
+        for i in range(256):
+            if i < threshold:  # 累积背景
+                background_sum += data_hist[i]
+            else:  # 累积目标
+                target_sum += data_hist[i]
+        background_ent = 0.
+        target_ent = 0.
+        for i in range(256):
+            if i < threshold:  # 计算背景熵
+                if data_hist[i] == 0:
+                    continue
+                ratio1 = data_hist[i] / background_sum
+                background_ent -= ratio1 * np.log2(ratio1)
+            else:
+                if data_hist[i] == 0:
+                    continue
+                ratio2 = data_hist[i] / target_sum
+                target_ent -= ratio2 * np.log2(ratio2)
+        return target_ent + background_ent
+
+    def max_entropy_segmentation(img):
+        channels = [0]
+        hist_size = [256]
+        prange = [0, 256]
+        hist = cv2.calcHist(img, channels, None, hist_size, prange)
+        hist = np.reshape(hist, [-1])
+        max_ent = 0.
+        max_index = 0
+        for i in range(256):
+            cur_ent = calculate_current_entropy(hist, i)
+            if cur_ent > max_ent:
+                max_ent = cur_ent
+                max_index = i
+        ret, th = cv2.threshold(img, max_index, 255, cv2.THRESH_BINARY)
+        return th
+
+    img = max_entropy_segmentation(img)
+    return img
+
+
+if __name__ == "__main__":
+    img = cv2.imread(file_path_rice_Ear)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    res = segment(img)
+    cv2.imshow("max_entropy_segmentation", res)
+    cv2.waitKey()
+```
+- ![20210418224435](http:cdn.ayusummer233.top/img/20210418224435.png)
+
+----
