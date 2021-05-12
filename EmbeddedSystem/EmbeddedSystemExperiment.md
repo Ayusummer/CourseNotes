@@ -1,5 +1,9 @@
+- 嵌入式系统实验记录
+  - [参考链接@CSDN:社恐患者](https://blog.csdn.net/qq_44714521?spm=1001.2014.3001.5509)
+  ![20210512101352](http:cdn.ayusummer233.top/img/20210512101352.png)
+
 # 实验2-跑马灯
-- [参考链接](https://nosteglic.blog.csdn.net/article/details/108703814)
+- [参考链接](https://nosteglic.blog.csdn.net/article/details/108703814)[已失效]
 
 ---
 ## 实验要求
@@ -13,7 +17,7 @@
 
 ----
 # 实验3-按键输入实验
-- [参考链接](https://nosteglic.blog.csdn.net/article/details/108704149)
+- [参考链接](https://nosteglic.blog.csdn.net/article/details/108704149)[已失效]
 
 ----
 ## 实验要求
@@ -192,7 +196,7 @@ int main(void){
 ----
 # 实验5-外部中断实验
 - 第4次实验
-- [参考链接](https://nosteglic.blog.csdn.net/article/details/108704493)
+- [参考链接](https://nosteglic.blog.csdn.net/article/details/108704493)[已失效]
 
 ----
 ## 实验要求
@@ -279,7 +283,7 @@ void EXTI0_IRQHandler(void){
 ---
 # 实验6-独立看门狗实验
 - 第5次实验
-- [参考链接](https://nosteglic.blog.csdn.net/article/details/108704695)
+- [参考链接](https://nosteglic.blog.csdn.net/article/details/108704695)[已失效]
 
 ---
 ## 实验要求
@@ -342,7 +346,7 @@ void EXTI0_IRQHandler(void){
 ----
 # 实验8-基本定时器实验
 - 第6次实验
-- [参考链接](https://nosteglic.blog.csdn.net/article/details/108704934)
+- [参考链接](https://nosteglic.blog.csdn.net/article/details/108704934)[已失效]
 
 ----
 ## 实验内容
@@ -350,7 +354,7 @@ void EXTI0_IRQHandler(void){
 - KEY0、KEY1和KEY2工作于中断方式；
 - 用按键KEY0控制LED0启动闪烁，再按一次则LED0停止闪烁，熄灭；
 - 用按键KEY1控制LED1启动闪烁，再按一次则LED1停止闪烁，熄灭；
-- 如果LED0或LED1在闪烁，按KEY2点亮LED0或LED1，原来闪烁的停止，这时按KEY0或KEY1不发生任何改变；再按下KEY2后，恢复原来的状态，即闪烁的继续闪烁，熄灭的依然熄灭。
+- 如果LED0或LED1在闪烁，按KEY2会点亮LED0或LED1(原来闪烁的停止)，这时按KEY0或KEY1不发生任何改变；再按下KEY2后，恢复原来的状态，即闪烁的继续闪烁，熄灭的依然熄灭。
 
 
 ----
