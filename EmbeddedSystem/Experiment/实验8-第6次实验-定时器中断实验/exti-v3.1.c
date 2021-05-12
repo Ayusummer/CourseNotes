@@ -16,56 +16,54 @@
 //All rights reserved                                      
 ////////////////////////////////////////////////////////////////////////////////// 
 
-int press_key1=0;          // key1按键状态, 0->按下, 1->未按下
-int press_key0=0;          // key0按键状态, 0->按下, 1->未按下
-int press_key2=0;          // key2按键状态, 0->按下, 1->未按下
+int en_key0=0;          // key0按键有效性, 0->无效, 1->有效->LED0闪烁
+int en_key1=0;          // key1按键有效性, 0->无效, 1->有效
+int key2_lock_en=0;     // key2用于上锁,有效性, 0->无效, 1->有效->给lED和右键下键上锁,LED状态固定且右下键无法再控制LED状态
 
-int L0_old=1;                // LED0原来值->用于交替闪烁保持
-int L1_old=1;                // LED1原来值->用于交替闪烁保持
+int LED0_origin=1;      // LED0原来值(按下Key2前的值)->用于交替闪烁保持
+int LED1_origin=1;      // LED1原来值(按下Key2前的值)->用于交替闪烁保持
 
 // 外部中断4服务程序(KEY0, 右键)
 void EXTI4_IRQHandler(void){
-    delay_ms(100);                      // 消抖
-    if(KEY0==0 && (!press_key2)){       // 按KEY0且未按下KEY2
-        press_key0 = !press_key0;       // KET0按键状态改变
-    }
-    EXTI_ClearITPendingBit(EXTI_Line4); // 清除LINE4上的中断标志位  
+    delay_ms(100);                   // 消抖
+    if(KEY0==0 && (!key2_lock_en))   // 按KEY0且未按下KEY2
+        en_key0 = !en_key0;          // KEY0按键状态改变
+    EXTI_ClearITPendingBit(EXTI_Line4);    // 清除LINE4上的中断标志位  
 }
 
 
 // 外部中断3服务程序(KEY1, 下键)
 void EXTI3_IRQHandler(void){
-    delay_ms(100);                    // 消抖
-    if(KEY1==0&&(!press_key2)){       // 按KEY1且未按下KEY2
-        press_key1=!press_key1;       // KEY1按键状态改变
-    }
-     EXTI_ClearITPendingBit(EXTI_Line3);  //清除LINE3上的中断标志位  
+    delay_ms(100);                  // 消抖
+    if(KEY1==0&&(!key2_lock_en))    // 按KEY1且未按下KEY2
+        en_key1=!en_key1;           // KEY1按键状态改变
+    EXTI_ClearITPendingBit(EXTI_Line3);    // 清除LINE3上的中断标志位  
 }
 
 
 // 外部中断2服务程序(KEY2, 左键)
 void EXTI2_IRQHandler(void){
-    delay_ms(100);                    // 消抖
+    delay_ms(100);    // 消抖
 
     // 若KEY2按下
     if(KEY2 == 0){
-        press_key2 =! press_key2;     // KEY2按下的标志位反相
-
-        if(press_key2){     // 如果KEY2按下则给当前LED状态上锁
+        key2_lock_en =! key2_lock_en;     // KEY2按下的标志位反相
+        // 如果KEY2按下则给当前LED状态上锁
+        if(key2_lock_en){     
           // 将LED状态送给旧值
-          L0_old=LED0;    
-          L1_old=LED1;
+          LED0_origin=LED0;    
+          LED1_origin=LED1;
           // 如果LED在闪烁则将其置为常亮, 若熄灭则不变
-          if(press_key0) LED0=0;     // press_key0为1时，LED0正在闪烁，设置成常亮
-          if(press_key1) LED1=0;
+          if(en_key0) LED0=0;     // en_key0为1时，LED0正在闪烁，设置成常亮
+          if(en_key1) LED1=0;
           
           TIM_Cmd(TIM3,DISABLE);    // 失能TIM3
         }
-        // 如果KEY2松开(解锁)
+        // 如果KEY2上锁无效(解锁)
         else{
           // LED状态返回旧值
-          LED0=L0_old;             
-          LED1=L1_old;
+          LED0=LED0_origin;             
+          LED1=LED1_origin;
           TIM_Cmd(TIM3,ENABLE);     // 使能TIM3
         }    
     }         

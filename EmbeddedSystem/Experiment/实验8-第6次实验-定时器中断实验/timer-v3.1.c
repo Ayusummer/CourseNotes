@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-22 19:46:27
- * @LastEditTime: 2021-04-28 22:22:41
+ * @LastEditTime: 2021-05-12 15:49:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \JuniorLesson_SecondTerm\EmbeddedSystem\Experiment\实验8-第6次实验-定时器中断实验\timer-v3.0-lc.c
@@ -20,8 +20,8 @@
 //Copyright(C) 广州市星翼电子科技有限公司 2014-2024
 //All rights reserved									  
 ////////////////////////////////////////////////////////////////////////////////// 	 
-extern int press_key0;   // KEY0按键是否按下 : 1->按下
-extern int press_key1;   // KEY1是否按下 : 1->按下
+extern int en_key0;   // KEY0按键是否生效 : 1->生效->LED0闪烁
+extern int en_key1;   // KEY1是否生效 : 1->生效
 
 //通用定时器3中断初始化
 //定时器溢出时间计算方法:Tout=((arr+1)*(psc+1))/Ft us.
@@ -55,9 +55,9 @@ void TIM3_Int_Init(u16 arr,u16 psc){
 // 定时器3中断服务函数
 void TIM3_IRQHandler(void){
     if(TIM_GetITStatus(TIM3,TIM_IT_Update)==SET){	// 溢出中断
-        if(press_key1) LED1=!LED1; // LED1(绿灯)反相
+        if(en_key1) LED1=!LED1; // LED1(绿灯)反相
         else LED1=1;
-        if(press_key0) LED0=!LED0; // LED0(红灯)反相
+        if(en_key0) LED0=!LED0; // LED0(红灯)反相
         else LED0=1;
     }
     TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //清除中断标志位
