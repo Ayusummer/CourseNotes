@@ -27,7 +27,9 @@ tmp.md
 ## 用于重排c文件
 TMP.c
 
-
+# 个人文件
+CompilingTechnique/个人实验报告模板.md
+resource.md
 
 
 
@@ -48,3 +50,4 @@ bin-release/
 *.ipa
 *.apk
 *.jpg
+
