@@ -28,8 +28,10 @@ tmp.md
 TMP.c
 
 # 个人文件
-CompilingTechnique/个人实验报告模板.md
 resource.md
+CompilingTechnique/个人实验报告模板.md
+DigitalImageProcessing/个人数字图像处理实验报告模板.md
+
 
 
 
@@ -50,4 +52,3 @@ bin-release/
 *.ipa
 *.apk
 *.jpg
-
