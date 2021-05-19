@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-13 17:06:32
- * @LastEditTime: 2021-05-13 19:48:59
+ * @LastEditTime: 2021-05-19 21:09:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \JuniorLesson_SecondTerm\EmbeddedSystem\Experiment\实验4-第8次实验-串口(usart)实验\usart-v1.0-初次尝试.c
@@ -133,35 +133,35 @@ void uart_init(u32 bound){
 char C[12]={'1','2','3','a','4','5','6','b','7','8','9','c'}; 
 u8 index=0;
 void USART1_IRQHandler(void){
-	u8 Res;
+    u8 Res;
 
-#if SYSTEM_SUPPORT_OS 		
-	OSIntEnter();    
-#endif
+    #if SYSTEM_SUPPORT_OS         
+        OSIntEnter();    
+    #endif
 
-	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET){
-		Res =USART_ReceiveData(USART1);
-		USART_SendData(USART1,Res);
-		
-        if(Res==C[index])
-			index++;
-        else{
-			if(Res=='1') 
-			  index=1;
-		    else
-			  index=0;
-		}
+    if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET){
+        Res =USART_ReceiveData(USART1);
+        USART_SendData(USART1,Res);
         
-		if(index==12){ 
-			LED0=0;    
-			index=0;  
-		}
-		else LED0=1;
-	}
-		 
-#if SYSTEM_SUPPORT_OS 
-	OSIntExit();  											 
-#endif
+        if(Res==C[index])
+            index++;
+        else{
+            if(Res=='1') 
+              index=1;
+            else
+              index=0;
+        }
+        
+        if(index==12){ 
+            LED0=0;    
+            index=0;  
+        }
+        else LED0=1;
+    }
+         
+    #if SYSTEM_SUPPORT_OS 
+        OSIntExit();                                               
+    #endif
 } 
 
 #endif    
