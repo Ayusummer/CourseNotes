@@ -24,15 +24,15 @@
 //All rights reserved                                      
 ////////////////////////////////////////////////////////////////////////////////// 
 
-int isKEY0=0;			// 反映KEY0按键状态
+int isKEY0=0;            // 反映KEY0按键状态
 
 //外部中断4服务程序(KEY0, 右键-无功能)
 void EXTI4_IRQHandler(void){
-	delay_ms(100);	//消抖
-	if(KEY0==0){	
-		isKEY0=!isKEY0;
-	}		 
-	EXTI_ClearITPendingBit(EXTI_Line4);//清除LINE4上的中断标志位  
+    delay_ms(100);    //消抖
+    if(KEY0==0){    
+        isKEY0=!isKEY0;
+    }         
+    EXTI_ClearITPendingBit(EXTI_Line4);//清除LINE4上的中断标志位  
 }
 
 
@@ -56,7 +56,7 @@ void EXTI2_IRQHandler(void){
 
 // 外部中断3服务程序(KEY1, 下键-无操作)
 void EXTI3_IRQHandler(void){
-    delay_ms(100);        	// 消抖-10ms不太够,100ms差不多
+    delay_ms(100);            // 消抖-10ms不太够,100ms差不多
     if(KEY1==0){
         // do nothing
     }         

@@ -4,15 +4,15 @@
  * @LastEditTime: 2021-04-17 18:41:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \junior-lessons_second-terme:\ProgrammingLessons\EmbeddedSystem\ÊµÑé6 ¶ÀÁ¢¿´ÃÅ¹·ÊµÑé\HARDWARE\EXTI\exti.h
+ * @FilePath: \junior-lessons_second-terme:\ProgrammingLessons\EmbeddedSystem\Êµï¿½ï¿½6 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¹ï¿½Êµï¿½ï¿½\HARDWARE\EXTI\exti.h
  */
 #ifndef __EXTI_H
-#define __EXIT_H	 
-#include "sys.h"  	
+#define __EXIT_H     
+#include "sys.h"      
 
 extern int flag;    
 
-void EXTIX_Init(void);		 					    
+void EXTIX_Init(void);                                 
 #endif
 
 

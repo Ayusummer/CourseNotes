@@ -18,31 +18,31 @@ using namespace std;
 int count=0;
 int main()
 {
-	int i=39;
+    int i=39;
     int 89jjj,kkkoo;        /* test comment */
 
-	while(1)
-	{
-	count++;
-	cout<<"input num:";
-	int ii;
-	cin>>ii;
-	if(ii==i)
-	{
-		cout<<"Right!!!"<<endl;
-		cout<<"times:"<<count<<endl;
-	    break;
-	}
-	else
-	{
-		cout<<"wrong!"<<endl;
-		if(ii>i)
-			cout<<"too big";
-		else 
-			cout<<"too small!";
+    while(1)
+    {
+    count++;
+    cout<<"input num:";
+    int ii;
+    cin>>ii;
+    if(ii==i)
+    {
+        cout<<"Right!!!"<<endl;
+        cout<<"times:"<<count<<endl;
+        break;
+    }
+    else
+    {
+        cout<<"wrong!"<<endl;
+        if(ii>i)
+            cout<<"too big";
+        else 
+            cout<<"too small!";
     }
     system("pause");
 
-	}
-	return 0;
+    }
+    return 0;
 }

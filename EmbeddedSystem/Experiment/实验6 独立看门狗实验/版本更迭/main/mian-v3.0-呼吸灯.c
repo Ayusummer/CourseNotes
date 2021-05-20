@@ -25,9 +25,9 @@ typedef enum {FALSE = 0，TRUE = 1} bool；// bool宏定义
 
 /*声光报警*/
 void mywarning(void){
-	LED0=!LED0;
-	//BEEP=!BEEP;
-	delay_ms(100);
+    LED0=!LED0;
+    //BEEP=!BEEP;
+    delay_ms(100);
 }
 
 /* LED灯闪烁 */
@@ -51,37 +51,37 @@ bool led_off(int flag_breath){
 
 int main(void)
 { 
-	u16 prer=4;					// 分频系数，预分频系数:4*2^prer=64
-	u16 rlr=500*5;				// 计数重载值
-	u16 count=0;				// 计数变量
-	
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	// 设置系统中断优先级分组2
-	delay_init(168);			// 初始化延时函数
-	LED_Init();					// 初始化LED端口
-	KEY_Init();					// 初始化按键
-	BEEP_Init();				// 初始化蜂鸣器
-	EXTIX_Init();				// 初始化外部中断输入
+    u16 prer=4;                    // 分频系数，预分频系数:4*2^prer=64
+    u16 rlr=500*5;                // 计数重载值
+    u16 count=0;                // 计数变量
+    
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);    // 设置系统中断优先级分组2
+    delay_init(168);            // 初始化延时函数
+    LED_Init();                    // 初始化LED端口
+    KEY_Init();                    // 初始化按键
+    BEEP_Init();                // 初始化蜂鸣器
+    EXTIX_Init();                // 初始化外部中断输入
 
-	delay_ms(200);				// 延时200ms 
-	IWDG_Init(prer,rlr);		// 分频系数为64,重载值为500时,溢出时间为1s
-								// 此实验设计溢出时间为1*5=5s
-								
-	LED1=0;						// 先点亮绿灯
-	
+    delay_ms(200);                // 延时200ms 
+    IWDG_Init(prer,rlr);        // 分频系数为64,重载值为500时,溢出时间为1s
+                                // 此实验设计溢出时间为1*5=5s
+                                
+    LED1=0;                        // 先点亮绿灯
+    
     /*
-	while(1){
-		count++;
-		if(!flag){				//当没有喂狗
-			if(count>=380){		//程序大约还剩2s运行结束
-				mywarning();	//喂狗报警提示
-			}
-		}
-		else{					//当喂狗了
-			count=0;			//重新计数
-			flag=0;				//清除喂狗标志
-		}
-		delay_ms(10);			//小延时
-	};
+    while(1){
+        count++;
+        if(!flag){                //当没有喂狗
+            if(count>=380){        //程序大约还剩2s运行结束
+                mywarning();    //喂狗报警提示
+            }
+        }
+        else{                    //当喂狗了
+            count=0;            //重新计数
+            flag=0;                //清除喂狗标志
+        }
+        delay_ms(10);            //小延时
+    };
     */
 while(1){
     int flag_breath=0;

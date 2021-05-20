@@ -437,7 +437,7 @@ void TIM2_CH3_Cap_Init(u32 arr, u16 psc){
     NVIC_InitTypeDef  NVIC_InitStructure;
     //TIM2时钟    
 
-    //GPIO时钟	
+    //GPIO时钟    
     
     GPIO_InitStructure.GPIO_Pin =                  ; 
     GPIO_InitStructure.GPIO_Mode =                ;

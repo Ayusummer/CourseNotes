@@ -6,49 +6,49 @@
 #include "key.h"
 
 
-//ALIENTEK 探索者STM32F407开发板 实验4
-//串口通信实验 -库函数版本
-//技术支持：www.openedv.com
-//淘宝店铺：http://eboard.taobao.com
-//广州市星翼电子科技有限公司  
-//作者：正点原子 @ALIENTEK
+//ALIENTEK 探锟斤拷锟斤拷STM32F407锟斤拷锟斤拷锟斤拷 实锟斤拷4
+//锟斤拷锟斤拷通锟斤拷实锟斤拷 -锟解函锟斤拷锟芥本
+//锟斤拷锟斤拷支锟街ｏ拷www.openedv.com
+//锟皆憋拷锟斤拷锟教ｏ拷http://eboard.taobao.com
+//锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟接科硷拷锟斤拷锟睫癸拷司  
+//锟斤拷锟竭ｏ拷锟斤拷锟斤拷原锟斤拷 @ALIENTEK
 
 
 int main(void)
 { 
  
-	u8 t;
-	u8 len;	
-	u16 times=0;  
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
-	delay_init(168);		//延时初始化 
-	uart_init(115200);	//串口初始化波特率为115200
-	LED_Init();		  		//初始化与LED连接的硬件接口  
-	while(1)
-	{
-		if(USART_RX_STA&0x8000)
-		{					   
-			len=USART_RX_STA&0x3fff;//得到此次接收到的数据长度
-			printf("\r\n您发送的消息为:\r\n");
-			for(t=0;t<len;t++)
-			{
-				USART_SendData(USART1, USART_RX_BUF[t]);         //向串口1发送数据
-				while(USART_GetFlagStatus(USART1,USART_FLAG_TC)!=SET);//等待发送结束
-			}
-			printf("\r\n\r\n");//插入换行
-			USART_RX_STA=0;
-		}else
-		{
-			times++;
-			if(times%5000==0)
-			{
-				printf("\r\nALIENTEK 探索者STM32F407开发板 串口实验\r\n");
-				printf("正点原子@ALIENTEK\r\n\r\n\r\n");
-			}
-			if(times%200==0)printf("请输入数据,以回车键结束\r\n");  
-			if(times%30==0)LED0=!LED0;//闪烁LED,提示系统正在运行.
-			delay_ms(10);   
-		}
-	}
+    u8 t;
+    u8 len;    
+    u16 times=0;  
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//锟斤拷锟斤拷系统锟叫讹拷锟斤拷锟饺硷拷锟斤拷锟斤拷2
+    delay_init(168);        //锟斤拷时锟斤拷始锟斤拷 
+    uart_init(115200);    //锟斤拷锟节筹拷始锟斤拷锟斤拷锟斤拷锟斤拷为115200
+    LED_Init();                  //锟斤拷始锟斤拷锟斤拷LED锟斤拷锟接碉拷硬锟斤拷锟接匡拷  
+    while(1)
+    {
+        if(USART_RX_STA&0x8000)
+        {                       
+            len=USART_RX_STA&0x3fff;//锟矫碉拷锟剿次斤拷锟秸碉拷锟斤拷锟斤拷锟捷筹拷锟斤拷
+            printf("\r\n锟斤拷锟斤拷锟酵碉拷锟斤拷息为:\r\n");
+            for(t=0;t<len;t++)
+            {
+                USART_SendData(USART1, USART_RX_BUF[t]);         //锟津串匡拷1锟斤拷锟斤拷锟斤拷锟斤拷
+                while(USART_GetFlagStatus(USART1,USART_FLAG_TC)!=SET);//锟饺达拷锟斤拷锟酵斤拷锟斤拷
+            }
+            printf("\r\n\r\n");//锟斤拷锟诫换锟斤拷
+            USART_RX_STA=0;
+        }else
+        {
+            times++;
+            if(times%5000==0)
+            {
+                printf("\r\nALIENTEK 探锟斤拷锟斤拷STM32F407锟斤拷锟斤拷锟斤拷 锟斤拷锟斤拷实锟斤拷\r\n");
+                printf("锟斤拷锟斤拷原锟斤拷@ALIENTEK\r\n\r\n\r\n");
+            }
+            if(times%200==0)printf("锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷,锟皆回筹拷锟斤拷锟斤拷锟斤拷\r\n");  
+            if(times%30==0)LED0=!LED0;//锟斤拷烁LED,锟斤拷示系统锟斤拷锟斤拷锟斤拷锟斤拷.
+            delay_ms(10);   
+        }
+    }
 }
 

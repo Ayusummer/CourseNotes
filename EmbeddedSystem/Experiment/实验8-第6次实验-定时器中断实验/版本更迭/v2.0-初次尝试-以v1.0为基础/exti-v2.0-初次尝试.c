@@ -14,12 +14,12 @@
 #include "exti.h"
 
 
-int isKEY2=0;		// 反映KEY2按键状态
-int isKEY1=0;		// 反映KEY1按键状态
-int isKEY0=0;		// 反映KEY0按键状态
+int isKEY2=0;        // 反映KEY2按键状态
+int isKEY1=0;        // 反映KEY1按键状态
+int isKEY0=0;        // 反映KEY0按键状态
 
-int oldLED0=1;		// 反映LED0旧值
-int oldLED1=1;		// 反映LED1旧值
+int oldLED0=1;        // 反映LED0旧值
+int oldLED1=1;        // 反映LED1旧值
 
 /************************************/
 int status0 = 0;    // LED0的状态: 0->熄灭, 1->闪烁
@@ -28,11 +28,11 @@ int status1 = 0;    // LED1的状态: 0->熄灭, 1->闪烁
 
 //外部中断4服务程序(KEY0 右键)
 void EXTI4_IRQHandler(void){
-	delay_ms(100);	//消抖
-	if(KEY0 == 0 && (!isKEY2) ){
-		isKEY0=!isKEY0;
-	}
-	 EXTI_ClearITPendingBit(EXTI_Line4);//清除LINE4上的中断标志位  
+    delay_ms(100);    //消抖
+    if(KEY0 == 0 && (!isKEY2) ){
+        isKEY0=!isKEY0;
+    }
+     EXTI_ClearITPendingBit(EXTI_Line4);//清除LINE4上的中断标志位  
 }
 
 
@@ -40,49 +40,49 @@ void EXTI4_IRQHandler(void){
 
 //外部中断2服务程序
 void EXTI2_IRQHandler(void){
-	delay_ms(100);	//消抖
-	if(KEY2 == 0){
-		isKEY2=!isKEY2;
-		if(isKEY2){
-			oldLED0=LED0;
-			oldLED1=LED1;
-			
-			/*若想谁闪加锁后让谁常亮*/
-//			if(isKEY0) LED0=0;
-//			else LED0=1;
-//			if(isKEY1) LED1=0;
-//			else LED1=1;
-			
-			LED0=0;
-			LED1=0;
-			
-//			TIM_ITConfig(TIM3,TIM_IT_Update, DISABLE); 
-			TIM_Cmd(TIM3,DISABLE);
-		}
-		else{
-//			TIM_ITConfig(TIM3,TIM_IT_Update, ENABLE); 
-			TIM_Cmd(TIM3,ENABLE);
-			LED0=oldLED0;
-			LED1=oldLED1;
-		}
-		
-	}		 
-	 EXTI_ClearITPendingBit(EXTI_Line2);//清除LINE2上的中断标志位 
+    delay_ms(100);    //消抖
+    if(KEY2 == 0){
+        isKEY2=!isKEY2;
+        if(isKEY2){
+            oldLED0=LED0;
+            oldLED1=LED1;
+            
+            /*若想谁闪加锁后让谁常亮*/
+//            if(isKEY0) LED0=0;
+//            else LED0=1;
+//            if(isKEY1) LED1=0;
+//            else LED1=1;
+            
+            LED0=0;
+            LED1=0;
+            
+//            TIM_ITConfig(TIM3,TIM_IT_Update, DISABLE); 
+            TIM_Cmd(TIM3,DISABLE);
+        }
+        else{
+//            TIM_ITConfig(TIM3,TIM_IT_Update, ENABLE); 
+            TIM_Cmd(TIM3,ENABLE);
+            LED0=oldLED0;
+            LED1=oldLED1;
+        }
+        
+    }         
+     EXTI_ClearITPendingBit(EXTI_Line2);//清除LINE2上的中断标志位 
 }
 
 //外部中断3服务程序
 void EXTI3_IRQHandler(void)
 {
-	delay_ms(10);	//消抖
-	if(KEY1==0&&(!isKEY2)){
-		isKEY1=!isKEY1;
-	}
-	 EXTI_ClearITPendingBit(EXTI_Line3);//清除LINE3上的中断标志位  
+    delay_ms(10);    //消抖
+    if(KEY1==0&&(!isKEY2)){
+        isKEY1=!isKEY1;
+    }
+     EXTI_ClearITPendingBit(EXTI_Line3);//清除LINE3上的中断标志位  
 }
 
 
 
-	   
+       
 //外部中断初始化程序
 //初始化PE2~4,PA0为中断输入.
 void EXTIX_Init(void)

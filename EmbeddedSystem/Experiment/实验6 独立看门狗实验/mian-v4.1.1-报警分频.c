@@ -40,7 +40,7 @@ int main(void){
     u16 prer=4;           // 分频系数，预分频系数:4*2^prer=64         
     u16 rlr=500*5;        // 计数重载值       
     u16 count=0;          // 计数变量-用于计算喂狗超时
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);     	// 设置系统中断优先级分组2
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);         // 设置系统中断优先级分组2
     delay_init(168);      // 初始化延时函数
     LED_Init();           // 初始化LED端口     
     KEY_Init();           // 初始化按键  

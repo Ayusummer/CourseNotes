@@ -218,65 +218,65 @@ int main(void){
 ## 实验程序
 - 中断服务程序
 ```C
-int width=0;	// 滑动窗口宽度,用于判断LED0是否到了需要改变状态的时候
+int width=0;    // 滑动窗口宽度,用于判断LED0是否到了需要改变状态的时候
 
 // 外部中断4服务程序(KEY0,右键)
 void EXTI4_IRQHandler(void){
-	delay_ms(100);      // 消抖
-	if(KEY0==0){
-        LED1 = !LED1;	// 测试语句,KEY0按下后LED1反相,用于实测时判断是否检测到了KEY0按下
-        			 
-		if(width == 0 || width == 1) width++;   // 滑窗扩大1格,进入下个状态
-		else {                          // width > 1
+    delay_ms(100);      // 消抖
+    if(KEY0==0){
+        LED1 = !LED1;    // 测试语句,KEY0按下后LED1反相,用于实测时判断是否检测到了KEY0按下
+                     
+        if(width == 0 || width == 1) width++;   // 滑窗扩大1格,进入下个状态
+        else {                          // width > 1
             if(width == 2);             // width == 2 时再按KEY0滑窗宽度不在增加
             else width=1;               // width > 2  时再按KEY0则滑窗宽度置1
         }
-	}		 
-	EXTI_ClearITPendingBit(EXTI_Line4);	// 清除LINE4上的中断标志位  
+    }         
+    EXTI_ClearITPendingBit(EXTI_Line4);    // 清除LINE4上的中断标志位  
 }
 
 
 // 外部中断3服务程序(KEY1,下键)
 void EXTI3_IRQHandler(void){
-	delay_ms(100);	    // 消抖
-	if(KEY1==0){
+    delay_ms(100);        // 消抖
+    if(KEY1==0){
         LED1 = !LED1;   // 测试语句,KEY1按下后LED1反相,用于实测时判断是否检测到了KEY1按下
 
-		if(width == 2 || width == 3) width++;   // 只有2,3两种状态(滑窗宽度)下按下KEY1(下键)才会使滑窗宽度增加
-		else width=0;   // 其他情况下按下KEY1(下键)滑窗清零
-	}		 
-	EXTI_ClearITPendingBit(EXTI_Line3);         // 清除LINE3上的中断标志位  
+        if(width == 2 || width == 3) width++;   // 只有2,3两种状态(滑窗宽度)下按下KEY1(下键)才会使滑窗宽度增加
+        else width=0;   // 其他情况下按下KEY1(下键)滑窗清零
+    }         
+    EXTI_ClearITPendingBit(EXTI_Line3);         // 清除LINE3上的中断标志位  
 }
 
 
 // 外部中断2服务程序(KEY2,左键)
 void EXTI2_IRQHandler(void){
-	delay_ms(100);	    // 消抖
-	if(KEY2==0){	
+    delay_ms(100);        // 消抖
+    if(KEY2==0){    
         LED1 = !LED1;   // 测试语句,KEY2(左键)按下后LED1反相,用于实测时判断是否检测到了KEY2(左键)按下
         // 当滑窗宽度为4,5,6时按下左键(KEY2)才会使滑窗宽度增加
-		if(width == 4 || width == 5 || width == 6 ) width++;    
-		else width=0;  // 否则滑窗清零
-	}	 
-	EXTI_ClearITPendingBit(EXTI_Line2); // 清除LINE2上的中断标志位 
+        if(width == 4 || width == 5 || width == 6 ) width++;    
+        else width=0;  // 否则滑窗清零
+    }     
+    EXTI_ClearITPendingBit(EXTI_Line2); // 清除LINE2上的中断标志位 
 }
 
 
 // 外部中断0服务程序(WK_UP, 上键)
 void EXTI0_IRQHandler(void){
-	delay_ms(100);	    // 消抖
+    delay_ms(100);        // 消抖
     if(WK_UP==1){       
         LED1 = !LED1;   // 测试语句,WK_UP(上键)按下后LED1反相,用于实测时判断是否检测到了WK_UP(上键)按下
         // 只有当滑窗宽度为7时按下上键(WK_UP)才能滑窗宽度增加,状态达到终态,LED0反相
-		if(width==7){
+        if(width==7){
             width++;
             LED0=!LED0;
         }
         // 其它状态下按下上键只会导致滑窗清零
-		else width=0; 
-	}		
-	EXTI_ClearITPendingBit(EXTI_Line0); 	// 清除LINE0上的中断标志位 
-}	
+        else width=0; 
+    }        
+    EXTI_ClearITPendingBit(EXTI_Line0);     // 清除LINE0上的中断标志位 
+}    
 ```
 
 
@@ -358,7 +358,7 @@ void EXTI0_IRQHandler(void){
 ## 注意事项
 - 改变闪烁频率
   ```
-  TIM3_Int_Init(arr-1,psc-1);	// 改变计数值arr和分频系数psc
+  TIM3_Int_Init(arr-1,psc-1);    // 改变计数值arr和分频系数psc
   ```
 
   ----
@@ -380,9 +380,9 @@ void EXTI0_IRQHandler(void){
 - 1. 实现用正弦波的数值控制LED0闪烁；
 - 2. 同时将该控制量送串口输出正弦波波形；
 - 3. 用KEY0中断方式控制启动和停止。
-	- （1）按下KEY0，LED0开始闪烁，串口输出波形。
-	- （2）再次按下KEY0，LED0和输出波形都暂停；
-	- （3）第三次按KEY0，LED0和输出波形都能恢复，并和原来的状态衔接上，即保持闪烁的完整性和波形的完整性。
+    - （1）按下KEY0，LED0开始闪烁，串口输出波形。
+    - （2）再次按下KEY0，LED0和输出波形都暂停；
+    - （3）第三次按KEY0，LED0和输出波形都能恢复，并和原来的状态衔接上，即保持闪烁的完整性和波形的完整性。
 - 4. 特别重要： 中途重启计算机或做完实验关机时，必须下载一个其他程序到实验板中，比如实验二跑马灯；或者运行桌面的FlyMCU，点击清除芯片功能。否则重启计算机后鼠标可能工作不正常。
 
 
@@ -411,3 +411,32 @@ void EXTI0_IRQHandler(void){
 ### #if,#endif
 - #if的后面接的是表达式，条件语句
 - #if的具体作用是，如果满足条件语句，则**编译器会把#if与#endif之间的代码编译进去。此处只编译，不执行**。
+
+
+----
+# 实验18-ADC实验
+- 第9次实验
+
+---
+## 实验内容
+ - 在开发板的LCD上画出电压的波形。
+ - 注意：
+   - 1.波形反映的是电压的波动，比例可以自己决定，但要波动看上去比较明显；
+   - 2.开始的时候波形是向右延伸，而满屏后应该让图形滚动起来。
+
+----
+## 函数用法概览
+- ```C
+  // 画线
+  // x1,y1 : 起点坐标
+  // x2,y2 : 终点坐标  
+  void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)
+  ```
+- ```C
+  // 显示字符串
+  // x,y : 起点坐标
+  // width,height : 区域大小  
+  // size : 字体大小
+  // *p : 字符串起始地址          
+  void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)
+  ```

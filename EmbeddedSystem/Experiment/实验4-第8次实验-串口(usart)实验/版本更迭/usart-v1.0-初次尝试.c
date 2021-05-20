@@ -137,19 +137,19 @@ void USART1_IRQHandler(void){
 #if SYSTEM_SUPPORT_OS         //如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
     OSIntEnter();    
 #endif
-	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET){	//接收中断(接收到的数据必须是0x0d 0x0a结尾)
-		Res =USART_ReceiveData(USART1);//(USART1->DR);		//读取接收到的数据
-		USART_SendData(USART1,Res);
-		if(Res==USART_RX_BUF[pos])
-			pos++;
-		else
-			pos=0;
-		if(pos==12){
-			LED0=0;
-			pos=0;
-		}
-		else
-			LED0=1;
+    if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET){    //接收中断(接收到的数据必须是0x0d 0x0a结尾)
+        Res =USART_ReceiveData(USART1);//(USART1->DR);        //读取接收到的数据
+        USART_SendData(USART1,Res);
+        if(Res==USART_RX_BUF[pos])
+            pos++;
+        else
+            pos=0;
+        if(pos==12){
+            LED0=0;
+            pos=0;
+        }
+        else
+            LED0=1;
   } 
 #if SYSTEM_SUPPORT_OS     //如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
     OSIntExit();                                               

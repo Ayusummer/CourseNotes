@@ -31,11 +31,11 @@ int main(void){
     EXTIX_Init();
     TIM14_PWM_Init(500-1,84-1);        // a84M/84=1Mhz的计数频率,重装载值500，所以PWM频率为 1M/500=2Khz.     
     
-	int i=0,x=1;
+    int i=0,x=1;
     u16 led0pwmval=0; 
-	   
-   	while(1){ 
-        delay_ms(100);	// 消抖     
+       
+       while(1){ 
+        delay_ms(100);    // 消抖     
         if(!Flag){
             printf("       ");
             if(x>=16){
@@ -43,16 +43,16 @@ int main(void){
                 printf("\r\n");
             }
             else{
-                for(i=0; i<led0pwmval/5;i++)	printf(" "); 
+                for(i=0; i<led0pwmval/5;i++)    printf(" "); 
                 printf("*\r\n");
             }
-			
-            if(x<16)	x++;
-            else x=1; 	// 1-16
+            
+            if(x<16)    x++;
+            else x=1;     // 1-16
 
             led0pwmval=300*sin(2*x*PI/64);
-			
+            
         TIM_SetCompare1(TIM14, led0pwmval);    // 修改比较值，修改占空比
-    	}
-	}	
+        }
+    }    
 }

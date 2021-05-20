@@ -28,12 +28,12 @@ int flag=0;     // 喂狗标志
 
 // 外部中断3服务程序(KEY1, 下键-喂狗)
 void EXTI3_IRQHandler(void){
-    delay_ms(100);        	// 消抖-10ms不太够,100ms差不多
+    delay_ms(100);            // 消抖-10ms不太够,100ms差不多
     if(KEY1==0){
-        IWDG_Feed();    	// 喂狗
-        BEEP=0;         	// 解除蜂鸣器报警
-        LED0=1;         	// 解除LED0闪烁
-        flag=1;         	// 喂狗标记置1-表示已喂狗
+        IWDG_Feed();        // 喂狗
+        BEEP=0;             // 解除蜂鸣器报警
+        LED0=1;             // 解除LED0闪烁
+        flag=1;             // 喂狗标记置1-表示已喂狗
     }         
     EXTI_ClearITPendingBit(EXTI_Line3);  // 清除LINE3上的中断标志位  
 }

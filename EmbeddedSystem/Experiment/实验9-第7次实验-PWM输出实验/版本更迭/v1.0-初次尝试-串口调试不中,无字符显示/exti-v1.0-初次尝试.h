@@ -22,7 +22,7 @@
 //All rights reserved                                      
 //////////////////////////////////////////////////////////////////////////////////      
 
-extern int isKEY0;	    // 外部定义isKEY0, 反映KEY0按键状态
+extern int isKEY0;        // 外部定义isKEY0, 反映KEY0按键状态
 
 void EXTIX_Init(void);      //外部中断初始化                                 
 #endif
