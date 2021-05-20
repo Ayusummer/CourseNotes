@@ -1,10 +1,16 @@
 /*
- * @Author: nosteglic
- * @Date: 2021-05-19 22:18:23
- * @LastEditTime: 2021-05-20 16:21:09
+ * @Author: your name
+ * @Date: 2021-05-20 15:22:02
+ * @LastEditTime: 2021-05-20 16:44:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \JuniorLesson_SecondTerm\EmbeddedSystem\Experiment\实验18-第9次实验-ADC实验\main-v1-初次尝试.c
+ * @FilePath: \JuniorLesson_SecondTerm\EmbeddedSystem\Experiment\实验18-第9次实验-ADC实验\main-v1.1-修改清屏函数.c
+ * CHANGELOG : 
+ * 修改了起始点坐标,将其横坐标修改为35,与y轴箭头右端对其,以防止清屏函数清除掉y轴箭头
+ * 修改了y轴标注的显示位置,防止其被清屏函数清掉
+ * 修改了清屏函数
+ * 增加了一堆宏定义及其他预定义
+ 
  */
 #include "sys.h"
 #include "delay.h"
@@ -21,41 +27,58 @@
 //广州市星翼电子科技有限公司  
 //作者：正点原子 @ALIENTEK
 
-#define len 20
-#define minus 30
+#define front_axisX 30      // x轴与边界的距离(x轴起点)
+#define length_axis_x  400  // x轴长度为40mm
+int tail_axisX = length_axis_x + front_axisX;   // x轴尾部横坐标
 
-u16 buffer[len];
-static int pos=0;
-u16 x1,x2,y1,y2;
+#define length_axis_y  200  // y轴长度为20mm
+
+
+
+#define num_point_per_circle 20      // 每轮周期中的点的数目
+int distance_between_two_point = length_axis_x / num_point_per_circle;  // 两点间距
+
+#define distance_plumb_arrow 5          // 箭头与坐标轴的铅垂线距离
+#define distance_horizontal_arrow 15    // 箭头与坐标轴端点水平距离
+
+
+#define minus 30    // 
+
+#define x_begin_point 35                // 起始点横坐标
+#define y_begin_point lcddev.height/2   // 起始点纵坐标
+
+u16 buffer[num_point_per_circle];   // 电压缓冲数组
+static int pos=0;   // 电压缓冲数组下标
+u16 x1,x2,y1,y2;    // 定义横纵坐标
 
 /*滚动，双标记位实现循环数组*/
 void draw_roll(u16 buffer[],u16 temp){
     int i;
     int flag=0,round=0;
-    pos=pos%len;
+    pos=pos%num_point_per_circle;
     buffer[pos]=temp;
     pos++;
     x1=30;
     y1=buffer[0];
-    if(pos==len){
+    if(pos==num_point_per_circle){
         i=0;
         round=1;
     }
     else
         i=pos;
     while(!flag||!round){//其实只要!flag就行
-        x2=x1+400/len;
+        x2=x1+400/num_point_per_circle;
         y2=buffer[i];
         LCD_DrawLine(x1,y1,x2,y2);
         x1=x2;
         y1=y2;
-        if(i==len-1){
+        if(i==num_point_per_circle-1){
             round=1;
             i=0;
         }
         else
             i++;
-        if(round&&(i==pos%len))
+        if(round&&(i==pos%num_point_per_circle))
             flag=1;
     }//while(!flag||!round)
 }
@@ -64,8 +87,9 @@ void draw_roll(u16 buffer[],u16 temp){
    //在指定区域内填充单个颜色
   LCD_Fill(填充矩形对角坐标, 要填充的颜色);*/
 void clean_lcd(void){
-    LCD_Fill(31, lcddev.height/2-80, 430, lcddev.height/2+80, WHITE);    
+    LCD_Fill(35, lcddev.height/2-210, 430, lcddev.height/2+80, WHITE);    
 }
+
 
 
 int main(void){ 
@@ -84,20 +108,30 @@ int main(void){
 
     /*在屏幕正中偏下方显示电压值*/
     LCD_ShowString(lcddev.width*2/5, lcddev.height*9/10, 200,16,16,"ADC=0.000V");
-    
+
+    int up_axisY =  lcddev.height/2 - length_axis_y/2;  // y轴上端
+    int down_axisY = lcddev.height/2 + length_axis_y/2;  // y轴下端
     /* x，y轴显示
        LCD_DrawLine(x1, y1, x2, y2)   // 画线(起点坐标,终点坐标) */
-    LCD_DrawLine(30,  lcddev.height/2+100, 30,     lcddev.height/2-100);        // y轴
-    LCD_DrawLine(30,  lcddev.height/2+100, 430,    lcddev.height/2+100);        // x轴
-    LCD_DrawLine(30,  lcddev.height/2-100, 30-5,   lcddev.height/2-100+15);     // y轴箭头左半(y轴顶点->箭头尾)
-    LCD_DrawLine(30,  lcddev.height/2-100, 30+5,   lcddev.height/2-100+15);     // y轴箭头右半(y轴顶点->箭头尾)
-    LCD_DrawLine(430, lcddev.height/2+100, 430-15, lcddev.height/2+100-5);      // x轴箭头上半(x轴顶点->箭头尾)
-    LCD_DrawLine(430, lcddev.height/2+100, 430-15, lcddev.height/2+100+5);      // x轴箭头下半(x轴顶点->箭头尾)
-    LCD_ShowString(30+5+5,lcddev.height/2-100,200,16,16,"VOL");     // y轴标注    
-    LCD_ShowString(430,lcddev.height/2+100+5,200,16,16,"TIME");     // x轴标注
+    LCD_DrawLine( front_axisX,  down_axisY, front_axisX, up_axisY);      // y轴
+    LCD_DrawLine( front_axisX,  down_axisY, tail_axisX,  down_axisY);    // x轴
+    // y轴箭头左半(y轴顶点->箭头尾)
+    LCD_DrawLine( front_axisX,  up_axisY, 
+                  front_axisX - distance_plumb_arrow, up_axisY + distance_horizontal_arrow);    
+    // y轴箭头右半(y轴顶点->箭头尾)
+    LCD_DrawLine( front_axisX,  up_axisY, 
+                  front_axisX + distance_plumb_arrow, up_axisY + distance_horizontal_arrow);     
+    // x轴箭头上半(x轴顶点->箭头尾)
+    LCD_DrawLine( tail_axisX, down_axisY, 
+                  tail_axisX - distance_horizontal_arrow, down_axisY - distance_plumb_arrow);   
+    // x轴箭头下半(x轴顶点->箭头尾)   
+    LCD_DrawLine( tail_axisX, down_axisY, 
+                  tail_axisX - distance_horizontal_arrow, down_axisY + distance_plumb_arrow);      
+    LCD_ShowString(0,          up_axisY,     200,16, 16, "VOL");     // y轴标注 VOL   
+    LCD_ShowString(tail_axisX, down_axisY+5, 200,16, 16, "TIME");    // x轴标注 TIME
     
     /*初始化第一个点*/
-    x1 = 30;
+    x1 = 35;
     y1 = lcddev.height/2;
     delay_ms(500);
     
@@ -116,8 +150,8 @@ int main(void){
         LCD_ShowxNum(47+lcddev.width*2/5, lcddev.height*9/10,temp, 3, 16, 0x80);    
         
         // 第一轮
-        if(count<len){                            
-            x2 = x1 + 400/len;                       // 每隔400/len画一个像素点
+        if(count<num_point_per_circle){                            
+            x2 = x1 + 400/num_point_per_circle;                       // 每隔 400/num_point_per_circle 画一个像素点
             y2=(minus-temp)*5+lcddev.height/2;       // 放大电压差异
             buffer[pos]=y2;                          // 电压缓冲区
             pos++;
@@ -127,13 +161,10 @@ int main(void){
             y1=y2;
         }
         
-        if(count==len){                            //不是第一轮
+        if(count==num_point_per_circle){                            //不是第一轮
             clean_lcd();                          //清屏
             temp=(minus-temp)*5+lcddev.height/2;  //放大电压差异
             draw_roll(buffer,temp);               //滚动
         }
     }//while(1)
 }
-
-
-

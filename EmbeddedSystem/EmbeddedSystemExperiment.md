@@ -430,13 +430,48 @@ void EXTI0_IRQHandler(void){
   // 画线
   // x1,y1 : 起点坐标
   // x2,y2 : 终点坐标  
-  void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)
+  void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2);
   ```
+  - 实际视觉上,变量中的10对应实验板LCD屏上约1mm
+
+
+  ----
 - ```C
   // 显示字符串
   // x,y : 起点坐标
   // width,height : 区域大小  
   // size : 字体大小
   // *p : 字符串起始地址          
-  void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)
+  void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p);
   ```
+
+  ----
+- ```C
+  //显示数字,高位为0,还是显示
+  //x,y:起点坐标
+  //num:数值(0~999999999);     
+  //len:长度(即要显示的位数)
+  //size:字体大小
+  //mode:
+  //[7]:0,不填充;1,填充0.
+  //[6:1]:保留
+  //[0]:0,非叠加显示;1,叠加显示.
+  void LCD_ShowxNum(u16 x,u16 y,u32 num,u8 len,u8 size,u8 mode);
+  ```
+
+  ---
+- ```C
+  //在指定区域内填充单个颜色
+  //(sx,sy),(ex,ey):填充矩形对角坐标,区域大小为:(ex-sx+1)*(ey-sy+1)   
+  //color:要填充的颜色
+  void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color);
+  ```
+
+---
+## 调试记录
+
+---
+### STM32常见错误error: #268: declaration may not appear after executable statement in block
+- 声明不能在可执行语句后出现。表示有变量在函数后面声明，应该改为在函数开头声明变量。
+- 因为 keil 默认编译标准是C89，解决方法：  
+  ![20210520164727](http:cdn.ayusummer233.top/img/20210520164727.png)

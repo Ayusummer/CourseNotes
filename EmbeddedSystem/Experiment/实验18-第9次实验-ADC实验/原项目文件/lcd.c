@@ -78,8 +78,8 @@
 //////////////////////////////////////////////////////////////////////////////////     
 
 //LCD的画笔颜色和背景色       
-u16 POINT_COLOR=0x0000;    //画笔颜色
-u16 BACK_COLOR=0xFFFF;  //背景色 
+u16 POINT_COLOR=0x0000;    	// 画笔颜色
+u16 BACK_COLOR=0xFFFF;  	// 背景色 
   
 //管理LCD重要参数
 //默认为竖屏
@@ -92,6 +92,7 @@ void LCD_WR_REG(vu16 regval)
     regval=regval;        //使用-O2优化的时候,必须插入的延时
     LCD->LCD_REG=regval;//写入要写的寄存器序号     
 }
+
 //写LCD数据
 //data:要写入的值
 void LCD_WR_DATA(vu16 data)
@@ -99,6 +100,7 @@ void LCD_WR_DATA(vu16 data)
     data=data;            //使用-O2优化的时候,必须插入的延时
     LCD->LCD_RAM=data;         
 }
+
 //读LCD数据
 //返回值:读到的值
 u16 LCD_RD_DATA(void)
@@ -107,6 +109,7 @@ u16 LCD_RD_DATA(void)
     ram=LCD->LCD_RAM;    
     return ram;     
 }                       
+
 //写寄存器
 //LCD_Reg:寄存器地址
 //LCD_RegValue:要写入的数据
@@ -115,6 +118,7 @@ void LCD_WriteReg(u16 LCD_Reg,u16 LCD_RegValue)
     LCD->LCD_REG = LCD_Reg;        //写入要写的寄存器序号     
     LCD->LCD_RAM = LCD_RegValue;//写入数据                 
 }       
+
 //读寄存器
 //LCD_Reg:寄存器地址
 //返回值:读到的数据
@@ -124,17 +128,20 @@ u16 LCD_ReadReg(u16 LCD_Reg)
     delay_us(5);          
     return LCD_RD_DATA();        //返回读到的值
 }   
+
 //开始写GRAM
 void LCD_WriteRAM_Prepare(void)
 {
      LCD->LCD_REG=lcddev.wramcmd;      
 }     
+
 //LCD写GRAM
 //RGB_Code:颜色值
 void LCD_WriteRAM(u16 RGB_Code)
 {                                
     LCD->LCD_RAM = RGB_Code;//写十六位GRAM
 }
+
 //从ILI93xx读出的数据为GBR格式，而我们写入的时候为RGB格式。
 //通过该函数转换
 //c:GBR格式的颜色值
@@ -148,12 +155,14 @@ u16 LCD_BGR2RGB(u16 c)
     rgb=(b<<11)+(g<<5)+(r<<0);         
     return(rgb);
 } 
+
 //当mdk -O1时间优化时需要设置
 //延时i
 void opt_delay(u8 i)
 {
     while(i--);
 }
+
 //读取个某点的颜色值     
 //x,y:坐标
 //返回值:此点的颜色
@@ -181,6 +190,7 @@ u16 LCD_ReadPoint(u16 x,u16 y)
     else if(lcddev.id==0X9341||lcddev.id==0X5310||lcddev.id==0X5510)return (((r>>11)<<11)|((g>>10)<<5)|(b>>11));//ILI9341/NT35310/NT35510需要公式转换一下
     else return LCD_BGR2RGB(r);                        //其他IC
 }             
+
 //LCD开启显示
 void LCD_DisplayOn(void)
 {                       
@@ -188,6 +198,7 @@ void LCD_DisplayOn(void)
     else if(lcddev.id==0X5510)LCD_WR_REG(0X2900);    //开启显示
     else LCD_WriteReg(0X07,0x0173);                      //开启显示
 }     
+
 //LCD关闭显示
 void LCD_DisplayOff(void)
 {       
@@ -195,6 +206,7 @@ void LCD_DisplayOff(void)
     else if(lcddev.id==0X5510)LCD_WR_REG(0X2800);    //关闭显示
     else LCD_WriteReg(0X07,0x0);//关闭显示 
 }   
+
 //设置光标位置
 //Xpos:横坐标
 //Ypos:纵坐标
@@ -244,6 +256,7 @@ void LCD_SetCursor(u16 Xpos, u16 Ypos)
         LCD_WriteReg(lcddev.setycmd, Ypos);
     }     
 }          
+
 //设置LCD的自动扫描方向
 //注意:其他函数可能会受到此函数设置的影响(尤其是9341/6804这两个奇葩),
 //所以,一般设置为L2R_U2D即可,如果设置为其他扫描方式,可能导致显示不正常.
@@ -375,6 +388,7 @@ void LCD_Scan_Dir(u8 dir)
         LCD_WriteReg(dirreg,regval);
     }
 }     
+
 //画点
 //x,y:坐标
 //POINT_COLOR:此点的颜色
@@ -384,6 +398,7 @@ void LCD_DrawPoint(u16 x,u16 y)
     LCD_WriteRAM_Prepare();    //开始写入GRAM
     LCD->LCD_RAM=POINT_COLOR; 
 }
+
 //快速画点
 //x,y:坐标
 //color:颜色
@@ -426,6 +441,7 @@ void LCD_Fast_DrawPoint(u16 x,u16 y,u16 color)
     LCD->LCD_REG=lcddev.wramcmd; 
     LCD->LCD_RAM=color; 
 }     
+
 //SSD1963 背光设置
 //pwm:背光等级,0~100.越大越亮.
 void LCD_SSD_BackLightSet(u8 pwm)
@@ -521,6 +537,7 @@ void LCD_Display_Dir(u8 dir)
     } 
     LCD_Scan_Dir(DFT_SCAN_DIR);    //默认扫描方向
 }     
+
 //设置窗口,并自动设置画点坐标到窗口左上角(sx,sy).
 //sx,sy:窗口起始坐标(左上角)
 //width,height:窗口宽度和高度,必须大于0!!
@@ -594,6 +611,7 @@ void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height)
         LCD_SetCursor(sx,sy);    //设置光标位置
     }
 }
+
 //初始化lcd
 //该初始化函数可以初始化各种ILI93XX液晶,但是其他函数是基于ILI9320的!!!
 //在其他型号的驱动芯片上没有测试! 
@@ -2693,6 +2711,7 @@ void LCD_Init(void)
     LCD_LED=1;                //点亮背光
     LCD_Clear(WHITE);
 }  
+
 //清屏函数
 //color:要清屏的填充色
 void LCD_Clear(u16 color)
@@ -2716,6 +2735,7 @@ void LCD_Clear(u16 color)
         LCD->LCD_RAM=color;    
     }
 }  
+
 //在指定区域内填充单个颜色
 //(sx,sy),(ex,ey):填充矩形对角坐标,区域大小为:(ex-sx+1)*(ey-sy+1)   
 //color:要填充的颜色
@@ -2749,6 +2769,7 @@ void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color)
         }
     }     
 }  
+
 //在指定区域内填充指定颜色块             
 //(sx,sy),(ex,ey):填充矩形对角坐标,区域大小为:(ex-sx+1)*(ey-sy+1)   
 //color:要填充的颜色
@@ -2812,6 +2833,7 @@ void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2)
     LCD_DrawLine(x1,y2,x2,y2);
     LCD_DrawLine(x2,y1,x2,y2);
 }
+
 //在指定位置画一个指定大小的圆
 //(x,y):中心点
 //r    :半径
@@ -2841,6 +2863,7 @@ void LCD_Draw_Circle(u16 x0,u16 y0,u8 r)
         }                             
     }
 }                                       
+
 //在指定位置显示一个字符
 //x,y:起始坐标
 //num:要显示的字符:" "--->"~"
@@ -2875,6 +2898,7 @@ void LCD_ShowChar(u16 x,u16 y,u8 num,u8 size,u8 mode)
         }       
     }                            
 }   
+
 //m^n函数
 //返回值:m^n次方.
 u32 LCD_Pow(u8 m,u8 n)
@@ -2883,6 +2907,7 @@ u32 LCD_Pow(u8 m,u8 n)
     while(n--)result*=m;    
     return result;
 }             
+
 //显示数字,高位为0,则不显示
 //x,y :起点坐标     
 //len :数字的位数
@@ -2908,6 +2933,7 @@ void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size)
          LCD_ShowChar(x+(size/2)*t,y,temp+'0',size,0); 
     }
 } 
+
 //显示数字,高位为0,还是显示
 //x,y:起点坐标
 //num:数值(0~999999999);     
@@ -2937,6 +2963,7 @@ void LCD_ShowxNum(u16 x,u16 y,u32 num,u8 len,u8 size,u8 mode)
          LCD_ShowChar(x+(size/2)*t,y,temp+'0',size,mode&0X01); 
     }
 } 
+
 //显示字符串
 //x,y:起点坐标
 //width,height:区域大小  
