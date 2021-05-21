@@ -47,7 +47,7 @@ def polaris_draw(x, y) -> None:
 
 # 二维图形缩放函数
 def zoom_graphic(x,y):
-
+    23321
 
 
 if __name__ == '__main__':
