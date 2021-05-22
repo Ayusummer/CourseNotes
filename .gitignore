@@ -15,11 +15,13 @@ ComputerGraphics/Experiment/venv
 # VSCode生成文件
 .vscode
 
+
 # 测试文件
 DigitalImageProcessing/OpenCV-python/GlobalTest.py
 DigitalImageProcessing/OpenCV-python/main.py
 DigitalImageProcessing/Matlab/GlobalTest.m
 ComputerGraphics/Experiment/GlobalTest.py
+ComputerGraphics/code2flow/
 
 # 辅助性文件
 ## 用于截取实验记录并输出PDF
