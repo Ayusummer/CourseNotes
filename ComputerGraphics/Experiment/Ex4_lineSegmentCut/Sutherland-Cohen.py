@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2021/5/21 8:16
 # @Author  : 咸鱼型233
-# @File    : Sutherland-Cohen.py
+# @File    : Sutherland_Cohen_abandoned.py
 # @Software: PyCharm
 # @Function: 
 # @ChangeLog :
