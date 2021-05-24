@@ -6,7 +6,8 @@
 ---
 ### 1.绘制金刚石图案​
 - 金刚石图案的成图规则是：把一个圆周等分成​n份，然后每两点之间连线。当n取奇数时，该图案可一笔连续绘成，即用MoveTo函数确定一个当前点，然后连续用LineTo函数连点成线。​
-- 请设计连线规则并编程实现。​
+- 请设计连线规则并编程实现。​  
+  ![20210521222556](http:cdn.ayusummer233.top/img/20210521222556.png)
 
 ----
 ### 2.绘制魔术三角形
@@ -25,9 +26,11 @@
 ## 实验环境
 > 本次上机实验所使用的平台和相关软件。
 - win10专业版
-- IDE选择 : Pycharm
-- python版本 : python3.8.5
-- 导入第三方库版本:
+- IDE选择 : Pycharm+Anaconda
+  - `Pycharm Community 2021.1`
+  - `conda 4.10.1`
+- python版本 : `python3.9.5`
+- 导入第三方库版本(详见项目根目录 `requirements.txt`):
 
 
 ----
@@ -36,14 +39,39 @@
 
 ---
 ### 绘制金刚石图案
-- 金刚石图案的成图规则是：把一个圆周等分成​n份，然后每两点之间连线。当n取奇数时，该图案可一笔连续绘成，即用MoveTo函数确定一个当前点，然后连续用LineTo函数连点成线。​
-- 请设计连线规则并编程实现。​
-
-
+- 首先需要绘制金刚石图案的外圈圆周
+- 绘制完圆周后将其等分成​n份，然后每两点之间连线。当n取奇数时，该图案可一笔连续绘成，即用MoveTo函数确定一个当前点，然后连续用LineTo函数连点成线。​
+  - 为了尽肯能还原示例,因此观察示例图案,可见示例图案中对圆周进行了24等分  
+  ![20210521222556](http:cdn.ayusummer233.top/img/20210521222556.png)
+  
 
 ----
 ## 算法设计
 > 用流程图或伪代码描述解决问题的算法。
+
+----
+### 金刚石绘制
+
+```flow
+start=>start: 开始
+op1=>operation: radius 半径 nums 圆周等分数
+op2=>operation: i=0, 定义圆周等分点坐标列表
+c1=>condition: i < nums
+op3=>operation: 计算出一个圆周等分点坐标并加入坐标列表;     绘制同心圆;     i++
+op4=>operation: i=0
+c2=>condition: i<nums
+op5=>operation: j=i+1
+c3=>condition: j<nums
+op6=>operation: 绘制列表中第 i 个点到第 j 个点的连线;       j++
+op7=>operation: i++
+end=>end: 结束
+start->op1->op2->c1(yes)->op3->c1
+c1(no)->op4->c2(yes)->op5->c3(yes)->op6->c3
+c3(no)->op7->c2
+c2(no)->end
+```
+ 
+----
 
 
 
@@ -256,11 +284,11 @@ pip install pyopengl
 ## 实验环境
 > 本次上机实验所使用的平台和相关软件。
 - win10专业版
-- IDE选择 : Pycharm
-- python版本 : python3.8.5
-- 导入第三方库版本:
-
-
+- IDE选择 : Pycharm+Anaconda
+  - `Pycharm Community 2021.1`
+  - `conda 4.10.1`
+- python版本 : `python3.9.5`
+- 导入第三方库版本(详见项目根目录 `requirements.txt`):
 
 
 
