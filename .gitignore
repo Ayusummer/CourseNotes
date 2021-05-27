@@ -1,7 +1,7 @@
 # 资源文件与输出文件
 DigitalImageProcessing/output
 DigitalImageProcessing/resource
-
+DigitalImageProcessing/OpenCV-python/Experiment/cohead
 
 # Pycharm配置文件及自动生成的文件
 DigitalImageProcessing/.idea
