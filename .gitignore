@@ -54,3 +54,4 @@ bin-release/
 *.ipa
 *.apk
 *.jpg
+DigitalImageProcessing/GlobalTest.py
