@@ -13,7 +13,7 @@ from Graphic_draw_2D.diamond_draw import diamond_draw
 from Graphic_draw_2D.diamond_draw import diamond_generate_vertex
 from Graphic_draw_2D.diamond_draw import diamond_generate_circle
 from lineSegmentCut.diamond_clip_draw import clip_draw_diamond
-from ComputerGraphics.Graphic_draw_2D.magic_triangle_draw import matrix_triangle_draw
+from ComputerGraphics.Graphic_draw_2D.magic_triangle_draw import magic_triangle_draw
 
 # 金刚石相关数据定义
 radius = 300  # 外圆半径为300
@@ -37,7 +37,7 @@ clip_draw_diamond(vertex_diamond, circle_diamond, 0, 300, 300, 0)
 turtle.clear()
 
 # 绘制魔术三角形
-matrix_triangle_draw()
+magic_triangle_draw()
 
 print("\n结束")
 turtle.done()

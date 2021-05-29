@@ -14,7 +14,7 @@ from ComputerGraphics.basic_draw import line_to
 from ComputerGraphics.basic_draw import rotate_point
 
 
-def matrix_triangle_draw():
+def magic_triangle_draw():
     """魔术三角形绘制
 
     """
