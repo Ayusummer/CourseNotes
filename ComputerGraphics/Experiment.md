@@ -45,6 +45,20 @@
   ![20210521222556](http:cdn.ayusummer233.top/img/20210521222556.png)
   
 
+---
+### 绘制魔术三角形
+- 绘制这玩意儿   
+  ![20210521221041](http:cdn.ayusummer233.top/img/20210521221041.png)
+- 仔细观察可知组成魔术三角形的三部分区块形状相同,外侧两长边比为 4:3 ,内侧两边比为 3:2, 夹角为 60°
+- 要完成这个图形的绘制只需要绘制一份区块然后两次旋转120°即可得到
+
+---
+### 绘制递归圆
+- 应用递归的方法绘制如下所示的图案。    
+  ![20210521221151](http:cdn.ayusummer233.top/img/20210521221151.png)  
+
+
+
 ----
 ## 算法设计
 > 用流程图或伪代码描述解决问题的算法。
@@ -83,6 +97,50 @@ c2(no)->end
 ```
 
 ----
+### 魔术三角
+- 观察示例图像可知   
+  ![IMG_1547(20210529-103735)](http:cdn.ayusummer233.top/img/IMG_1547(20210529-103735).PNG)
+- 组成魔术三角形的三部分区块形状相同,外侧两长边比为 4:3 ,内侧两边比为 3:2, 夹角为 60°
+  - 要完成这个图形的绘制只需要绘制一份区块然后两次旋转120°即可得到
+- 点绕坐标原点逆时针旋转 $\theta$°
+$$
+\left[
+\begin{matrix}
+x'  \\
+y' \\
+\end{matrix}
+\right] 
+  = 
+\left[
+\begin{matrix}
+cos\theta, -sin\theta  \\
+sin\theta, cos\theta \\
+\end{matrix}
+\right] 
+  *  
+\left[
+\begin{matrix}
+x \\
+y \\
+\end{matrix}
+\right] 
+$$
+```plantuml
+@startuml
+(*) --> "定义第一份区块的顶点表"    
+"定义第一份区块的顶点表" -> "开始填充颜色"
+"开始填充颜色" -> "依次连接顶点表相邻顶点"
+"依次连接顶点表相邻顶点" -> "顶点表最后一个顶点连接初始顶点"
+"顶点表最后一个顶点连接初始顶点" -> "结束填充颜色"
+if "绘制三遍图形了" then
+  -->[true] (*)
+else
+  -->[false] "遍历顶点表并将各顶点逆时针旋转120°"
+  --> "开始填充颜色"
+@enduml
+```
+
+
 
 
 
@@ -203,8 +261,82 @@ c2(no)->end
               line_to(vertex[i], vertex[j])
   ```
 
+---
+### 魔术三角形绘制
+- `basic_draw.py`
+  ```python
+  def rotate_point(point: list, angle) -> list:
+      """将一个点(point)绕坐标原点逆时针旋转angle°
+
+      PS : 懒省事不想写绕任意点.jpg
+
+      :param point: 待旋转点
+      :param angle: 旋转角度(°)
+      """
+      angle = ((2 * np.pi) / 360) * angle
+      a = round(np.cos(angle), 3)
+      b = round(-np.sin(angle), 3)
+      c = round(np.sin(angle), 3)
+      d = round(np.cos(angle), 3)
+      angle_matrix = np.mat([[a, b], [c, d]])
+      N = np.mat([[point[0]], [point[1]]])
+      S = angle_matrix * N
+      S = S.tolist()
+      lst = [S[0][0], S[1][0]]
+      return lst
+  ```
+
+  ---
+- `magic_triangle_draw.py`
+  ```python
+  # -*- coding : utf-8 -*-
+  # @Author    : 咸鱼型233
+  # @File      : magic_triangle_draw.py
+  # @Software  : PyCharm
+  # @Function  : 绘制魔术三角形
+  # @ChangeLog :
+  # 导入第三方库
+  import turtle
+  import math
+
+  # 导入自定义绘图函数
+  from ComputerGraphics.basic_draw import line_to
+  from ComputerGraphics.basic_draw import rotate_point
 
 
+  def matrix_triangle_draw():
+      """魔术三角形绘制
+
+      """
+      a = [50, -50/math.sqrt(3)]
+      b = [-150, -50/math.sqrt(3)]
+      c = [50, 200*math.sqrt(3)-50/math.sqrt(3)]
+      d = [-50, 200*math.sqrt(3)-50/math.sqrt(3)]
+      e = [-300, -50/math.sqrt(3)-50*math.sqrt(3)]
+      f = [100, -50/math.sqrt(3)-50*math.sqrt(3)]
+      vertex = [a, b, c, d, e, f]
+      turtle.begin_fill()
+      for i in range(vertex.__len__() - 1):
+          line_to(vertex[i], vertex[i+1], "pink")
+      line_to(vertex[-1], vertex[0], "pink")
+      turtle.end_fill()
+
+      for i in range(vertex.__len__()):
+          vertex[i] = rotate_point(vertex[i], 120)
+      turtle.begin_fill()
+      for i in range(vertex.__len__() - 1):
+          line_to(vertex[i], vertex[i+1], "red")
+      line_to(vertex[-1], vertex[0], "red")
+      turtle.end_fill()
+
+      for i in range(vertex.__len__()):
+          vertex[i] = rotate_point(vertex[i], 120)
+      turtle.begin_fill()
+      for i in range(vertex.__len__() - 1):
+          line_to(vertex[i], vertex[i+1], "yellow")
+      line_to(vertex[-1], vertex[0], "yellow")
+      turtle.end_fill()
+  ```
 
 
 
@@ -215,6 +347,9 @@ c2(no)->end
 - 金刚石绘制  
   ![20210528153218](http:cdn.ayusummer233.top/img/20210528153218.png)
 
+  ---
+- 魔术三角形绘制
+  ![20210529110249](http:cdn.ayusummer233.top/img/20210529110249.png)
 
 
 
