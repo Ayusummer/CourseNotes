@@ -7,9 +7,5 @@
 # @ChangeLog :
 import turtle
 
-dict1 = {9: [1, 2, 3, 4]}
-print(len(dict1))
-print(dict1.__len__())
-
-for i in dict1:
-    print(i)
+a = list(range(6))
+print(a)

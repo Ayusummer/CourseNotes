@@ -47,17 +47,51 @@ def diamond_generate_circle(radius, nums) -> list:
 def diamond_draw(vertex, radius, nums) -> None:
     """金刚石绘制函数
 
-    PS : 最后一个金刚石图形参数是用来表示整个金刚石图案的信息的,实验四里的裁剪会用上
+    :param vertex: 顶点表
+    :param radius: 外圆半径 : 用于绘制同心圆,因此这里又把这个参数拿过来了
+    :param nums: 外圆等分数 : 其实可以使用vertex的大小,但是不想多计算一步,直接拿来用
+    :return: 无返回值 -> 绘制金刚石图案
+    """
+    for i in range(0, nums):
+        draw_circle(0, 0, (i + 1) * (radius / nums))
+    for i in range(0, nums):
+        for j in range(i + 1, nums):
+            line_to(vertex[i], vertex[j])
+
+
+def diamond_draw_no_interrupt(vertex, radius, nums) -> None:
+    """金刚石绘制函数(不间断->即一笔画)
+
+    PS : 这里的一笔绘指的仅仅是金刚石的线段部分,不包括同心圆(同心圆都不想交怎么一笔绘嘛)
+         此外,线段一笔绘要求圆周等分数为奇数
+
+    PS : 不写了23333
 
     :param vertex: 顶点表
     :param radius: 外圆半径 : 用于绘制同心圆,因此这里又把这个参数拿过来了
     :param nums: 外圆等分数 : 其实可以使用vertex的大小,但是不想多计算一步,直接拿来用
     :return: 无返回值 -> 绘制金刚石图案
     """
-    turtle.speed(0)  # 设置笔头移动速度->0->最快
-    turtle.ht()  # 隐藏海龟,提高绘制速度
+    turtle.speed(0)
+
+    # 绘制同心圆
     for i in range(0, nums):
         draw_circle(0, 0, (i + 1) * (radius / nums))
-    for i in range(0, nums):
-        for j in range(i + 1, nums):
-            line_to(vertex[i], vertex[j])
+
+    turtle.speed(1)
+    # 一笔绘线段
+    # 定义并初始化相邻点数据结构
+    next_point = list()
+    print("\n啊这", list(range(nums-1)))
+    for i in range(nums-1):
+        print(i, end="  ")
+        next_point.append([])
+        print(i)
+        next_point[i] = list(range(i, nums))
+
+    # 绘制
+    for j in range(nums):
+        for i in range(nums-j-1):
+            line_to(vertex[i], vertex[next_point[i][0]])
+            next_point[i].pop(0)
+

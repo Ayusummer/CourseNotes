@@ -70,7 +70,18 @@ c1(no)->op4->c2(yes)->op5->c3(yes)->op6->c3
 c3(no)->op7->c2
 c2(no)->end
 ```
- 
+
+---
+```plantuml
+@startuml
+(*) --> "生成顶点表"    
+"生成顶点表" --> "双层循环遍历顶点表并绘制相应顶点连线"
+(*) --> "单循环遍历[0, nums)绘制同心圆"
+"单循环遍历[0, nums)绘制同心圆" -> (*) 
+"双层循环遍历顶点表并绘制相应顶点连线" -> (*)
+@enduml
+```
+
 ----
 
 
@@ -78,9 +89,134 @@ c2(no)->end
 ----
 ## 源代码
 
+---
+### 金刚石绘制
+- `basic_draw.py`
+  ```python
+  # -*- coding : utf-8 -*-
+  # @Time      : 2021/5/21 10:37
+  # @Author    : 咸鱼型233
+  # @File      : basic_draw.py
+  # @Software  : PyCharm
+  # @Function  : 
+  # @ChangeLog :
+  import turtle
+
+
+  def draw_circle(x, y, r, extent=None, color='red') -> None:
+      """以(x,y)为圆心,r为半径画圆;
+
+      画笔起始点位置并非圆心,而是圆心垂线与下圆弧的交点,然后逆时针画圆
+
+      :param x: 圆心横坐标
+      :param y: 圆心纵坐标
+      :param r: 圆的半径
+      :param extent: 弧度
+      :param color: 线条颜色(默认为红色)
+      """
+      turtle.color(color)     # 设置画笔颜色
+      turtle.penup()          # 画笔抬起 -- 移动时不画线
+      turtle.goto(x+r, y)     # 将笔尖移动到(x+r,y)
+      turtle.setheading(90)   # 海龟朝北
+      turtle.pendown()        # 落笔
+      turtle.circle(r, extent)        # 画圆
+      # turtle.color('black')   # 画笔颜色恢复为黑色
+
+
+  def line_to(v1, v2, color='red'):
+      """从v1径直画到v2(默认笔触为红色)
+
+      :param v1: 起始点坐标 : [x1, y1]
+      :param v2: 结束点坐标 : [x2, y2]
+      :param color: 线条颜色(默认为红色)
+      """
+      turtle.color(color)     # 设置画笔颜色
+      turtle.penup()          # 画笔抬起 -- 移动时不画线
+      turtle.goto(v1[0], v1[1])       # 将笔尖移动到(x,y)
+      turtle.pendown()        # 落笔
+      turtle.goto(v2[0], v2[1])       # 画笔直线移动到(ex,ey)并画线
+      # 画笔颜色恢复为黑色,本意是让每步动作都规范些,但是大家只要起笔的时候都拿好颜色就不管最后重置颜色了
+      # turtle.color('black')
+  ```
+
+  ----
+- `diamond_draw.py`
+  ```python
+  # -*- coding : utf-8 -*-
+  # @Time      : 2021/5/21 10:50
+  # @Author    : 咸鱼型233
+  # @File      : diamond_draw.py
+  # @Software  : PyCharm
+  # @Function  : 
+  # @ChangeLog :
+
+  # 导入第三方库
+  import turtle
+  import math
+
+  # 导入自定义绘图函数
+  from ComputerGraphics.basic_draw import line_to
+  from ComputerGraphics.basic_draw import draw_circle
+
+
+  def diamond_generate_vertex(radius, nums) -> list:
+      """金刚石的顶点列表生成函数(外圆上顶点)
+
+      :param radius: 外圆半径
+      :param nums: 外圆等分数
+      :return: vertex(list of list) 顶点表
+      """
+      vertex = list()
+      for i in range(0, nums):
+          # 将圆周上的等分点都加到列表里
+          vertex.append([radius * math.cos(2 * math.pi / nums * i),
+                        radius * math.sin(2 * math.pi / nums * i)])
+      return vertex
+
+
+  def diamond_generate_circle(radius, nums) -> list:
+      """金刚石的同心圆列表生成函数
+
+      :param radius: 外圆半径
+      :param nums: 外圆等分数
+      :return: circle(list of list) [圆心, 半径, 弧度]
+      """
+      circle = list()
+      for i in range(0, nums):
+          # 生成同心圆列表
+          circle.append([[0, 0], (i + 1) * (radius / nums), 360])
+      return circle
+
+
+  def diamond_draw(vertex, radius, nums) -> None:
+      """金刚石绘制函数
+
+      :param vertex: 顶点表
+      :param radius: 外圆半径 : 用于绘制同心圆,因此这里又把这个参数拿过来了
+      :param nums: 外圆等分数 : 其实可以使用vertex的大小,但是不想多计算一步,直接拿来用
+      :return: 无返回值 -> 绘制金刚石图案
+      """
+      for i in range(0, nums):
+          draw_circle(0, 0, (i + 1) * (radius / nums))
+      for i in range(0, nums):
+          for j in range(i + 1, nums):
+              line_to(vertex[i], vertex[j])
+  ```
+
+
+
+
+
+
+
 
 ----
 ## 程序运行结果
+- 金刚石绘制  
+  ![20210528153218](http:cdn.ayusummer233.top/img/20210528153218.png)
+
+
+
 
 
 ----

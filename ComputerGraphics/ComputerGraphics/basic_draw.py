@@ -25,7 +25,6 @@ def draw_circle(x, y, r, extent=None, color='red') -> None:
     turtle.setheading(90)   # 海龟朝北
     turtle.pendown()        # 落笔
     turtle.circle(r, extent)        # 画圆
-    # turtle.color('black')   # 画笔颜色恢复为黑色
 
 
 def line_to(v1, v2, color='red'):
@@ -35,15 +34,10 @@ def line_to(v1, v2, color='red'):
     :param v2: 结束点坐标 : [x2, y2]
     :param color: 线条颜色(默认为红色)
     """
-    # x1 = int(v1[0])
-    # x2 = int(v2[0])
-    # y1 = int(v1[1])
-    # y2 = int(v2[1])
     turtle.color(color)     # 设置画笔颜色
     turtle.penup()          # 画笔抬起 -- 移动时不画线
     turtle.goto(v1[0], v1[1])       # 将笔尖移动到(x,y)
     turtle.pendown()        # 落笔
     turtle.goto(v2[0], v2[1])       # 画笔直线移动到(ex,ey)并画线
-    # 画笔颜色恢复为黑色,本意是让每步动作都规范些,但是大家只要起笔的时候都拿好颜色就不管最后重置颜色了
-    # turtle.color('black')
+
 
