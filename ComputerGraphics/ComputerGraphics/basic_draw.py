@@ -1,3 +1,11 @@
+'''
+Author: your name
+Date: 2021-05-21 10:37:45
+LastEditTime: 2021-05-30 16:11:15
+LastEditors: Please set LastEditors
+Description: In User Settings Edit
+FilePath: \JuniorLesson_SecondTerm\ComputerGraphics\ComputerGraphics\basic_draw.py
+'''
 # -*- coding : utf-8 -*-
 # @Time      : 2021/5/21 10:37
 # @Author    : 咸鱼型233
@@ -20,12 +28,12 @@ def draw_circle(x, y, r, extent=None, color='red') -> None:
     :param extent: 弧度
     :param color: 线条颜色(默认为红色)
     """
-    turtle.color(color)  # 设置画笔颜色
-    turtle.penup()  # 画笔抬起 -- 移动时不画线
-    turtle.goto(x + r, y)  # 将笔尖移动到(x+r,y)
-    turtle.setheading(90)  # 海龟朝北
-    turtle.pendown()  # 落笔
-    turtle.circle(r, extent)  # 画圆
+    turtle.color(color)         # 设置画笔颜色
+    turtle.penup()              # 画笔抬起 -- 移动时不画线
+    turtle.goto(x + r, y)       # 将笔尖移动到(x+r,y)
+    turtle.setheading(90)       # 海龟朝北
+    turtle.pendown()            # 落笔
+    turtle.circle(r, extent)    # 画圆
 
 
 def line_to(v1, v2, color='red'):
@@ -35,17 +43,15 @@ def line_to(v1, v2, color='red'):
     :param v2: 结束点坐标 : [x2, y2]
     :param color: 线条颜色(默认为红色)
     """
-    turtle.color(color)  # 设置画笔颜色
-    turtle.penup()  # 画笔抬起 -- 移动时不画线
-    turtle.goto(v1[0], v1[1])  # 将笔尖移动到(x,y)
-    turtle.pendown()  # 落笔
-    turtle.goto(v2[0], v2[1])  # 画笔直线移动到(ex,ey)并画线
+    turtle.color(color)         # 设置画笔颜色
+    turtle.penup()              # 画笔抬起 -- 移动时不画线
+    turtle.goto(v1[0], v1[1])   # 将笔尖移动到(x,y)
+    turtle.pendown()            # 落笔
+    turtle.goto(v2[0], v2[1])   # 画笔直线移动到(ex,ey)并画线
 
 
 def rotate_point(point: list, angle) -> list:
     """将一个点(point)绕坐标原点逆时针旋转angle°
-
-    PS : 懒省事不想写绕任意点.jpg
 
     :param point: 待旋转点
     :param angle: 旋转角度(°)
@@ -60,4 +66,24 @@ def rotate_point(point: list, angle) -> list:
     S = angle_matrix * N
     S = S.tolist()
     lst = [S[0][0], S[1][0]]
+    return lst
+
+
+def rotate_point_with_center(point: list, angle, center: list) -> list:
+    """将一个点(point)绕旋转中心(center)逆时针旋转angle°
+
+    :param point: 待旋转点
+    :param angle: 旋转角度(°)
+    :param center: 旋转中心
+    """
+    angle = ((2 * np.pi) / 360) * angle
+    a = round(np.cos(angle), 3)
+    b = round(-np.sin(angle), 3)
+    c = round(np.sin(angle), 3)
+    d = round(np.cos(angle), 3)
+    angle_matrix = np.mat([[a, b], [c, d]])
+    N = np.mat([[point[0] - center[0]], [point[1] - center[1]]])
+    S = angle_matrix * N
+    S = S.tolist()
+    lst = [S[0][0] + center[0], S[1][0] + center[1]]
     return lst
