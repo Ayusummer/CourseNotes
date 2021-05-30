@@ -45,15 +45,16 @@ def polaris_draw(x, y) -> None:
     turtle.color(color_lst[0])
     turtle.goto(x_lst[0], y_lst[0])
 
+
 # 二维图形缩放函数
-def zoom_graphic(x,y):
-    23321
+def zoom_graphic(x, y):
+    pass
 
 
 if __name__ == '__main__':
     x_lst = [75, 47, -9, 11, -26, 19, 0, 47, 75, 103, 160, 142, 189, 142, 169, 104]
     y_lst = [0, 113, 96, 155, 181, 199, 255, 246, 343, 246, 266, 208, 181, 161, 85, 114]
     # turtle.setup(width=.75, height=0.5, startx=None, starty=None)  # 窗口宽75%,高50%,水平垂直居中
-    turtle.speed(1)  # 设置笔头移动速度->0->最快
+    turtle.speed(0)  # 设置笔头移动速度->0->最快
     polaris_draw(x_lst, y_lst)
     turtle.done()

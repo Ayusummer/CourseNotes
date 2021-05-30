@@ -67,7 +67,7 @@ def polaris_draw_color() -> None:
 
 if __name__ == '__main__':
     # turtle.setup(width=.75, height=0.5, startx=None, starty=None)  # 窗口宽75%,高50%,水平垂直居中
-    turtle.speed(1)  # 设置笔头移动速度->0->最快
+    turtle.speed(0)  # 设置笔头移动速度->0->最快
     polaris_draw_color()
     # turtle.exitonclick()
     # turtle.done()
