@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-29 10:45:32
- * @LastEditTime: 2021-05-29 10:45:45
+ * @LastEditTime: 2021-05-30 15:54:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \JuniorLesson_SecondTerm\UML_Example.md
@@ -91,5 +91,21 @@ def line_to(v1, v2, color='red'):
 (*) --> "单循环遍历[0, nums)绘制同心圆"
 "单循环遍历[0, nums)绘制同心圆" -> (*) 
 "双层循环遍历顶点表并绘制相应顶点连线" -> (*)
+@enduml
+```
+
+
+```plantuml
+@startuml
+(*) --> "定义第一份区块的顶点表"    
+"定义第一份区块的顶点表" -> "开始填充颜色"
+"开始填充颜色" -> "依次连接顶点表相邻顶点"
+"依次连接顶点表相邻顶点" -> "顶点表最后一个顶点连接初始顶点"
+"顶点表最后一个顶点连接初始顶点" -> "结束填充颜色"
+if "绘制三遍图形了" then
+  -->[true] (*)
+else
+  -->[false] "遍历顶点表并将各顶点逆时针旋转120°"
+  --> "开始填充颜色"
 @enduml
 ```
