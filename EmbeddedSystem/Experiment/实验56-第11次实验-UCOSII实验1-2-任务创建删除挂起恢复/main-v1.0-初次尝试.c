@@ -133,7 +133,7 @@ void beep_task(void *pdata){
 void adc_task(void *pdata)
 {
     u16 i=0,j=0,n,m;
-     u16 adcx;
+    u16 adcx;
     u16 num[60];
     float temp;
 
@@ -142,9 +142,9 @@ void adc_task(void *pdata)
     LCD_ShowString(30,70,200,16,16,"ADC TEST");    
     LCD_ShowString(30,90,200,16,16,"ATOM@ALIENTEK");
     LCD_ShowString(30,110,200,16,16,"2014/5/6");      
-    POINT_COLOR=BLUE;//???????
+    POINT_COLOR=BLUE;
     LCD_ShowString(30,130,200,16,16,"ADC1_CH5_VAL:");          
-    LCD_ShowString(30,150,200,16,16,"ADC1_CH5_VOL:0.000V");    //???????????   
+    LCD_ShowString(30,150,200,16,16,"ADC1_CH5_VOL:0.000V");   
         LCD_ShowString(30,200,10,16,16,"VOL");   
         LCD_DrawLine(50,550,50,250);//??
         LCD_DrawLine(50,250,55,255);
@@ -155,14 +155,14 @@ void adc_task(void *pdata)
     LCD_DrawLine(450,550,445,555);    
     while(1)
     { 
-        adcx=Get_Adc_Average(ADC_Channel_5,20);//????5????,20????
-        LCD_ShowxNum(134,130,adcx,4,16,0);    //??ADCC???????
-        temp=(float)adcx*(3.3/4096);          //???????????????,??3.1111
-        adcx=temp;                            //???????adcx??,??adcx?u16??
-        LCD_ShowxNum(134,150,adcx,1,16,0);    //??????????,3.1111??,??????3
-        temp-=adcx;                           //????????????,??????,??3.1111-3=0.1111
-        temp=temp*1000;                           //??????1000,??:0.1111????111.1,??????????
-        LCD_ShowxNum(150,150,temp,3,16,0X80); //??????(??????????),???????111.
+        adcx=Get_Adc_Average(ADC_Channel_5,20);
+        LCD_ShowxNum(134,130,adcx,4,16,0);    
+        temp=(float)adcx*(3.3/4096);         
+        adcx=temp;                           
+        LCD_ShowxNum(134,150,adcx,1,16,0);   
+        temp-=adcx;                         
+        temp=temp*1000;                           
+        LCD_ShowxNum(150,150,temp,3,16,0X80); 
 
         if(i<60)
         {
@@ -175,7 +175,7 @@ void adc_task(void *pdata)
         if(i>=60)
         {
       i++;
-            LCD_Fill(51,200,494,544,WHITE);//??????
+            LCD_Fill(51,200,494,544,WHITE);
             for(m=0;m<59;m++){
                 num[m]=num[m+1];
             }
