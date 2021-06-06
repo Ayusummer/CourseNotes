@@ -12,6 +12,14 @@
 //广州市星翼电子科技有限公司  
 //作者：正点原子 @ALIENTEK
 
+// 实际实验新增依赖
+#include "lcd.h"
+#include "adc.h"
+#include <cmath>
+
+
+
+
 
 /////////////////////////UCOSII任务堆栈设置///////////////////////////////////
 // START 任务
@@ -23,7 +31,13 @@
 __align(8) OS_STK START_TASK_STK[START_STK_SIZE];
 // 任务函数接口
 void start_task(void *pdata);    
-                
+
+// 实验新增 ADC 任务堆栈设置
+#define ADC_TASK_PRIO  8
+#define ADC_STK_SIZE   128
+__align(8) OS_STK ADC_TASK_STK[ADC_STK_SIZE];
+void adc_task(void *pdata);
+
 // LED任务
 // 设置任务优先级
 #define LED_TASK_PRIO  7 
@@ -62,13 +76,17 @@ int main(void){
     LED_Init();         // 初始化与LED连接的硬件接口
      BEEP_Init();       // 蜂鸣器初始化    
     KEY_Init();         // 按键初始化
+
+    LCD_Init();         // LCD 初始化
+    ADC_Init();         // ADC 初始化
+
     OSInit();           // 初始化UCOSII         
     // 创建起始任务              
     OSTaskCreate(start_task,(void *)0,(OS_STK *)&START_TASK_STK[START_STK_SIZE-1],START_TASK_PRIO );
     OSStart();    
 }
 
-// 开始任务
+// 开始任务(加入 ADC 任务的创建)
 void start_task(void *pdata){
     OS_CPU_SR cpu_sr=0;
     pdata = pdata;                                  
@@ -77,19 +95,27 @@ void start_task(void *pdata){
     OSTaskCreate(led_task,(void *)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);                                               
     OSTaskCreate(beep_task,(void *)0,(OS_STK*)&BEEP_TASK_STK[BEEP_STK_SIZE-1],BEEP_TASK_PRIO);                                           
     OSTaskCreate(key_task,(void *)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);                        
+    
+    OSTaskCreate(adc_task,(void *)0,(OS_STK*)&ADC_TASK_STK[KEY_STK_SIZE-1],ADC_TASK_PRIO);
+    
     OSTaskSuspend(START_TASK_PRIO);    // 挂起起始任务.
     OS_EXIT_CRITICAL();                // 退出临界区(可以被中断打断)
-}      
-//LED任务
+}    
+
+// LED任务(实验要求更改为删除与重构,因此这里仿写 BEEP 任务)
 void led_task(void *pdata){   
-    while(1){  
+    while(1){
+        // 判断是否有删除请求 
+        if(OSTaskDelReq(OS_PRIO_SELF)==OS_ERR_TASK_DEL_REQ){
+            OSTaskDel(OS_PRIO_SELF);    // 删除任务本身TaskLed
+        }
         LED0=!LED0;
         LED1=!LED1;
         delay_ms(500);
     }                                     
 }       
 
-//蜂鸣器任务
+// 蜂鸣器任务
 void beep_task(void *pdata){
     while(1){     
         // 判断是否有删除请求 
@@ -103,30 +129,92 @@ void beep_task(void *pdata){
     }                                     
 }
 
+// ADC 任务
+void adc_task(void *pdata)
+{
+    u16 i=0,j=0,n,m;
+     u16 adcx;
+    u16 num[60];
+    float temp;
+
+    POINT_COLOR=RED; 
+    LCD_ShowString(30,50,200,16,16,"Explorer STM32F4");    
+    LCD_ShowString(30,70,200,16,16,"ADC TEST");    
+    LCD_ShowString(30,90,200,16,16,"ATOM@ALIENTEK");
+    LCD_ShowString(30,110,200,16,16,"2014/5/6");      
+    POINT_COLOR=BLUE;//???????
+    LCD_ShowString(30,130,200,16,16,"ADC1_CH5_VAL:");          
+    LCD_ShowString(30,150,200,16,16,"ADC1_CH5_VOL:0.000V");    //???????????   
+        LCD_ShowString(30,200,10,16,16,"VOL");   
+        LCD_DrawLine(50,550,50,250);//??
+        LCD_DrawLine(50,250,55,255);
+    LCD_DrawLine(50,250,45,255);
+    LCD_ShowString(450,555,10,16,16,"TIME");
+    LCD_DrawLine(50,550,450,550);//??
+    LCD_DrawLine(450,550,445,545);
+    LCD_DrawLine(450,550,445,555);    
+    while(1)
+    { 
+        adcx=Get_Adc_Average(ADC_Channel_5,20);//????5????,20????
+        LCD_ShowxNum(134,130,adcx,4,16,0);    //??ADCC???????
+        temp=(float)adcx*(3.3/4096);          //???????????????,??3.1111
+        adcx=temp;                            //???????adcx??,??adcx?u16??
+        LCD_ShowxNum(134,150,adcx,1,16,0);    //??????????,3.1111??,??????3
+        temp-=adcx;                           //????????????,??????,??3.1111-3=0.1111
+        temp=temp*1000;                           //??????1000,??:0.1111????111.1,??????????
+        LCD_ShowxNum(150,150,temp,3,16,0X80); //??????(??????????),???????111.
+
+        if(i<60)
+        {
+            num[i]=temp;
+            i++;
+            if(j>0)
+                LCD_DrawLine(45+j*5,num[j-1]+250,50+j*5,num[j]+250);
+            j++;
+        }
+        if(i>=60)
+        {
+      i++;
+            LCD_Fill(51,200,494,544,WHITE);//??????
+            for(m=0;m<59;m++){
+                num[m]=num[m+1];
+            }
+            num[59]=temp;
+            for(n=1;n<60;n++)
+            {
+                LCD_DrawLine(45+n*5,num[n-1]+250,50+n*5,num[n]+250);
+            }
+        }
+        delay_ms(100);    
+    }
+}    
+
 // 按键扫描任务
 void key_task(void *pdata){    
     u8 key;                                     
     while(1){
         key=KEY_Scan(0);
         if(key==KEY0_PRES){
-            // 挂起LED任务，LED停止闪烁
-            OSTaskSuspend(LED_TASK_PRIO);
+            // 挂起ADC任务
+            OSTaskSuspend(ADC_TASK_PRIO);
         }
         else if (key==KEY2_PRES){
-            // 恢复LED任务，LED恢复闪烁
-            OSTaskResume(LED_TASK_PRIO);    
+            // 恢复ADC任务   
+            OSTaskResume(ADC_TASK_PRIO);    
         }
         else if (key==WKUP_PRES){
             // 发送删除BEEP任务请求，任务睡眠，无法恢复
             OSTaskDelReq(BEEP_TASK_PRIO);    
+            // 删除LED任务，LED停止闪烁
+            OSTaskDelReq(LED_TASK_PRIO);        
         }
         else if(key==KEY1_PRES){
             // 重新创建任务beep 
             OSTaskCreate(beep_task,(void *)0,(OS_STK*)&BEEP_TASK_STK[BEEP_STK_SIZE-1],BEEP_TASK_PRIO);                                          
+            // 重新创建 LED 任务
+            OSTaskCreate(led_task,(void *)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
         }   
          delay_ms(10);
     }
 }
-
-
 
