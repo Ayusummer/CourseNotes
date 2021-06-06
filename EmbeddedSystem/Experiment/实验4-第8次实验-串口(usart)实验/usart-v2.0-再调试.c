@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-13 17:06:32
- * @LastEditTime: 2021-05-19 21:09:05
+ * @LastEditTime: 2021-06-03 19:48:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \JuniorLesson_SecondTerm\EmbeddedSystem\Experiment\实验4-第8次实验-串口(usart)实验\usart-v1.0-初次尝试.c
