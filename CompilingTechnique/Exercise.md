@@ -50,12 +50,12 @@
 ---
 ## 3.27作业二
 - 求下列NFA对应的最小DFA。（最下面一行三条弧线上表示a或b）
-  - ![20210329221942](http:cdn.ayusummer233.top/img/20210329221942.png)
-  - ![20210331130247](http:cdn.ayusummer233.top/img/20210331130247.png)
+  - ![20210329221942](http://cdn.ayusummer233.top/img/20210329221942.png)
+  - ![20210331130247](http://cdn.ayusummer233.top/img/20210331130247.png)
 - 姜老师班的作业
-  ![20210331130336](http:cdn.ayusummer233.top/img/20210331130336.png)
+  ![20210331130336](http://cdn.ayusummer233.top/img/20210331130336.png)
 - 例题
-  ![20210331130604](http:cdn.ayusummer233.top/img/20210331130604.png)
+  ![20210331130604](http://cdn.ayusummer233.top/img/20210331130604.png)
 
 ---
 ## 
