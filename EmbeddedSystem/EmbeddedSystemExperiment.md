@@ -1,6 +1,6 @@
 - 嵌入式系统实验记录
   - [参考链接@CSDN:社恐患者](https://blog.csdn.net/qq_44714521?spm=1001.2014.3001.5509)
-  ![20210512101352](http:cdn.ayusummer233.top/img/20210512101352.png)
+  ![20210512101352](http://cdn.ayusummer233.top/img/20210512101352.png)
 
 # 实验2-跑马灯
 - [参考链接](https://nosteglic.blog.csdn.net/article/details/108703814)[已失效]
