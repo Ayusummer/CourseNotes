@@ -499,11 +499,11 @@ void EXTI0_IRQHandler(void){
 
 ----
 - ```C
-  // 显示字符串
-  // x,y : 起点坐标
-  // width,height : 区域大小  
-  // size : 字体大小
-  // *p : 字符串起始地址          
+  /* 显示字符串
+     x,y : 起点坐标
+     width,height : 区域大小  
+     size : 字体大小
+     *p : 字符串起始地址 */         
   void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p);
   ```
 
