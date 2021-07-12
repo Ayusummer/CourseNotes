@@ -1,13 +1,20 @@
+/*
+ * @Author: your name
+ * @Date: 2021-07-11 09:25:12
+ * @LastEditTime: 2021-07-12 17:43:42
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \JuniorLesson_SecondTerm\EmbeddedSystem\Experiment\课程设计-多功能电子钟\V1.2-错位改动\ADC\adc.c
+ */
 #include "adc.h"
 #include "delay.h"		 
  
 //初始化ADC
 //开启温度传感器通道																   
-void  Adc_Init(void)
-{    
+void  Adc_Init(void){    
   GPIO_InitTypeDef  GPIO_InitStructure;
-	ADC_CommonInitTypeDef ADC_CommonInitStructure;
-	ADC_InitTypeDef       ADC_InitStructure;
+  ADC_CommonInitTypeDef ADC_CommonInitStructure;
+  ADC_InitTypeDef       ADC_InitStructure;
 	
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//使能GPIOA时钟
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);//使能ADC1时钟
@@ -46,8 +53,7 @@ void  Adc_Init(void)
 //获得ADC值
 //ch:通道值 @ref ADC_channels  0~16：ADC_Channel_0~ADC_Channel_16
 //返回值:转换结果
-u16 Get_Adc(u8 ch)   
-{
+u16 Get_Adc(u8 ch){
 	 //设置指定ADC的规则组通道，一个序列，采样时间
 	ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_480Cycles );	//ADC1,ADC通道,480个周期,提高采样时间可以提高精确度			     
 	ADC_SoftwareStartConv(ADC1);		//使能指定的ADC1的软件转换启动功能
@@ -59,12 +65,10 @@ u16 Get_Adc(u8 ch)
 //ch:通道编号
 //times:获取次数
 //返回值:通道ch的times次转换结果平均值
-u16 Get_Adc_Average(u8 ch,u8 times)
-{
+u16 Get_Adc_Average(u8 ch,u8 times){
 	u32 temp_val=0;
 	u8 t;
-	for(t=0;t<times;t++)
-	{
+	for(t=0;t<times;t++)	{
 		temp_val+=Get_Adc(ch);//获取通道转换值
 		delay_ms(5);
 	}
