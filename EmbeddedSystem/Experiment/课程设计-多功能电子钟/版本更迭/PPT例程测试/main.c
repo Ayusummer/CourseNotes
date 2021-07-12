@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-07-07 21:11:11
- * @LastEditTime: 2021-07-08 09:34:18
+ * @LastEditTime: 2021-07-09 19:15:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \JuniorLesson_SecondTerm\EmbeddedSystem\Experiment\课程设计-多功能电子钟\版本更迭\PPT例程测试\main.c
@@ -39,7 +39,7 @@ int main(void){
     LCD_Init();             // 初始化 LCD
     My_RTC_Init();          // 初始化 RTC
  
-	// 配置 WAKE UP中断,1 秒钟中断一次
+	// 配置 WAKE UP 中断,1 秒钟中断一次
     RTC_Set_WakeUp(RTC_WakeUpClock_CK_SPRE_16bits,0);        
     
     POINT_COLOR=RED;

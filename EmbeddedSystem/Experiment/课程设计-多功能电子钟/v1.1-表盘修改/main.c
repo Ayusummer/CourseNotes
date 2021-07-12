@@ -63,12 +63,14 @@ int main(void){
 
 	POINT_COLOR=RED;
 	LCD_ShowString(30, 50,  200, 24, 24, "LCD Clock");	
-	LCD_ShowString(30, 220, 200, 16, 16, "TEMPERATE: 00.00C");		// 先在固定位置显示小数点	
+	// 先在固定位置显示小数点
+	LCD_ShowString(30, 220, 200, 16, 16, "TEMPERATE: 00.00C");		
 	LCD_ShowString(280, 120,  100, 16, 24, "Timer");	
 	LCD_ShowxNum(300,160, 0, 3, 16, 0);
+
   	while(1){		
 		t++;
-		//每100ms更新一次显示数据
+		// 每100ms更新一次显示数据
 		if((t%10)==0){
 			RTC_GetTime(RTC_Format_BIN,&RTC_TimeStruct);			
 			sprintf((char*)tbuf,"Time:%02d:%02d:%02d",RTC_TimeStruct.RTC_Hours,RTC_TimeStruct.RTC_Minutes,RTC_TimeStruct.RTC_Seconds); 
