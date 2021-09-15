@@ -9,5 +9,5 @@
 # JuniorLessons_beta
 
 #### 介绍
-大三下学期笔记
+课程随笔
 
