@@ -112,7 +112,7 @@ Cloudstack 部署架构:
 
 ---
 
-# Linux 安装
+# Linux 
 
 ---
 
@@ -123,6 +123,26 @@ Cloudstack 部署架构:
 1. 方法1：使用命令： `cat /proc/version` 查看
 2. 方法2：使用命令： `uname -a` 查看
 3. 方法3：使用命令： `lsb_release -a` 查看
+
+
+
+---
+
+## CentOS
+
+---
+
+### 查看某软件包是否安装
+
+[centos系统如何查看指定软件是否已安装-CentOS-PHP中文网](https://www.php.cn/centos/445574.html)
+
+`yum` 方法安装的，可以用 `yum list installed` 查找，如果是查找指定包，命令后加 `| grep "软件名或者包名"`, 没有返回值就是没安装
+
+> `grep`: Linux 系统中 grep 命令是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来。grep全称是Global Regular Expression Print，表示全局正则表达式版本，它的使用权限是所有用户。
+
+---
+
+
 
 ---
 
@@ -200,12 +220,6 @@ CentOS 7.6
 
 ---
 
-#### 配置网络
-
-服务器有网, pass
-
----
-
 更新系统:
 
 ```shell
@@ -214,15 +228,207 @@ yum -y upgrade
 
 ![image-20210915155241846](http://cdn.ayusummer233.top/img/202109151552042.png)
 
+----
+
+#### 配置网络
+
+安装 `brctl` 与 `net-tools`
+
+```shell
+yum install bridge-utils net-tools -y
+```
+
+> 先检查下是否已经安装了
+>
+> ![image-20210915204418620](http://cdn.ayusummer233.top/img/202109152044700.png)
+
+![image-20210915204828274](http://cdn.ayusummer233.top/img/202109152048388.png)
+
+- `brctl`
+
+  [brctl命令 – 以太网网桥管理 – Linux命令大全(手册) (linuxcool.com)](https://www.linuxcool.com/brctl)
+
+  brctl 命令用于设置、维护和检查 linux 内核中的以太网网桥配置。
+
+  以太网网桥是一种设备，通常用于将以太网的不同网络连接在一起，以便这些以太网对参与者显示为一个以太网。所连接的每个以太网对应于网桥中的一个物理接口。这些单独的以太网被聚集成一个更大的（“逻辑”）以太网，这个更大的以太网对应于网桥网络接口
+
+- `net-tools`
+
+  Net-Tools 是一个 Linux 系统中基本的网络工具集，其集成了常用的网络管理命令“`ifconfig`、`netstat`、`arp`、`route` 等”
+
+---
+
+你应当以 root 身份登入控制台, 下面首先创建 Cloudstack 用于联网的桥
+
+创建并打开 `/etc/sysconfig/network-scripts/ifcfg-cloudbr0`
+
+> ip 寻址 - 在整个本文档中, 我们假设您有一个 `/24` 网络用于实现 Cloudstack; 这可以使任何 [RFC 1918](https://baike.baidu.com/item/RFC%201918/1528155) 网络; 但是我们料想到你可能会使用我们的机器地址来配置网络, 所以在这里声明我们在本篇中会使用 `172.16.10.2` 作为网络地址, 如果您的网络为 `192.168.55.0/24` 的话你应当使用 `192.168.55.2` 作为您的网络地址
+>
+> > RFC 1918私有网络地址分配 (Address Allocation for Private Internets)
+> >
+> > [局域网使用的IP地址范围_张小帅的专栏-CSDN博客](https://blog.csdn.net/qinghezhen/article/details/27882951)
+> >
+> > 局域网可用的IP地址范围为: 
+> >
+> > ```
+> > A类地址：10.0.0.0 - 10.255.255.255 
+> > B类地址：172.16.0.0 - 172.31.255.255 
+> > C类地址：192.168.0.0 -192.168.255.255 
+> > ```
+> >
+> > 以上IP是都是属于局域网，但不一定是同一个局域网。要检测两台电脑是否在同一个局域网，可以再一台电脑上ping另外一台电脑的IP.能ping通的就是在同一个局域网中。
+> >
+> > PS: 个人实验中使用了云服务器, 边使用了相应的内网地址 `10.x.x.x`
+
+```
+#【ifcfg-cloudbr0】，原本没有这个文件
+DEVICE=cloudbr0     # 网卡设备名称   
+TYPE=Bridge         # 网卡类型为网桥
+ONBOOT=yes          # 启动时是否激活 yes | no  
+BOOTPROTO=static    # 协议类型为静态协议   (dhcp bootp none)
+IPV6INIT=no
+IPV6_AUTOCONF=no
+DELAY=5
+IPADDR=172.16.10.2  # 网络IP地址(这里写的是官方的示例, 需要根据个人设备网络 ip 填写同网段地址)
+GATEWAY=172.16.10.1 # 网关地址(上一条的第 4 段改成 1 即可)
+NETMASK=255.255.255.0
+DNS1=8.8.8.8
+DNS2=8.8.4.4
+STP=yes
+USERCTL=no
+NM_CONTROLLED=no
+```
+
+> [linux 网络配置 (配置/etc/sysconfig/network-scripts/ifcfg-ethx) - blue鹰 - 博客园 (cnblogs.com)](https://www.cnblogs.com/blueying/p/3976502.html)
+>
+> 8.8.8.8是一个[IP地址](https://baike.baidu.com/item/IP地址)，是Google提供的免费[DNS服务器](https://baike.baidu.com/item/DNS服务器)的IP地址，Google提供的另外一个免费DNS服务器的IP地址是：8.8.4.4 。用户可以使用Google提供的[DNS](https://baike.baidu.com/item/DNS/427444)服务器上网。
+>
+> > 关于 BOOTPROTO: 
+> >
+> > [centos设置BOOTPROTO none和dhcp有什么区别_周二也被占用-CSDN博客](https://blog.csdn.net/u011350541/article/details/78224872)
+> >
+> > ```
+> > none表示使用静态IP，自行配置; 
+> > dhcp表示使用动态IP，自行生成
+> > ```
+> >
+> > 如果自己有内网的IP地址，最好设置成dhcp自己指定ip地址
+> >
+> > 还有个onboot=yes或onboot=no的配置
+> > 意思是是否系统启动是自动激活网卡，一般设置为yes
+
+保存配置并退出.
+
+打开接口配置文件 `/etc/sysconfig/network-scripts/ifcfg-eth0` 并按照如下配置
+
+```
+TYPE=Ethernet
+BOOTPROTO=none
+DEFROUTE=yes
+NAME=eth0
+DEVICE=eth0
+ONBOOT=yes
+BRIDGE=cloudbr0
+# HWADDR(又名 MAC 地址或 UUID) 不用改
+```
+
+> 接口名仅为用例, 请使用默认的以太网口名称替换上述配置项中的 etho
+>
+> > 也即你的配置项文件名称不一定为 `ifcfg-eth0`
+
+> [网卡配置文件里DEFROUTE="yes"是什么东西？ - Linux新手园地-Chinaunix](http://bbs.chinaunix.net/thread-4185395-1-1.html)
+>
+> ```
+> DEFROUTE=answer, 这里answer取下列值之一：
+> yes -- 将该接口设置为默认路由。
+> no -- 不要将该接口设置为默认路由
+> ```
+
+现在已经正确设置了配置文件, 我们需要运行几个命令来启动网络
+
+```
+systemctl enable network
+
+systemctl restart network
+```
+
+需要注意的是,如果通过 SSH 连接到虚拟机, 那么重启网络会您短暂地断开连接, 如果断开时间过久那么则说明您的配置项出现了错误
+
+可以通过如下命令查看系统网络的桥接情况
+
+```
+brctl show
+```
+
+![image-20210915220516351](http://cdn.ayusummer233.top/img/202109152205450.png)
+
+> [多网卡绑定实例 - 遥远的绿洲 - 博客园 (cnblogs.com)](https://www.cnblogs.com/zjd2626/p/6555198.html)
+
+> 如果是本地虚拟机的话可以通过 ping baidu.com 来试试有没有网
+>
+> 有网的话记得把前面的 yum 命令执行了
+>
+> ```
+> yum -y upgrade	# 升级所有包，不改变软件设置和系统设置，系统版本升级，内核不改变
+> yum install bridge-utils net-tools -y
+> 
+> 
+> # PS:
+> yum -y update：升级所有包，改变软件设置和系统设置,系统版本内核都升级
+> 
+> ```
+
 ---
 
 #### `Hostname`
 
-
+Cloudstack 要求正确配置主机名; 若您在安装中使用了默认选项,则主机名当前设置为本地主机, 为了测试这一点, 我们运行如下命令
 
 ```shell
-hostname --fqdn
+hostname --fqdn			# 或 hostname -f
+
+# PS:
+hostname		# 查看主机名
+hostname -f 	# 查看FQDN
 ```
+
+> [FQDN 是什么_ez scope-CSDN博客_fqdn](https://blog.csdn.net/u012842205/article/details/51931017)
+>
+> FQDN是完全合格域名/全程域名缩写，Fully Qualified Domain Name，即是域名，访问时将由DNS进行解析，得到IP。
+>
+> `FQDN = Hostname + DomainName`
+
+在当前情况下返回的应当是
+
+```
+localhost
+```
+
+为了纠正这种情况, 我们将通过编辑 `/etc/hosts` 来设置 `hostname` , 请按照类似如下格式进行配置
+
+```
+127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
+172.16.10.2 srvr1.cloud.priv	# ip 记得改成自己之前配网时的 ip
+```
+
+修改完文件后使用如下命令重启网络
+
+```
+systemctl restart network
+```
+
+并使用 `hostname --fqdn` 命令;来看看是否返回的是 `srvr1.cloud.priv`
+
+> 很遗憾我这里不管怎么配置都还是原本的默认值 `VM-4-11-centos`
+>
+> 索性直接 `hostname srvr1.cloud.priv` 改了, 重启网络重连后使用 `hostname --fqdn` 命令确实可以回显 `srvr1.cloud.priv`
+>
+> 虽然不清楚是否可以这么做, 但是遍寻磁盘文件, 我是用 hostname 命令改完主机名后只有 `/etc/hosts` 中有这个名字, 故不了了之
+
+---
+
+#### SELinux
 
 
 
