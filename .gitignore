@@ -22,6 +22,9 @@ DigitalImageProcessing/OpenCV-python/main.py
 DigitalImageProcessing/Matlab/GlobalTest.m
 ComputerGraphics/Experiment/GlobalTest.py
 ComputerGraphics/code2flow/
+Assembly/Test
+大数据处理与分析/Latex
+大数据处理与分析/stash
 
 # 辅助性文件
 ## 用于截取实验记录并输出PDF
