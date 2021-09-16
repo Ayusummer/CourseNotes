@@ -28,8 +28,8 @@ IaaS、PaaS、SaaS 是云计算的三种主要类型;
 
 |      |                         功能概述                         |                            示例                             |                      全称                       |
 | :--: | :------------------------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------: |
-| IaaS | 基于云的服务，按需付费，<br>用于存储，网络和虚拟化等服务 |                 AWS，阿里云，腾讯云，华为云                 | Infrastructure as a Service <br> 基础设施即服务 |
-| PaaS |              Internet上可用的硬件和软件工具              | Microsoft Windows Azure，百度BAE、<br/>新浪SAE、京东云擎JAE |      Platform as a Service <br> 平台即服务      |
+| IaaS | 基于云的服务，按需付费，<br> 用于存储，网络和虚拟化等服务 |                 AWS，阿里云，腾讯云，华为云                 | Infrastructure as a Service <br> 基础设施即服务 |
+| PaaS |              Internet上可用的硬件和软件工具              | Microsoft Windows Azure，百度BAE、<br/> 新浪SAE、京东云擎JAE |      Platform as a Service <br> 平台即服务      |
 | SaaS |             可通过互联网通过第三方获得的软件             |                       钉钉，企业微信                        |      Software as a Service <br> 软件即服务      |
 
 ![image-20210915091928167](http://cdn.ayusummer233.top/img/20210915091935.png)
@@ -44,7 +44,7 @@ IaaS 的根本就是将计算资源进行池化(不限于cpu,内存，网络), �
 
 ---
 
-## CloudStack 
+## CloudStack 概述
 
 [关于cloudstack，openstack，kubernetes三个开源云平台的架构演进思考 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/49523193)
 
@@ -109,7 +109,6 @@ Cloudstack 部署架构:
 
   二级存储与 Zone 关联，它存储模板文件，ISO 镜像和磁盘卷快照。
 
-
 ---
 
 # Linux 
@@ -124,8 +123,6 @@ Cloudstack 部署架构:
 2. 方法2：使用命令： `uname -a` 查看
 3. 方法3：使用命令： `lsb_release -a` 查看
 
-
-
 ---
 
 ## CentOS
@@ -139,10 +136,75 @@ Cloudstack 部署架构:
 `yum` 方法安装的，可以用 `yum list installed` 查找，如果是查找指定包，命令后加 `| grep "软件名或者包名"`, 没有返回值就是没安装
 
 > `grep`: Linux 系统中 grep 命令是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来。grep全称是Global Regular Expression Print，表示全局正则表达式版本，它的使用权限是所有用户。
+>
+> [教你使用CentOS yum-CentOS-PHP中文网](https://www.php.cn/centos/465530.html)
+>
+> `yum install -y xxx` 中的 `-y` 用于默认 yes, 省略 yes 确认步骤
 
 ---
 
+### 常用软件包
 
+#### screen
+
+[CentOS下screen 命令详解 - 用代码书写人生 - 博客园 (cnblogs.com)](https://www.cnblogs.com/webnote/p/5749675.html)
+
+GNU Screen可以看作是窗口管理器的命令行界面版本。它提供了统一的管理多个会话的界面和相应的功能。
+
+```shell
+yum install screen -y
+```
+
+
+
+---
+
+### Debug log
+
+---
+
+#### yum 命令报错: `Could not resolve host: mirrors.tencentyun.com; Unknown error`
+
+[Could not resolve host: mirrors.tencentyun.com_user2025的博客-CSDN博客](https://blog.csdn.net/user2025/article/details/107733068)
+
+原因：腾讯云服务器内网 yum 源的域名 mirrors.tencentyun.com 需要有内网的 DNS 才能访问，但是实际情况下，我们会根据需要修改 DNS，为了使用腾讯云内网快速稳定的内网源，我们需要把 DNS 恢复为内网 DNS，下面为各地区服务器 DNS 地址
+解决办法：
+（1）修改服务器的 DNS 配置文件：`/etc/resolv.conf` ，请参阅如下文档添加对应地区的内网 DNS 服务器
+
+​          [云服务器 内网服务 - 产品简介 - 文档中心 - 腾讯云 (tencent.com)](https://cloud.tencent.com/document/product/213/5225)
+
+> 我用的上海地域的轻量, 配上海或者上海金融的 DNS 都不对, 最后无奈重置实例才发现原来是配最后一个所有地域的那个 DNS
+>
+> ![image-20210916203841882](http://cdn.ayusummer233.top/img/202109162038974.png)
+
+（2）重启网络服务
+
+```shell
+# 重启方式1：
+/etc/init.d/network restart
+#重启方式2：
+systemctl restart network
+```
+
+>
+>
+>![image-20210916185305965](http://cdn.ayusummer233.top/img/202109161853077.png)
+>
+>部署 Cloudstack 前做网络桥接的时候把 DNS 改成了谷歌的这个所以重启网络后上图自动生成的配置中 DNS 就成这样了
+>
+>直接在上图这个文件中改的话重启网络后又会变回谷歌的这两个, 因此要在当初配网桥时候的配置里改:
+>
+>![image-20210916190504657](http://cdn.ayusummer233.top/img/202109161905823.png)
+>
+>这里需要注意的是最多支持三个 DNS, 一个首选两个备选, 因此这里将腾讯云的两个内网 DNS 设为首选, 谷歌的那个座位备选
+>
+>重启网络后可以看到配置自动更新了
+>
+>> PS: 图里的两个DNS对我的上海轻量不管用, 详见上文(应当配置适用于所有地域的内网DNS)
+>
+>---
+>
+>[linux 的/etc/resolv.conf文件最多支持多少DNS - Linux系统管理-Chinaunix](http://bbs.chinaunix.net/thread-3714518-1-1.html)
 
 ---
 
@@ -212,11 +274,11 @@ chrony 用于做时间同步, 暂且认为不会影响到此次部署
 
   > 云轻量有固定 ip, 故此项满足
 
-----
+---
 
 ### 环境
 
-CentOS 7.6 
+CentOS 7.6  
 
 ---
 
@@ -228,7 +290,7 @@ yum -y upgrade
 
 ![image-20210915155241846](http://cdn.ayusummer233.top/img/202109151552042.png)
 
-----
+---
 
 #### 配置网络
 
@@ -270,7 +332,7 @@ yum install bridge-utils net-tools -y
 > >
 > > 局域网可用的IP地址范围为: 
 > >
-> > ```
+> > ```shell
 > > A类地址：10.0.0.0 - 10.255.255.255 
 > > B类地址：172.16.0.0 - 172.31.255.255 
 > > C类地址：192.168.0.0 -192.168.255.255 
@@ -280,7 +342,7 @@ yum install bridge-utils net-tools -y
 > >
 > > PS: 个人实验中使用了云服务器, 边使用了相应的内网地址 `10.x.x.x`
 
-```
+```shell
 #【ifcfg-cloudbr0】，原本没有这个文件
 DEVICE=cloudbr0     # 网卡设备名称   
 TYPE=Bridge         # 网卡类型为网桥
@@ -307,7 +369,7 @@ NM_CONTROLLED=no
 > >
 > > [centos设置BOOTPROTO none和dhcp有什么区别_周二也被占用-CSDN博客](https://blog.csdn.net/u011350541/article/details/78224872)
 > >
-> > ```
+> > ```shell
 > > none表示使用静态IP，自行配置; 
 > > dhcp表示使用动态IP，自行生成
 > > ```
@@ -321,7 +383,7 @@ NM_CONTROLLED=no
 
 打开接口配置文件 `/etc/sysconfig/network-scripts/ifcfg-eth0` 并按照如下配置
 
-```
+```shell
 TYPE=Ethernet
 BOOTPROTO=none
 DEFROUTE=yes
@@ -335,10 +397,10 @@ BRIDGE=cloudbr0
 > 接口名仅为用例, 请使用默认的以太网口名称替换上述配置项中的 etho
 >
 > > 也即你的配置项文件名称不一定为 `ifcfg-eth0`
-
+>  
 > [网卡配置文件里DEFROUTE="yes"是什么东西？ - Linux新手园地-Chinaunix](http://bbs.chinaunix.net/thread-4185395-1-1.html)
 >
-> ```
+> ```shell
 > DEFROUTE=answer, 这里answer取下列值之一：
 > yes -- 将该接口设置为默认路由。
 > no -- 不要将该接口设置为默认路由
@@ -346,7 +408,7 @@ BRIDGE=cloudbr0
 
 现在已经正确设置了配置文件, 我们需要运行几个命令来启动网络
 
-```
+```shell
 systemctl enable network
 
 systemctl restart network
@@ -356,7 +418,7 @@ systemctl restart network
 
 可以通过如下命令查看系统网络的桥接情况
 
-```
+```shell
 brctl show
 ```
 
@@ -368,7 +430,7 @@ brctl show
 >
 > 有网的话记得把前面的 yum 命令执行了
 >
-> ```
+> ```shell
 > yum -y upgrade	# 升级所有包，不改变软件设置和系统设置，系统版本升级，内核不改变
 > yum install bridge-utils net-tools -y
 > 
@@ -385,11 +447,11 @@ brctl show
 Cloudstack 要求正确配置主机名; 若您在安装中使用了默认选项,则主机名当前设置为本地主机, 为了测试这一点, 我们运行如下命令
 
 ```shell
-hostname --fqdn			# 或 hostname -f
+hostname --fqdn    # 或 hostname -f
 
 # PS:
-hostname		# 查看主机名
-hostname -f 	# 查看FQDN
+hostname          # 查看主机名
+hostname -f       # 查看FQDN
 ```
 
 > [FQDN 是什么_ez scope-CSDN博客_fqdn](https://blog.csdn.net/u012842205/article/details/51931017)
@@ -400,21 +462,21 @@ hostname -f 	# 查看FQDN
 
 在当前情况下返回的应当是
 
-```
+```shell
 localhost
 ```
 
 为了纠正这种情况, 我们将通过编辑 `/etc/hosts` 来设置 `hostname` , 请按照类似如下格式进行配置
 
-```
+```shell
 127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
-172.16.10.2 srvr1.cloud.priv	# ip 记得改成自己之前配网时的 ip
+172.16.10.2 srvr1.cloud.priv    # ip 记得改成自己之前配网时的 ip
 ```
 
 修改完文件后使用如下命令重启网络
 
-```
+```shell
 systemctl restart network
 ```
 
@@ -429,6 +491,268 @@ systemctl restart network
 ---
 
 #### SELinux
+
+> [一文彻底明白linux中的selinux到底是什么_yanjun821126的博客-CSDN博客_selinux](https://blog.csdn.net/yanjun821126/article/details/80828908)
+>
+> [2.4 SELinux](https://blog.csdn.net/qq_44714521/article/details/109145500#24_SELinux_123)
+>
+> 安全增强型 Linux（Security-Enhanced Linux）简称 SELinux，它是一个 Linux 内核模块，也是 Linux 的一个安全子系统。
+> SELinux 主要作用就是最大限度地减小系统中服务进程可访问的资源（最小权限原则）
+
+要使 Cloudstack 正常工作, 必须将 SELinux 设置为 Permissive
+
+> [SELinux 宽容模式(permissive) 强制模式(enforcing) 关闭(disabled) 几种模式之间的转换_tangsilian的博客-CSDN博客_permissive](https://blog.csdn.net/tangsilian/article/details/80144112)
+>
+> permissive：宽容模式：代表 SELinux 运作中，不过仅会有警告讯息并不会实际限制 domain/type 的存取。这种模式可以运来作为 SELinux 的 debug 之用
+
+使用 `getenforce` 命令可以在 Linux 下查看是否开启了 SELinux
+
+```shell
+getenforce
+```
+
+
+
+![image-20210916100835642](http://cdn.ayusummer233.top/img/202109161008748.png)
+
+> [getenforce命令_Linux getenforce命令使用详解：查看是否开启了SELinux (ywnz.com)](https://www.ywnz.com/linux/getenforce/)
+
+可以使用如下命令将 SELinux 配置为 Permissive
+
+```shell
+setenforce 0
+```
+
+![image-20210916101218105](http://cdn.ayusummer233.top/img/202109161012171.png)
+
+> 我服务器中的 SELinux 处于未使能的状态, 不过反正 SELinux 设置为 Permissive 的话也是不会有实际上的操作限制, 直接关闭应该也不成问题
+
+---
+
+#### NTP
+
+NTP 是保证 cloud servers 中所有时钟同步的必要条件。但是 NTP 不是默认安装的;
+
+> [centos7 查看启动ntp服务命令_夫君子之行,静以修身,俭以养德,非淡泊无以明志,非宁静无以致远.-CSDN博客_启动ntp服务](https://blog.csdn.net/qq_33468857/article/details/91345107)
+>
+> 可以使用如下命令查看 NTP 是否启用
+>
+> ```shell
+> systemctl status ntpd
+> ```
+>
+> ![image-20210916101947609](http://cdn.ayusummer233.top/img/202109161019723.png)
+>
+> 可以看到我这里是 `active(running)` (毕竟本就是云服务器), 所以就不用再配置了
+
+使用如下命令安装并启用 ntpd:
+
+```shell
+yum -y install ntp
+systemctl enable ntpd
+systemctl start ntpd
+```
+
+---
+
+#### 配置 Cloudstack Package Repository
+
+我们需要配置机器使用 Cloudstack package repository
+
+> Apache Cloudstack 的官方 Release 都是 source code 以至于并不存在可用的"官方"二进制文件
+>
+> [完整的安装指南](http://docs.cloudstack.apache.org/en/4.15.1.0/installguide/index.html)描述了如何获取 source release 并生成 RPMs and  yum repository
+>
+> > [RPM（Red-Hat Package Manager 软件包管理器）_百度百科 (baidu.com)](https://baike.baidu.com/item/RPM/3794648)
+> >
+> > [Yum Repository详解_weixin_34055910的博客-CSDN博客](https://blog.csdn.net/weixin_34055910/article/details/92964753)
+> > [YUM](http://yum.baseurl.org/)(Yellowdog Updater Modified)是 Fedora、CentOS、RedHat 中的软件包管理器。基于 RPM 包管理，YUM 通过分析 RPM header数据，自动处理依赖关系，从指定服务器自动下载安装所有依赖的软件包。
+>
+> [快速部署指南](http://docs.cloudstack.apache.org/en/4.15.1.0/quickinstallationguide/qig.html#selinux)试图让配置越简单越好, 因此这里不进行过多描述, 因此这里使用一款 community-provided 的 yum repository
+>
+> 此外, 本次以安装 Cloudstack 4.15.1.0 为例 - 具体到个人安装参阅如下内容时请按照相应版本适当变更设置
+
+要添加 CLoudstack repository, 需要创建 `/etc/yum.repos.d/cloudstack.repo` 并输入如下信息:
+
+```shell
+[cloudstack]
+name=cloudstack    # yum仓库名字
+baseurl=http://download.cloudstack.org/centos/$releasever/4.15/    # 仓库的位置
+enabled=1     # 开启yum功能
+gpgcheck=0    # 关闭完整性检查
+```
+
+---
+
+#### NFS
+
+> 网络文件系统，Network File System, 是一种使用于分散式文件协定，功能是通过网络让不同的机器、不同的操作系统能够分享个人数据，让应用程序通过网络可以访问位于服务器磁盘中的数据的系统
+>
+> [Linux下部署NFS服务 (*￣︶￣)_Ever~z 的博客！-CSDN博客_nfs](https://blog.csdn.net/sinat_41075146/article/details/80800812)
+
+我们的配置将 NFS 用于 主存储 与 二级存储 (前文 [Cloudstack 概述](#Cloudstack 概述)时有提到)
+
+使用如下命令安装 `nfs-utils`
+
+```shell
+yum -y install nfs-utils
+```
+
+> 大失败, 到这里的时候我突然 ping 不同腾讯云的内网 DNS了, 导致后面 yum 操作全崩
+>
+> 备份完修改文件重置实例了, 这次要好好看看怎么回事
+>
+> > 答案是上海云轻量不适用上海或上海金融的DNS,  应当使用所有地域的DNS, 详见 [此处](# yum 命令报错: `Could not resolve host: mirrors.tencentyun.com; Unknown error`)
+
+配置 NFS 提供两个不同的 share
+
+```shell
+# 打开配置文件
+vi /etc/exports
+
+# 填入如下内容
+/export/secondary *(rw,async,no_root_squash,no_subtree_check)
+/export/primary *(rw,async,no_root_squash,no_subtree_check)
+```
+
+你应该会注意到这两个路径目前并不存在, 因此我们将继续创建这些目录并用如下命令为它们配置适当的权限
+
+```
+mkdir -p /export/primary
+mkdir /export/secondary
+```
+
+> [Linux mkdir 命令 | 菜鸟教程 (runoob.com)](https://www.runoob.com/linux/linux-comm-mkdir.html)
+>
+> ---
+>
+> `-p` 确保目录名称存在, 不存在就创建一个
+>
+> ![image-20210916212430637](http://cdn.ayusummer233.top/img/202109162124784.png)
+
+默认情况下, CentOS 7.x  release 使用 NFSv4; NFSv4 要求在所有客户端上都设置匹配的域; 在本例中 domain 是 `cloud.priv` ; 所以请确保 `/etc/idmapd.conf` 目录下 `Domain = cloud.priv`
+
+```shell
+vi /etc/idmapd.conf
+
+# 修改如下配置:
+Domain = cloud.priv
+```
+
+
+
+> ![image-20210916213927112](http://cdn.ayusummer233.top/img/202109162139208.png)
+>
+> 这里我没取消注释并修改而是直接在原有注释下加了一行, 主要是我看到后面有两处用到了原有注释里的 `local.domain.edu`
+>
+> ![image-20210916214044901](http://cdn.ayusummer233.top/img/202109162140989.png)
+
+在 `/etc/sysconfig/nfs` 中添加如下配置, 或者取消原本的注释并进行设置
+
+```shell
+vi /etc/sysconfig/nfs
+```
+
+```shell
+LOCKD_TCPPORT=32803
+LOCKD_UDPPORT=32769
+MOUNTD_PORT=892
+RQUOTAD_PORT=875
+STATD_PORT=662
+STATD_OUTGOING_PORT=2020
+```
+
+> 有一说一这个 nfs 是个隐藏文件, 差点误修改 nfs.conf 去了
+>
+> ![image-20210916214813349](http://cdn.ayusummer233.top/img/202109162148482.png)
+>
+> 如下图所示, 原文件中几处配置隔开了
+>
+> ![image-20210916214935117](http://cdn.ayusummer233.top/img/202109162149261.png)
+>
+> 所以我索性讲配置加在文件末尾了
+>
+> ![image-20210916215100821](http://cdn.ayusummer233.top/img/202109162151915.png)
+
+接下来关掉防火墙以防止其阻断连接
+
+```shell
+systemctl stop firewalld
+systemctl disable firewalld
+```
+
+> [iptables、firewall和SELinux的区别及CentOS6.5、7关闭/开启防火墙的方法_theworldofxiej的专栏-CSDN博客](https://blog.csdn.net/theworldofxiej/article/details/103652136)
+>
+> [CentOS查看端口防火墙状态 - 刀锋93 - 博客园 (cnblogs.com)](https://www.cnblogs.com/hebiao/p/12966000.html)
+
+用如下命令查看下防火墙状态
+
+```shell
+firewall-cmd --state
+```
+
+> ![image-20210916215701825](http://cdn.ayusummer233.top/img/202109162157968.png)
+
+现在开始配置 nfs 服务在主机启动时启用并实际启用 nfs
+
+```shell
+systemctl enable rpcbind
+systemctl enable nfs
+systemctl start rpcbind
+systemctl start nfs
+```
+
+> - [2.7 NFS](https://blog.csdn.net/qq_44714521/article/details/109145500#27_NFS_180)
+>
+> rpcbind 是一个 RPC 服务，主要是在 nfs 共享时候负责通知客户端服务器的 nfs 端口号的。简单理解 rpc 就是一个中介服务。
+>
+> ![image-20210916220118599](http://cdn.ayusummer233.top/img/202109162201695.png)
+>
+> 这里我遇到了一处比较奇怪的地方
+
+使用 `showmount` 命令查看共享目录
+
+```shell
+showmount -e srvr1.cloud.priv
+```
+
+
+
+> [Linux showmount命令查看NFS共享目录信息-Linux实验室 (wanyunshuju.com)](https://idc.wanyunshuju.com/cym/1728.html)
+>
+> 使用showmount命令可以显示NFS服务器的挂载信息。比如查看NFS服务器上有哪些共享目录，这些共享目录可以被哪些客户端访问，以及哪些共享目录已经被客户端挂载了。
+>
+> `showmount [选项] [NFS服务器]`
+>
+> `-e` 显示 NFS 服务器的导出列表
+>
+> ---
+>
+> 由于之前在 [hostname 设置](#Hostname)时 `hostname --fqdn` 始终无法回显 `srvr1.cloud.priv` 因此这次部署 Cloudstack 时就没配 hostname 所以这里也是无法识别 host
+>
+> ![image-20210916221453014](http://cdn.ayusummer233.top/img/202109162214100.png)
+>
+> 不过将 hostname 换成内网 ip 又查了下发现有用
+>
+> ![image-20210916222222868](http://cdn.ayusummer233.top/img/202109162222951.png)
+>
+> 那么说明 NFS 已经配置好了, 因此又返回  [hostname 设置](#Hostname) 步骤修改了下 hosts 文件将下面这行又加上了
+>
+> ```shell
+> 172.16.10.2 srvr1.cloud.priv	
+> ```
+>
+> 然后又用 hostname 试了下结果成功了
+>
+> ![image-20210916222517900](http://cdn.ayusummer233.top/img/202109162225999.png)
+>
+> 不过 `hostname --fqdn` 回显仍然没变, 那么说明这里 `hostname` 访问的名字可能是我公网的 hostname, 毕竟云服务器不同于本地虚拟机, 同时有公网 ip 和内网 ip
+>
+> 不过这种解释是否真的成立暂时按下不表, 下面继续部署时美出问题就是没事
+
+---
+
+### 安装 Management Server
 
 
 
