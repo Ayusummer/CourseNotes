@@ -6,8 +6,9 @@
  * @Description: In User Settings Edit
  * @FilePath: \JuniorLesson_SecondTerm\README.md
 -->
+[![wakatime](https://wakatime.com/badge/github/Ayusummer/JuniorLesson_SecondTerm.svg)](https://wakatime.com/badge/github/Ayusummer/JuniorLesson_SecondTerm)
 # JuniorLessons_beta
 
-#### 介绍
+## 介绍
 课程随笔
 
