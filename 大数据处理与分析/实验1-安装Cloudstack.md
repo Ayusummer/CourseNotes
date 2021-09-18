@@ -754,5 +754,108 @@ showmount -e srvr1.cloud.priv
 
 ### 安装 Management Server
 
+### 数据库的安装与配置
+
+安装并配置 MySQL
+
+首先, CentOS 7 不再提供 MySQL 二进制文件, 我们需要添加一个 MySQL 社区仓库, 其可提供 MySQL Server(以及 Python MySQL connector)
+
+```shell
+wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+rpm -ivh mysql-community-release-el7-5.noarch.rpm
+```
+
+> ![image-20210918104710063](http://cdn.ayusummer233.top/img/202109181047325.png)
+>
+> ![image-20210918104743300](http://cdn.ayusummer233.top/img/202109181047463.png)
+>
+> [Linux rpm命令 | 菜鸟教程 (runoob.com)](https://www.runoob.com/linux/linux-comm-rpm.html)
+>
+> ```shell
+> -i 　显示套件的相关信息。
+> -v 　显示指令执行过程。
+> -h或--hash 　套件安装时列出标记。
+> ```
+
+使用如下命令安装 MySQL:
+
+```shell
+yum -y install mysql-server
+```
+
+> ![image-20210918105200080](http://cdn.ayusummer233.top/img/202109181052287.png)
+>
+> 可以使用如下命令查看安装的 MySQL 版本
+>
+> ```shell
+> mysql -V
+> ```
+>
+> ![image-20210918105331967](http://cdn.ayusummer233.top/img/202109181053123.png)
+>
+> ```shell
+> rpm -qa | grep mysql
+> ```
+>
+> ![image-20210918110222751](http://cdn.ayusummer233.top/img/202109181102916.png)
+>
+> ```shell
+> -q 　使用询问模式，当遇到任何问题时，rpm指令会先询问用户。
+> -a 　查询所有套件。
+> ```
+>
+> 
+
+修改 `/etc/my.cnf`, 在 [mysqld] 部分添加如下配置
+
+```shell
+# 编辑 /etc/my.cnf
+vi /etc/my.cnf
+
+# 添加配置
+innodb_rollback_on_timeout=1
+innodb_lock_wait_timeout=600
+max_connections=350
+log-bin=mysql-bin
+binlog-format = 'ROW'
+```
+
+> 需要注意的是, 如果使用 `Ubuntu 16.04` 及更高版本, 那么请指定一个 `server-id`: 在 `my.cnf` 的 [mysqld] 中多加一句
+>
+> ```shell
+> server-id=master-01
+> ```
+>
+> 
+>
+> ---
+>
+> [MySQL my.cnf配置文件详解 (biancheng.net)](http://c.biancheng.net/view/7618.html#:~:text=Linux 操作系统中 MySQL 的配置文件是 my.cnf，一般会放在 %2Fetc%2Fmy.cnf 或 %2Fetc%2Fmysql%2Fmy.cnf,rpm 包安装 MySQL 找不到 my.cnf 文件，可参考《 在linux下通过rpm安装的mysql找不到my.cnf解决方法 》。)
+>
+> [mysql之my.cnf详解 - 百衲本 - 博客园 (cnblogs.com)](https://www.cnblogs.com/panwenbin-logs/p/8360703.html)
+>
+> - `innodb_rollback_on_timeout`
+> 	
+> 	[MySQL数据库innodb_rollback_on_timeout参数 - 云+社区 - 腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1579417)
+> 	
+> - `innodb_lock_wait_timeout`  
+> 	InnoDB 事务在被回滚之前可以等待一个锁定的超时秒数。InnoDB 在它自己的 锁定表中自动检测事务死锁并且回滚事务。 InnoDB 用 LOCK TABLES 语句注意到锁定设置。默认值是 50 秒
+>
+> 	> [innodb_百度百科 (baidu.com)](https://baike.baidu.com/item/Innodb/8970025)
+> 	>
+> 	> InnoDB，是MySQL的数据库引擎之一，现为MySQL的默认存储引擎
+>
+> - `max_connections`  
+>    指定 MySQL 允许的最大连接进程数。如果在访问数据库时经常出现"Too Many Connections"的错误提 示，则需要增大该参数值。
+>
+> - `log-bin = mysql-bin`  
+>   打开二进制日志功能.在复制(replication)配置中,作为 MASTER 主服务器必须打开此项.如果你需要从你最后的备份中做基于时间点的恢复,你也同样需要二进制日志.这些路径相对于 datadir>	
+>
+> - `binlog-format = 'ROW'`
+>
+>   [关于binary log那些事——认真码了好长一篇 - 苏家小萝卜 - 博客园 (cnblogs.com)](https://www.cnblogs.com/xinysu/p/6607658.html#_lab2_2_1)
+>
+> ![image-20210918113037715](http://cdn.ayusummer233.top/img/202109181130992.png)
+
 
 
