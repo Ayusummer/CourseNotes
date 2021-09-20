@@ -302,7 +302,15 @@ yum install bridge-utils net-tools -y
 
 > 先检查下是否已经安装了
 >
+> ```
+> yum list installed |grep "bridge-utils"
+> 
+> yum list installed |grep "net-tools"
+> ```
+>
 > ![image-20210915204418620](http://cdn.ayusummer233.top/img/202109152044700.png)
+>
+> ![image-20210919194415041](http://cdn.ayusummer233.top/img/202109191944282.png)
 
 ![image-20210915204828274](http://cdn.ayusummer233.top/img/202109152048388.png)
 
@@ -343,7 +351,6 @@ yum install bridge-utils net-tools -y
 > > PS: 个人实验中使用了云服务器, 边使用了相应的内网地址 `10.x.x.x`
 
 ```shell
-#【ifcfg-cloudbr0】，原本没有这个文件
 DEVICE=cloudbr0     # 网卡设备名称   
 TYPE=Bridge         # 网卡类型为网桥
 ONBOOT=yes          # 启动时是否激活 yes | no  
@@ -351,8 +358,8 @@ BOOTPROTO=static    # 协议类型为静态协议   (dhcp bootp none)
 IPV6INIT=no
 IPV6_AUTOCONF=no
 DELAY=5
-IPADDR=172.16.10.2  # 网络IP地址(这里写的是官方的示例, 需要根据个人设备网络 ip 填写同网段地址)
-GATEWAY=172.16.10.1 # 网关地址(上一条的第 4 段改成 1 即可)
+IPADDR=192.168.122.2  # 网络IP地址(这里写的是官方的示例, 需要根据个人设备网络 ip 填写同网段地址)
+GATEWAY=192.168.122.1 # 网关地址(上一条的第 4 段改成 1 即可)
 NETMASK=255.255.255.0
 DNS1=8.8.8.8
 DNS2=8.8.4.4
@@ -361,6 +368,10 @@ USERCTL=no
 NM_CONTROLLED=no
 ```
 
+> ![image-20210919195337609](http://cdn.ayusummer233.top/img/202109191953860.png)
+>
+> ---
+>
 > [linux 网络配置 (配置/etc/sysconfig/network-scripts/ifcfg-ethx) - blue鹰 - 博客园 (cnblogs.com)](https://www.cnblogs.com/blueying/p/3976502.html)
 >
 > 8.8.8.8是一个[IP地址](https://baike.baidu.com/item/IP地址)，是Google提供的免费[DNS服务器](https://baike.baidu.com/item/DNS服务器)的IP地址，Google提供的另外一个免费DNS服务器的IP地址是：8.8.4.4 。用户可以使用Google提供的[DNS](https://baike.baidu.com/item/DNS/427444)服务器上网。
@@ -382,6 +393,10 @@ NM_CONTROLLED=no
 保存配置并退出.
 
 打开接口配置文件 `/etc/sysconfig/network-scripts/ifcfg-eth0` 并按照如下配置
+
+```shell
+vi /etc/sysconfig/network-scripts/ifcfg-eth0
+```
 
 ```shell
 TYPE=Ethernet
@@ -754,7 +769,7 @@ showmount -e srvr1.cloud.priv
 
 ### 安装 Management Server
 
-### 数据库的安装与配置
+#### 数据库的安装与配置
 
 安装并配置 MySQL
 
@@ -804,7 +819,7 @@ yum -y install mysql-server
 > -a 　查询所有套件。
 > ```
 >
-> 
+> 可以看到这里的 `MySQL` 版本为 `5.6.51`
 
 修改 `/etc/my.cnf`, 在 [mysqld] 部分添加如下配置
 
@@ -826,8 +841,6 @@ binlog-format = 'ROW'
 > server-id=master-01
 > ```
 >
-> 
->
 > ---
 >
 > [MySQL my.cnf配置文件详解 (biancheng.net)](http://c.biancheng.net/view/7618.html#:~:text=Linux 操作系统中 MySQL 的配置文件是 my.cnf，一般会放在 %2Fetc%2Fmy.cnf 或 %2Fetc%2Fmysql%2Fmy.cnf,rpm 包安装 MySQL 找不到 my.cnf 文件，可参考《 在linux下通过rpm安装的mysql找不到my.cnf解决方法 》。)
@@ -835,27 +848,381 @@ binlog-format = 'ROW'
 > [mysql之my.cnf详解 - 百衲本 - 博客园 (cnblogs.com)](https://www.cnblogs.com/panwenbin-logs/p/8360703.html)
 >
 > - `innodb_rollback_on_timeout`
-> 	
+>
 > 	[MySQL数据库innodb_rollback_on_timeout参数 - 云+社区 - 腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1579417)
 > 	
 > - `innodb_lock_wait_timeout`  
-> 	InnoDB 事务在被回滚之前可以等待一个锁定的超时秒数。InnoDB 在它自己的 锁定表中自动检测事务死锁并且回滚事务。 InnoDB 用 LOCK TABLES 语句注意到锁定设置。默认值是 50 秒
->
+> 		InnoDB 事务在被回滚之前可以等待一个锁定的超时秒数。InnoDB 在它自己的 锁定表中自动检测事务死锁并且回滚事务。 InnoDB 用 LOCK TABLES 语句注意到锁定设置。默认值是 50 秒
+> 
 > 	> [innodb_百度百科 (baidu.com)](https://baike.baidu.com/item/Innodb/8970025)
-> 	>
+>	>
 > 	> InnoDB，是MySQL的数据库引擎之一，现为MySQL的默认存储引擎
->
+> 
 > - `max_connections`  
->    指定 MySQL 允许的最大连接进程数。如果在访问数据库时经常出现"Too Many Connections"的错误提 示，则需要增大该参数值。
->
+>   指定 MySQL 允许的最大连接进程数。如果在访问数据库时经常出现"Too Many Connections"的错误提 示，则需要增大该参数值。
+> 
 > - `log-bin = mysql-bin`  
->   打开二进制日志功能.在复制(replication)配置中,作为 MASTER 主服务器必须打开此项.如果你需要从你最后的备份中做基于时间点的恢复,你也同样需要二进制日志.这些路径相对于 datadir>	
->
+>  打开二进制日志功能.在复制(replication)配置中,作为 MASTER 主服务器必须打开此项.如果你需要从你最后的备份中做基于时间点的恢复,你也同样需要二进制日志.这些路径相对于 datadir>	
+> 
 > - `binlog-format = 'ROW'`
 >
 >   [关于binary log那些事——认真码了好长一篇 - 苏家小萝卜 - 博客园 (cnblogs.com)](https://www.cnblogs.com/xinysu/p/6607658.html#_lab2_2_1)
 >
 > ![image-20210918113037715](http://cdn.ayusummer233.top/img/202109181130992.png)
 
+现在 MySQL 的配置完成, 使用如下命令启动 MySQL
 
+```shell
+systemctl enable mysqld
+systemctl start mysqld
+```
+
+> ![image-20210919153846061](http://cdn.ayusummer233.top/img/202109191538290.png)
+
+---
+
+#### 安装 MySQL Connector
+
+从 MySQL community repo(上一步添加过) 安装 python MySQL
+
+```shell
+yum -y install mysql-connector-python
+```
+
+> ![image-20210919161355830](http://cdn.ayusummer233.top/img/202109191613215.png)
+>
+> 可以看到我这里的 `mysql-connector-python` 的版本号为 `8.0.23`
+
+需要注意的是往前版本所需要的 `mysql-connector-java library` 现在是与 `CloudStack Management server` 捆绑在一起的因此不需要单独安装
+
+#### 正式安装 Management Server
+
+通过如下命令安装 `Management server`
+
+```shell
+yum -y install cloudstack-management
+```
+
+> ![image-20210919162947373](http://cdn.ayusummer233.top/img/202109191629736.png)
+>
+> 可以看到这里我安装版本是 `4.15.2`, 但是我是看着 `4.15.1` 的文档装的, 有点麻, 不过小版本更新应该问题不大, 不过下面的过程就看 `4.15.2` 的文档吧 (╯﹏╰)b
+
+`CloudStack 4.15` 需要 `Java 11 JRE` 安装 `management servber` 时会自动安装 `Java 11`, 不过还是要看下 `Java 11` 是不是已经处于  `selected/active` 状态:
+
+```shell
+alternatives --config java
+```
+
+> ![image-20210919163721886](http://cdn.ayusummer233.top/img/202109191637078.png)
+
+确保 当前选定的是 `Java 11`  后继续进行下面的步骤
+
+安装完 `management server` 后, 我们现在执行如下命令来设置数据库:
+
+```shell
+cloudstack-setup-databases cloud:password@localhost --deploy-as=root
+```
+
+> ![image-20210919164354269](http://cdn.ayusummer233.top/img/202109191643501.png)
+
+当进程结束时将会显示如下信息:
+
+`CloudStack has successfully initialized the database.`
+
+现在数据库已经创建, 我们可以通过发布如下命令来完成设置 `management server` 的最后一步
+
+```shell
+cloudstack-setup-management
+```
+
+如果 `servlet container` 是 `Tomcat7` 那么须要加上 `-tomcat7` 参数
+
+>翻了下没找到 `tomcat` 相关的配置所以就没动参数
+>
+>[Apache Tomcat - 维基百科，自由的百科全书 (wikipedia.org)](https://zh.wikipedia.org/wiki/Apache_Tomcat)
+>
+>[Java Servlet - 维基百科，自由的百科全书 (wikipedia.org)](https://zh.wikipedia.org/wiki/Java_Servlet)
+>
+>---
+>
+>![image-20210919164654314](http://cdn.ayusummer233.top/img/202109191646467.png)
+>
+>这里显示让我放通 `8080 8250 8443 9090` 端口, 于是就去防火墙把这些端口放通了
+>
+>![image-20210919165001441](http://cdn.ayusummer233.top/img/202109191650668.png)
+
+---
+
+#### System Template 设置
+
+CloudStack 使用许多 `system VM` 提供诸如 `访问虚拟机控制台`, `提供网络服务` 和 `管理存储` 等功能; 此步骤将获取这些 `system image` 以便后续启动云时进行部署
+
+```shell
+/usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /export/secondary -u https://download.cloudstack.org/systemvm/4.15/systemvmtemplate-4.15.1-kvm.qcow2.bz2 -h kvm -F
+```
+
+> ![image-20210919171908727](http://cdn.ayusummer233.top/img/202109191719976.png)
+>
+> 看起来挺大, 下载应该要不少时间
+>
+> ![image-20210919173447500](http://cdn.ayusummer233.top/img/202109191734775.png)
+>
+> 下了大概十几分钟的样子
+
+对 `management server` 的配置到此为止. 我们仍需要继续配置 `CloudStack`, 但那需要在配置完 `hypervisor` 之后了
+
+> [Hypervisor - 维基百科，自由的百科全书 (wikipedia.org)](https://zh.wikipedia.org/wiki/Hypervisor)
+>
+> **Hypervisor**，又称**虚拟机监控器**（英语：virtual machine monitor，缩写为 VMM），是用来创建与运行[虚拟机](https://zh.wikipedia.org/wiki/虛擬機器)的软件、固件或硬件。
+>
+> 虽然拼写比较像, 但与 `Hyper-V` 并没有关系
+>
+> [Introduction to Hyper-V on Windows 10 | Microsoft Docs](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/) 
+
+---
+
+### 配置与安装 KVM 
+
+`KVM` 是我们将要使用的 `hypervisor` - 我们需要恢复已经在 `hypervisor host` 上完成的初始设置并覆盖掉代理软件的安装;
+
+可以使用相同的步骤为 `Cloudstack` 环境添加额外的 `KVM` 结点
+
+---
+
+#### KVM 安装的先决条件
+
+我们明确使用 `management sevrer` 作为计算结点, 这也就意味着我们我们在设置 `management server` 的同时已经执行了很多先决步骤; 但这里还是列出这些步骤义工明确说明; 这些步骤为:
+
+[配置网络](#配置网络)
+
+[Hostname](#Hostname)
+
+[SELinux](#SELinux)
+
+[NTP](NTP)
+
+[配置 Cloudstack Package Repository](#配置 Cloudstack Package Repository)
+
+现在我们不需要为 `management server` 做上面这些步骤, 但任何额外主机都需要完成上述步骤
+
+---
+
+#### 安装 KVM
+
+安装 `KVM agent` 只需要一个命令就可以完成, 但之后我们需要配置一些东西
+
+```shell
+yum -y install epel-release
+yum -y install cloudstack-agent
+```
+
+> ![image-20210919175345485](http://cdn.ayusummer233.top/img/202109191753869.png)
+>
+> `pel-release.noarch 0:7-14 `
+>
+> ![image-20210919175505265](http://cdn.ayusummer233.top/img/202109191755628.png)
+>
+> `cloudstack-agent.x86_64 0:4.15.2.0-1.el7`
+
+---
+
+#### KVM 配置
+
+该部分又包含两个不同部分: `QEMU` 与 `Libvirt`
+
+> - [4.3 KVM Configuration KVM配置](https://blog.csdn.net/qq_44714521/article/details/109145500#43_KVM_Configuration_KVM_335)
+> - [KVM-Qemu-Libvirt三者之间的关系_whatday的专栏-CSDN博客_libvirt qemu](https://blog.csdn.net/whatday/article/details/78445932)
+>
+> ---
+>
+> - `KVM` 负责 CPU虚拟化+内存虚拟化，但 KVM 不能模拟其他设备；
+>
+> - `QEMU` 模拟 IO设备（网卡，磁盘）
+>
+> `KVM + VEMU` 就能实现真正意义上服务器虚拟化。
+>
+> 因为用到了上面两个东西，所以一般都称之为 `qemu-kvm`。
+>
+> - `Libvirt` 则是调用 `KVM` 虚拟化技术的接口用于管理的，用 `Libvirt` 管理方便，直接用 `qemu-kvm` 的接口太繁琐。
+
+---
+
+`QUMU` 配置
+
+`KVM` 配置相对简单只有一个项目; 我们需要编辑 `QEMU VNC` 配置
+
+```shell
+vi /etc/libvirt/qemu.conf
+```
+
+![image-20210919180258495](http://cdn.ayusummer233.top/img/202109191802714.png)
+
+```shell
+vnc_listen=0.0.0.0
+```
+
+把上面这行注释取消掉即可
+
+> ![image-20210919180336298](http://cdn.ayusummer233.top/img/202109191803462.png)
+>
+> ---
+>
+> [kvm虚拟机vnc配置 - PigDragon - 博客园 (cnblogs.com)](https://www.cnblogs.com/pigdragon/p/9505729.html)
+>
+> [4.3.1 QEMU Configuration QEMU配置](https://blog.csdn.net/qq_44714521/article/details/109145500#431_QEMU_Configuration_QEMU_343)
+>
+> ---
+>
+> - `vnclisten` 默认绑定 `127.0.0.1` ,  在配置文件里指定VNC 绑定`0.0.0.0` IP,就不用在安装 kvm 虚拟机时指定 vnclisten 参数了。
+> - 在虚拟主机上有很多个虚拟机的时候，需要指定每个虚拟机的端口，否则将会很乱。
+
+---
+
+`Libvirt` 配置:
+
+`CloudStack` 使用 `Libvirt` 管理虚拟机; 因此正确配置 `Libvirt` 很重要;
+
+`Libvirt` 是 `cloud-agent` 的一个依赖因此应该已经安装好了
+
+1. 为了能够实时迁移, `Libvirt` 需要监听不安全的 `TCP connection`; 我们还需要关闭 `Libvirt` 使用 `多播 DNS 广告` 的尝试
+
+   编辑配置文件:
+
+   ```shell
+   vi /etc/libvirt/libvirtd.conf
+   ```
+
+   进行如下配置:
+
+   ```shell
+   listen_tls = 0
+   listen_tcp = 1
+   tcp_port = "16509"
+   auth_tcp = "none"
+   mdns_adv = 0
+   ```
+
+   > ![image-20210919182019530](http://cdn.ayusummer233.top/img/202109191820697.png)
+   >
+   > ![image-20210919182004406](http://cdn.ayusummer233.top/img/202109191820576.png)
+   >
+   > ![image-20210919182048680](http://cdn.ayusummer233.top/img/202109191820811.png)
+   >
+   > ![image-20210919182137463](http://cdn.ayusummer233.top/img/202109191821654.png)
+   >
+   > ![image-20210919182218466](http://cdn.ayusummer233.top/img/202109191822636.png)
+
+2. 在 `libvirtd.conf` 中打开 `listen_tcp` 是不够的, 我们必须改变参数
+
+   编辑配置文件:
+
+   ```shell
+   vi /etc/sysconfig/libvirtd
+   ```
+
+   取消如下配置的注释:
+
+   ```shell
+   LIBVIRTD_ARGS="--listen"
+   ```
+
+   > ![image-20210919182516869](http://cdn.ayusummer233.top/img/202109191825033.png)
+
+3. 重启 `libvirt`
+
+   ```shell
+   systemctl restart libvirtd
+   ```
+
+   > ![image-20210919182559977](http://cdn.ayusummer233.top/img/202109191826168.png)
+
+---
+
+#### `KVM` 配置完成
+
+为完整起见, 需要检查下 `KVM` 是否在此机器上正常运行:
+
+```shell
+lsmod | grep kvm
+```
+
+> [Linux lsmod 命令 | 菜鸟教程 (runoob.com)](https://www.runoob.com/linux/linux-comm-lsmod.html)
+>
+> ---
+>
+> Linux lsmod（英文全拼：list modules）命令用于显示已载入系统的模块。
+>
+> ---
+>
+> ![image-20210919183358309](http://cdn.ayusummer233.top/img/202109191833478.png)
+>
+> 很尴尬, 有可能是漏装了, 找了找其他教程
+>
+> ![image-20210919183913979](http://cdn.ayusummer233.top/img/202109191839218.png)
+>
+> ```shell
+> yum install qemu-kvm libvirt libvirt-python libguestfs-tools virt-install
+> ```
+>
+> ![image-20210919184219923](http://cdn.ayusummer233.top/img/202109191842146.png)
+>
+> ![image-20210919184054588](http://cdn.ayusummer233.top/img/202109191840847.png)
+>
+> 使用如下命令查看 `libvirt` 运行状态
+>
+> ```shell
+> service libvirtd status
+> ```
+>
+> ![image-20210919184540644](http://cdn.ayusummer233.top/img/202109191845904.png)
+>
+> 发现它在正常运行
+>
+> 不过手里的这台云轻量本身就是 KVM
+>
+> ![image-20210919185224785](http://cdn.ayusummer233.top/img/202109191852043.png)
+>
+> 不打算再死磕了, 继续处理下面的步骤了, 不行的话就用手头的 WSL2 做
+>
+> -----
+>
+> 9-20 新进展::
+>
+> [cento7安装kvm并通过kvm命令行安装centos7_飞龙的博客-CSDN博客_centos kvm](https://blog.csdn.net/yulsh/article/details/91790804)
+>
+> ```shell
+> # 启用 KVM
+> modprobe kvm
+> lsmod |grep kvm
+> ```
+>
+> 
+>
+> ![image-20210920082027155](http://cdn.ayusummer233.top/img/202109200820358.png)
+
+---
+
+![image-20210919190250733](http://cdn.ayusummer233.top/img/202109191902110.png)
+
+![image-20210919190616158](http://cdn.ayusummer233.top/img/202109191906389.png)
+
+![image-20210919191642295](http://cdn.ayusummer233.top/img/202109191916446.png)
+
+![image-20210919191712120](http://cdn.ayusummer233.top/img/202109191917294.png)
+
+![image-20210919192205116](http://cdn.ayusummer233.top/img/202109191922371.png)
+
+![image-20210919192247062](http://cdn.ayusummer233.top/img/202109191922315.png)
+
+![image-20210920083238151](http://cdn.ayusummer233.top/img/202109200832411.png)
+
+![image-20210920083451631](http://cdn.ayusummer233.top/img/202109200834881.png)
+
+![image-20210920083510007](http://cdn.ayusummer233.top/img/202109200835208.png)
+
+![image-20210919192608219](http://cdn.ayusummer233.top/img/202109191926473.png)
+
+> [CloudStack日志文件路径_kepa520的博客-CSDN博客](https://blog.csdn.net/kepa520/article/details/49126541)
+>
+> '运行的时候可以在这里查下日志
 
