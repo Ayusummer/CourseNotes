@@ -1,3 +1,7 @@
+```
+
+```
+
 # Cloudstack
 
 [CloudStack 简介 - Jamin Zhang](https://jaminzhang.github.io/cloud-computing/CloudStack-Introduction/)
@@ -26,11 +30,11 @@
 
 IaaS、PaaS、SaaS 是云计算的三种主要类型;
 
-|      |                         功能概述                         |                            示例                             |                      全称                       |
-| :--: | :------------------------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------: |
-| IaaS | 基于云的服务，按需付费，<br> 用于存储，网络和虚拟化等服务 |                 AWS，阿里云，腾讯云，华为云                 | Infrastructure as a Service <br> 基础设施即服务 |
-| PaaS |              Internet上可用的硬件和软件工具              | Microsoft Windows Azure，百度BAE、<br/> 新浪SAE、京东云擎JAE |      Platform as a Service <br> 平台即服务      |
-| SaaS |             可通过互联网通过第三方获得的软件             |                       钉钉，企业微信                        |      Software as a Service <br> 软件即服务      |
+|     |                           功能概述                           |                               示例                               |                        全称                        |
+| :--: | :-----------------------------------------------------------: | :--------------------------------------------------------------: | :------------------------------------------------: |
+| IaaS | 基于云的服务，按需付费，`<br>` 用于存储，网络和虚拟化等服务 |                   AWS，阿里云，腾讯云，华为云                   | Infrastructure as a Service`<br>` 基础设施即服务 |
+| PaaS |                Internet上可用的硬件和软件工具                | Microsoft Windows Azure，百度BAE、`` 新浪SAE、京东云擎JAE |      Platform as a Service`<br>` 平台即服务      |
+| SaaS |               可通过互联网通过第三方获得的软件               |                          钉钉，企业微信                          |      Software as a Service`<br>` 软件即服务      |
 
 ![image-20210915091928167](http://cdn.ayusummer233.top/img/20210915091935.png)
 
@@ -74,11 +78,9 @@ Cloudstack 部署架构:
 
   Zone 对应于现实中的一个数据中心，它是 CloudStack 中最大的一个单元。
   即从包含关系上来说，一个 Zone 包含多个 Pod，一个 Pod 包含多个 Cluster，一个 Cluster 包含多个 Host。
-
 - `Pod` 提供点
 
   一个提供点通常代表一个机柜，机柜里面的主机在同一个子网，每个区域中必须包含一个或多个提供点，提供点中包含主机和主存储服务器，CloudStack 的内部管理通信配置一个预留 IP 地址范围。预留的 IP 范围对云中的每个区域来说必须唯一。
-
 - `Cluster` 集群
 
   Cluster 是多个主机组成的一个集群。
@@ -88,7 +90,6 @@ Cloudstack 部署架构:
   集群的大小取决于下层虚拟机软件。大多数情况下基本无建议。
   当使用 VMware 时，每个 VMware 集群都被 vCenter 服务器管理。
   管理员必须在本产品中登记 vCenter。每个 Zone 下可以有多个 vCenter 服务器。每个 vCenter 服务器可能管理多个 VMware 集群。
-
 - `Host` 主机
 
   Host 就是运行的虚拟机（VM）主机。
@@ -100,18 +101,16 @@ Cloudstack 部署架构:
   宿主机包含于集群中，集群又属于提供点，而区域中包含提供点（就是在逻辑概念上 Zone>Pod>Cluster>Host ），
   新增的宿主机可以随时添加以提供更多资源给来宾虚拟机，CloudStack 自动探测宿主机的 CPU 数量和内存资源。
   宿主机对终端用户不可见。终端用户不能决定他们的虚拟机被分配到哪台宿主机。
-
 - `Primary Storage` 一级存储
 
   一级存储与 Cluster 关联，它为该 Cluster 中的主机的全部虚拟机提供磁盘卷。一个 Cluster 至少有一个一级存储，且在部署时位置要临近主机以提供高性能。
-
 - `Secondary Storage` 二级存储
 
   二级存储与 Zone 关联，它存储模板文件，ISO 镜像和磁盘卷快照。
 
 ---
 
-# Linux 
+# Linux
 
 ---
 
@@ -155,8 +154,6 @@ GNU Screen可以看作是窗口管理器的命令行界面版本。它提供了�
 yum install screen -y
 ```
 
-
-
 ---
 
 ### Debug log
@@ -171,7 +168,10 @@ yum install screen -y
 解决办法：
 （1）修改服务器的 DNS 配置文件：`/etc/resolv.conf` ，请参阅如下文档添加对应地区的内网 DNS 服务器
 
-​          [云服务器 内网服务 - 产品简介 - 文档中心 - 腾讯云 (tencent.com)](https://cloud.tencent.com/document/product/213/5225)
+```
+```
+
+[云服务器 内网服务 - 产品简介 - 文档中心 - 腾讯云 (tencent.com)](https://cloud.tencent.com/document/product/213/5225)
 
 > 我用的上海地域的轻量, 配上海或者上海金融的 DNS 都不对, 最后无奈重置实例才发现原来是配最后一个所有地域的那个 DNS
 >
@@ -186,25 +186,24 @@ yum install screen -y
 systemctl restart network
 ```
 
+> ![image-20210916185305965](http://cdn.ayusummer233.top/img/202109161853077.png)
 >
+> 部署 Cloudstack 前做网络桥接的时候把 DNS 改成了谷歌的这个所以重启网络后上图自动生成的配置中 DNS 就成这样了
 >
->![image-20210916185305965](http://cdn.ayusummer233.top/img/202109161853077.png)
+> 直接在上图这个文件中改的话重启网络后又会变回谷歌的这两个, 因此要在当初配网桥时候的配置里改:
 >
->部署 Cloudstack 前做网络桥接的时候把 DNS 改成了谷歌的这个所以重启网络后上图自动生成的配置中 DNS 就成这样了
+> ![image-20210916190504657](http://cdn.ayusummer233.top/img/202109161905823.png)
 >
->直接在上图这个文件中改的话重启网络后又会变回谷歌的这两个, 因此要在当初配网桥时候的配置里改:
+> 这里需要注意的是最多支持三个 DNS, 一个首选两个备选, 因此这里将腾讯云的两个内网 DNS 设为首选, 谷歌的那个座位备选
 >
->![image-20210916190504657](http://cdn.ayusummer233.top/img/202109161905823.png)
->
->这里需要注意的是最多支持三个 DNS, 一个首选两个备选, 因此这里将腾讯云的两个内网 DNS 设为首选, 谷歌的那个座位备选
->
->重启网络后可以看到配置自动更新了
+> 重启网络后可以看到配置自动更新了
 >
 >> PS: 图里的两个DNS对我的上海轻量不管用, 详见上文(应当配置适用于所有地域的内网DNS)
+>>
 >
->---
+> ---
 >
->[linux 的/etc/resolv.conf文件最多支持多少DNS - Linux系统管理-Chinaunix](http://bbs.chinaunix.net/thread-3714518-1-1.html)
+> [linux 的/etc/resolv.conf文件最多支持多少DNS - Linux系统管理-Chinaunix](http://bbs.chinaunix.net/thread-3714518-1-1.html)
 
 ---
 
@@ -262,23 +261,21 @@ chrony 用于做时间同步, 暂且认为不会影响到此次部署
 
 ### 先决条件
 
-- [x] 至少一台计算机支持并启用了硬件虚拟化
+- [X] 至少一台计算机支持并启用了硬件虚拟化
 
   > 已经上了云服务器, 故满足要求
-
-- [x] CentOS7.6 x86_64
-
-  > ![image-20210915153357943](http://cdn.ayusummer233.top/img/202109151533049.png)
-
-- [x] 一个网关位于 `xxx.xxx.xxx.1`  的 `/24` 网络，，该网络上不应有DHCP，并且任何运行 CloudStack 的计算机都不会具有动态地址。同样，这也是为了简单。
+  >
+- [X] CentOS7.6 x86_64
+- [X] 一个网关位于 `xxx.xxx.xxx.1`  的 `/24` 网络，，该网络上不应有DHCP，并且任何运行 CloudStack 的计算机都不会具有动态地址。同样，这也是为了简单。
 
   > 云轻量有固定 ip, 故此项满足
+  >
 
 ---
 
 ### 环境
 
-CentOS 7.6  
+CentOS 7.6
 
 ---
 
@@ -304,7 +301,7 @@ yum install bridge-utils net-tools -y
 >
 > ```
 > yum list installed |grep "bridge-utils"
-> 
+>
 > yum list installed |grep "net-tools"
 > ```
 >
@@ -321,7 +318,6 @@ yum install bridge-utils net-tools -y
   brctl 命令用于设置、维护和检查 linux 内核中的以太网网桥配置。
 
   以太网网桥是一种设备，通常用于将以太网的不同网络连接在一起，以便这些以太网对参与者显示为一个以太网。所连接的每个以太网对应于网桥中的一个物理接口。这些单独的以太网被聚集成一个更大的（“逻辑”）以太网，这个更大的以太网对应于网桥网络接口
-
 - `net-tools`
 
   Net-Tools 是一个 Linux 系统中基本的网络工具集，其集成了常用的网络管理命令“`ifconfig`、`netstat`、`arp`、`route` 等”
@@ -334,21 +330,22 @@ yum install bridge-utils net-tools -y
 
 > ip 寻址 - 在整个本文档中, 我们假设您有一个 `/24` 网络用于实现 Cloudstack; 这可以使任何 [RFC 1918](https://baike.baidu.com/item/RFC%201918/1528155) 网络; 但是我们料想到你可能会使用我们的机器地址来配置网络, 所以在这里声明我们在本篇中会使用 `172.16.10.2` 作为网络地址, 如果您的网络为 `192.168.55.0/24` 的话你应当使用 `192.168.55.2` 作为您的网络地址
 >
-> > RFC 1918私有网络地址分配 (Address Allocation for Private Internets)
-> >
-> > [局域网使用的IP地址范围_张小帅的专栏-CSDN博客](https://blog.csdn.net/qinghezhen/article/details/27882951)
-> >
-> > 局域网可用的IP地址范围为: 
-> >
-> > ```shell
-> > A类地址：10.0.0.0 - 10.255.255.255 
-> > B类地址：172.16.0.0 - 172.31.255.255 
-> > C类地址：192.168.0.0 -192.168.255.255 
-> > ```
-> >
-> > 以上IP是都是属于局域网，但不一定是同一个局域网。要检测两台电脑是否在同一个局域网，可以再一台电脑上ping另外一台电脑的IP.能ping通的就是在同一个局域网中。
-> >
-> > PS: 个人实验中使用了云服务器, 边使用了相应的内网地址 `10.x.x.x`
+>> RFC 1918私有网络地址分配 (Address Allocation for Private Internets)
+>>
+>> [局域网使用的IP地址范围_张小帅的专栏-CSDN博客](https://blog.csdn.net/qinghezhen/article/details/27882951)
+>>
+>> 局域网可用的IP地址范围为:
+>>
+>> ```shell
+>> A类地址：10.0.0.0 - 10.255.255.255 
+>> B类地址：172.16.0.0 - 172.31.255.255 
+>> C类地址：192.168.0.0 -192.168.255.255 
+>> ```
+>>
+>> 以上IP是都是属于局域网，但不一定是同一个局域网。要检测两台电脑是否在同一个局域网，可以再一台电脑上ping另外一台电脑的IP.能ping通的就是在同一个局域网中。
+>>
+>> PS: 个人实验中使用了云服务器, 边使用了相应的内网地址 `10.x.x.x`
+>>
 
 ```shell
 DEVICE=cloudbr0     # 网卡设备名称   
@@ -376,19 +373,20 @@ NM_CONTROLLED=no
 >
 > 8.8.8.8是一个[IP地址](https://baike.baidu.com/item/IP地址)，是Google提供的免费[DNS服务器](https://baike.baidu.com/item/DNS服务器)的IP地址，Google提供的另外一个免费DNS服务器的IP地址是：8.8.4.4 。用户可以使用Google提供的[DNS](https://baike.baidu.com/item/DNS/427444)服务器上网。
 >
-> > 关于 BOOTPROTO: 
-> >
-> > [centos设置BOOTPROTO none和dhcp有什么区别_周二也被占用-CSDN博客](https://blog.csdn.net/u011350541/article/details/78224872)
-> >
-> > ```shell
-> > none表示使用静态IP，自行配置; 
-> > dhcp表示使用动态IP，自行生成
-> > ```
-> >
-> > 如果自己有内网的IP地址，最好设置成dhcp自己指定ip地址
-> >
-> > 还有个onboot=yes或onboot=no的配置
-> > 意思是是否系统启动是自动激活网卡，一般设置为yes
+>> 关于 BOOTPROTO:
+>>
+>> [centos设置BOOTPROTO none和dhcp有什么区别_周二也被占用-CSDN博客](https://blog.csdn.net/u011350541/article/details/78224872)
+>>
+>> ```shell
+>> none表示使用静态IP，自行配置; 
+>> dhcp表示使用动态IP，自行生成
+>> ```
+>>
+>> 如果自己有内网的IP地址，最好设置成dhcp自己指定ip地址
+>>
+>> 还有个onboot=yes或onboot=no的配置
+>> 意思是是否系统启动是自动激活网卡，一般设置为yes
+>>
 
 保存配置并退出.
 
@@ -411,9 +409,10 @@ BRIDGE=cloudbr0
 
 > 接口名仅为用例, 请使用默认的以太网口名称替换上述配置项中的 etho
 >
-> > 也即你的配置项文件名称不一定为 `ifcfg-eth0`
->  
-> [网卡配置文件里DEFROUTE="yes"是什么东西？ - Linux新手园地-Chinaunix](http://bbs.chinaunix.net/thread-4185395-1-1.html)
+>> 也即你的配置项文件名称不一定为 `ifcfg-eth0`
+>>
+>
+> [网卡配置文件里DEFROUTE=&#34;yes&#34;是什么东西？ - Linux新手园地-Chinaunix](http://bbs.chinaunix.net/thread-4185395-1-1.html)
 >
 > ```shell
 > DEFROUTE=answer, 这里answer取下列值之一：
@@ -448,11 +447,11 @@ brctl show
 > ```shell
 > yum -y upgrade	# 升级所有包，不改变软件设置和系统设置，系统版本升级，内核不改变
 > yum install bridge-utils net-tools -y
-> 
-> 
+>
+>
 > # PS:
 > yum -y update：升级所有包，改变软件设置和系统设置,系统版本内核都升级
-> 
+>
 > ```
 
 ---
@@ -526,8 +525,6 @@ systemctl restart network
 getenforce
 ```
 
-
-
 ![image-20210916100835642](http://cdn.ayusummer233.top/img/202109161008748.png)
 
 > [getenforce命令_Linux getenforce命令使用详解：查看是否开启了SELinux (ywnz.com)](https://www.ywnz.com/linux/getenforce/)
@@ -578,10 +575,11 @@ systemctl start ntpd
 >
 > [完整的安装指南](http://docs.cloudstack.apache.org/en/4.15.1.0/installguide/index.html)描述了如何获取 source release 并生成 RPMs and  yum repository
 >
-> > [RPM（Red-Hat Package Manager 软件包管理器）_百度百科 (baidu.com)](https://baike.baidu.com/item/RPM/3794648)
-> >
-> > [Yum Repository详解_weixin_34055910的博客-CSDN博客](https://blog.csdn.net/weixin_34055910/article/details/92964753)
-> > [YUM](http://yum.baseurl.org/)(Yellowdog Updater Modified)是 Fedora、CentOS、RedHat 中的软件包管理器。基于 RPM 包管理，YUM 通过分析 RPM header数据，自动处理依赖关系，从指定服务器自动下载安装所有依赖的软件包。
+>> [RPM（Red-Hat Package Manager 软件包管理器）_百度百科 (baidu.com)](https://baike.baidu.com/item/RPM/3794648)
+>>
+>> [Yum Repository详解_weixin_34055910的博客-CSDN博客](https://blog.csdn.net/weixin_34055910/article/details/92964753)
+>> [YUM](http://yum.baseurl.org/)(Yellowdog Updater Modified)是 Fedora、CentOS、RedHat 中的软件包管理器。基于 RPM 包管理，YUM 通过分析 RPM header数据，自动处理依赖关系，从指定服务器自动下载安装所有依赖的软件包。
+>>
 >
 > [快速部署指南](http://docs.cloudstack.apache.org/en/4.15.1.0/quickinstallationguide/qig.html#selinux)试图让配置越简单越好, 因此这里不进行过多描述, 因此这里使用一款 community-provided 的 yum repository
 >
@@ -617,7 +615,8 @@ yum -y install nfs-utils
 >
 > 备份完修改文件重置实例了, 这次要好好看看怎么回事
 >
-> > 答案是上海云轻量不适用上海或上海金融的DNS,  应当使用所有地域的DNS, 详见 [此处](# yum 命令报错: `Could not resolve host: mirrors.tencentyun.com; Unknown error`)
+>> 答案是上海云轻量不适用上海或上海金融的DNS,  应当使用所有地域的DNS, 详见 [此处](# yum 命令报错: `Could not resolve host: mirrors.tencentyun.com; Unknown error`)
+>>
 
 配置 NFS 提供两个不同的 share
 
@@ -653,8 +652,6 @@ vi /etc/idmapd.conf
 # 修改如下配置:
 Domain = cloud.priv
 ```
-
-
 
 > ![image-20210916213927112](http://cdn.ayusummer233.top/img/202109162139208.png)
 >
@@ -706,8 +703,6 @@ systemctl disable firewalld
 firewall-cmd --state
 ```
 
-> ![image-20210916215701825](http://cdn.ayusummer233.top/img/202109162157968.png)
-
 现在开始配置 nfs 服务在主机启动时启用并实际启用 nfs
 
 ```shell
@@ -731,8 +726,6 @@ systemctl start nfs
 showmount -e srvr1.cloud.priv
 ```
 
-
-
 > [Linux showmount命令查看NFS共享目录信息-Linux实验室 (wanyunshuju.com)](https://idc.wanyunshuju.com/cym/1728.html)
 >
 > 使用showmount命令可以显示NFS服务器的挂载信息。比如查看NFS服务器上有哪些共享目录，这些共享目录可以被哪些客户端访问，以及哪些共享目录已经被客户端挂载了。
@@ -754,7 +747,7 @@ showmount -e srvr1.cloud.priv
 > 那么说明 NFS 已经配置好了, 因此又返回  [hostname 设置](#Hostname) 步骤修改了下 hosts 文件将下面这行又加上了
 >
 > ```shell
-> 172.16.10.2 srvr1.cloud.priv	
+> 172.16.10.2 srvr1.cloud.priv
 > ```
 >
 > 然后又用 hostname 试了下结果成功了
@@ -849,21 +842,15 @@ binlog-format = 'ROW'
 >
 > - `innodb_rollback_on_timeout`
 >
-> 	[MySQL数据库innodb_rollback_on_timeout参数 - 云+社区 - 腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1579417)
-> 	
-> - `innodb_lock_wait_timeout`  
-> 		InnoDB 事务在被回滚之前可以等待一个锁定的超时秒数。InnoDB 在它自己的 锁定表中自动检测事务死锁并且回滚事务。 InnoDB 用 LOCK TABLES 语句注意到锁定设置。默认值是 50 秒
-> 
-> 	> [innodb_百度百科 (baidu.com)](https://baike.baidu.com/item/Innodb/8970025)
->	>
-> 	> InnoDB，是MySQL的数据库引擎之一，现为MySQL的默认存储引擎
-> 
-> - `max_connections`  
->   指定 MySQL 允许的最大连接进程数。如果在访问数据库时经常出现"Too Many Connections"的错误提 示，则需要增大该参数值。
-> 
-> - `log-bin = mysql-bin`  
->  打开二进制日志功能.在复制(replication)配置中,作为 MASTER 主服务器必须打开此项.如果你需要从你最后的备份中做基于时间点的恢复,你也同样需要二进制日志.这些路径相对于 datadir>	
-> 
+>   [MySQL数据库innodb_rollback_on_timeout参数 - 云+社区 - 腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1579417)
+> - `innodb_lock_wait_timeout`InnoDB 事务在被回滚之前可以等待一个锁定的超时秒数。InnoDB 在它自己的 锁定表中自动检测事务死锁并且回滚事务。 InnoDB 用 LOCK TABLES 语句注意到锁定设置。默认值是 50 秒
+>
+>   > [innodb_百度百科 (baidu.com)](https://baike.baidu.com/item/Innodb/8970025)
+>   >
+>   > InnoDB，是MySQL的数据库引擎之一，现为MySQL的默认存储引擎
+>   >
+> - `max_connections`指定 MySQL 允许的最大连接进程数。如果在访问数据库时经常出现"Too Many Connections"的错误提 示，则需要增大该参数值。
+> - `log-bin = mysql-bin`打开二进制日志功能.在复制(replication)配置中,作为 MASTER 主服务器必须打开此项.如果你需要从你最后的备份中做基于时间点的恢复,你也同样需要二进制日志.这些路径相对于 datadir>
 > - `binlog-format = 'ROW'`
 >
 >   [关于binary log那些事——认真码了好长一篇 - 苏家小萝卜 - 博客园 (cnblogs.com)](https://www.cnblogs.com/xinysu/p/6607658.html#_lab2_2_1)
@@ -876,8 +863,6 @@ binlog-format = 'ROW'
 systemctl enable mysqld
 systemctl start mysqld
 ```
-
-> ![image-20210919153846061](http://cdn.ayusummer233.top/img/202109191538290.png)
 
 ---
 
@@ -907,13 +892,11 @@ yum -y install cloudstack-management
 >
 > 可以看到这里我安装版本是 `4.15.2`, 但是我是看着 `4.15.1` 的文档装的, 有点麻, 不过小版本更新应该问题不大, 不过下面的过程就看 `4.15.2` 的文档吧 (╯﹏╰)b
 
-`CloudStack 4.15` 需要 `Java 11 JRE` 安装 `management servber` 时会自动安装 `Java 11`, 不过还是要看下 `Java 11` 是不是已经处于  `selected/active` 状态:
+`CloudStack 4.15` 需要 `Java 11 JRE` 安装 `management server` 时会自动安装 `Java 11`, 不过还是要看下 `Java 11` 是不是已经处于  `selected/active` 状态:
 
 ```shell
 alternatives --config java
 ```
-
-> ![image-20210919163721886](http://cdn.ayusummer233.top/img/202109191637078.png)
 
 确保 当前选定的是 `Java 11`  后继续进行下面的步骤
 
@@ -922,8 +905,6 @@ alternatives --config java
 ```shell
 cloudstack-setup-databases cloud:password@localhost --deploy-as=root
 ```
-
-> ![image-20210919164354269](http://cdn.ayusummer233.top/img/202109191643501.png)
 
 当进程结束时将会显示如下信息:
 
@@ -937,19 +918,19 @@ cloudstack-setup-management
 
 如果 `servlet container` 是 `Tomcat7` 那么须要加上 `-tomcat7` 参数
 
->翻了下没找到 `tomcat` 相关的配置所以就没动参数
+> 翻了下没找到 `tomcat` 相关的配置所以就没动参数
 >
->[Apache Tomcat - 维基百科，自由的百科全书 (wikipedia.org)](https://zh.wikipedia.org/wiki/Apache_Tomcat)
+> [Apache Tomcat - 维基百科，自由的百科全书 (wikipedia.org)](https://zh.wikipedia.org/wiki/Apache_Tomcat)
 >
->[Java Servlet - 维基百科，自由的百科全书 (wikipedia.org)](https://zh.wikipedia.org/wiki/Java_Servlet)
+> [Java Servlet - 维基百科，自由的百科全书 (wikipedia.org)](https://zh.wikipedia.org/wiki/Java_Servlet)
 >
->---
+> ---
 >
->![image-20210919164654314](http://cdn.ayusummer233.top/img/202109191646467.png)
+> ![image-20210919164654314](http://cdn.ayusummer233.top/img/202109191646467.png)
 >
->这里显示让我放通 `8080 8250 8443 9090` 端口, 于是就去防火墙把这些端口放通了
+> 这里显示让我放通 `8080 8250 8443 9090` 端口, 于是就去防火墙把这些端口放通了
 >
->![image-20210919165001441](http://cdn.ayusummer233.top/img/202109191650668.png)
+> ![image-20210919165001441](http://cdn.ayusummer233.top/img/202109191650668.png)
 
 ---
 
@@ -977,11 +958,11 @@ CloudStack 使用许多 `system VM` 提供诸如 `访问虚拟机控制台`, `�
 >
 > 虽然拼写比较像, 但与 `Hyper-V` 并没有关系
 >
-> [Introduction to Hyper-V on Windows 10 | Microsoft Docs](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/) 
+> [Introduction to Hyper-V on Windows 10 | Microsoft Docs](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/)
 
 ---
 
-### 配置与安装 KVM 
+### 配置与安装 KVM
 
 `KVM` 是我们将要使用的 `hypervisor` - 我们需要恢复已经在 `hypervisor host` 上完成的初始设置并覆盖掉代理软件的安装;
 
@@ -1036,7 +1017,6 @@ yum -y install cloudstack-agent
 > ---
 >
 > - `KVM` 负责 CPU虚拟化+内存虚拟化，但 KVM 不能模拟其他设备；
->
 > - `QEMU` 模拟 IO设备（网卡，磁盘）
 >
 > `KVM + VEMU` 就能实现真正意义上服务器虚拟化。
@@ -1073,7 +1053,7 @@ vnc_listen=0.0.0.0
 >
 > ---
 >
-> - `vnclisten` 默认绑定 `127.0.0.1` ,  在配置文件里指定VNC 绑定`0.0.0.0` IP,就不用在安装 kvm 虚拟机时指定 vnclisten 参数了。
+> - `vnclisten` 默认绑定 `127.0.0.1` ,  在配置文件里指定VNC 绑定 `0.0.0.0` IP,就不用在安装 kvm 虚拟机时指定 vnclisten 参数了。
 > - 在虚拟主机上有很多个虚拟机的时候，需要指定每个虚拟机的端口，否则将会很乱。
 
 ---
@@ -1101,17 +1081,6 @@ vnc_listen=0.0.0.0
    auth_tcp = "none"
    mdns_adv = 0
    ```
-
-   > ![image-20210919182019530](http://cdn.ayusummer233.top/img/202109191820697.png)
-   >
-   > ![image-20210919182004406](http://cdn.ayusummer233.top/img/202109191820576.png)
-   >
-   > ![image-20210919182048680](http://cdn.ayusummer233.top/img/202109191820811.png)
-   >
-   > ![image-20210919182137463](http://cdn.ayusummer233.top/img/202109191821654.png)
-   >
-   > ![image-20210919182218466](http://cdn.ayusummer233.top/img/202109191822636.png)
-
 2. 在 `libvirtd.conf` 中打开 `listen_tcp` 是不够的, 我们必须改变参数
 
    编辑配置文件:
@@ -1125,16 +1094,11 @@ vnc_listen=0.0.0.0
    ```shell
    LIBVIRTD_ARGS="--listen"
    ```
-
-   > ![image-20210919182516869](http://cdn.ayusummer233.top/img/202109191825033.png)
-
 3. 重启 `libvirt`
 
    ```shell
    systemctl restart libvirtd
    ```
-
-   > ![image-20210919182559977](http://cdn.ayusummer233.top/img/202109191826168.png)
 
 ---
 
@@ -1184,7 +1148,7 @@ lsmod | grep kvm
 >
 > 不打算再死磕了, 继续处理下面的步骤了, 不行的话就用手头的 WSL2 做
 >
-> -----
+> ---
 >
 > 9-20 新进展::
 >
@@ -1195,8 +1159,6 @@ lsmod | grep kvm
 > modprobe kvm
 > lsmod |grep kvm
 > ```
->
-> 
 >
 > ![image-20210920082027155](http://cdn.ayusummer233.top/img/202109200820358.png)
 
@@ -1225,4 +1187,3 @@ lsmod | grep kvm
 > [CloudStack日志文件路径_kepa520的博客-CSDN博客](https://blog.csdn.net/kepa520/article/details/49126541)
 >
 > '运行的时候可以在这里查下日志
-
