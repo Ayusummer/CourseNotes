@@ -3,7 +3,7 @@
 ## 9.16作业
 
 ### 数据段的定义如下，阅读后解答后面的问题。
-```
+```ASSEMBLY
 VARX DB -1, ’AB’,2 DUP(?，3)
 VARY DW 2078H, ’AB’
 VARZ DW $-VARX
@@ -101,12 +101,12 @@ VARZ DW $-VARX
   - 正确答案：对
 - 10.进位和溢出标志都表达结果超出范围，所以加法运算有溢出，一定也进位了。
   - 正确答案：错
----- 
+----
 ## 9.28随堂练习
 ### 编写程序段，求以下变量表达式的值，所有变量均为有符号字变量:
 $Z = ( X + Y)/W - S*Y$
 - 正确答案:
-```
+```ASSEMBLY
 MOV AX, X
 ADD AX, Y      ; X + Y (1分)
 CWD
@@ -127,7 +127,7 @@ MOV Z+2, CX
 - P87,2-14(2), 写出实现下列计算的指令序列。（假定X、Y、Z、W、R都为有符号字变量）  
 $Z = 2*（W-X）/（5*Y）$
 - 参考答案
-  ```
+  ```ASSEMBLY
   MOV AX, W
   SUB AX, X   ; W-X,结果在AX中
   SAL AX,1    ; 2(W-X), 结果在AX中
@@ -139,7 +139,7 @@ $Z = 2*（W-X）/（5*Y）$
   IDIV BX     ; 2(W-X)/(5Y),结果在AX中
   MOV Z, AX
   ```
-  ```
+  ```ASSEMBLY
   MOV  AX, W    
   SUB  AX, X   ;  W-X ,结果在AX中  
   SAL  AX, 1   ;  2（W-X ）,结果在AX中  
@@ -163,7 +163,7 @@ $Z = 2*（W-X）/（5*Y）$
 ### 2.7.3 逻辑运算类指令
 #### 逻辑运算指令预习检测
 - 1.已知$(AX)= 0FF60H，CF = 1。$
-  ```
+  ```assembly
   MOV DX, 96
   XOR DH, 0FFH
   SBB AX, DX
@@ -215,7 +215,7 @@ $Z = 2*（W-X）/（5*Y）$
   - 目的操作数最高位为0
 
 - 3.下面两条指令执行后，DA2中两字节单元内容分别是?
-    ```   
+    ```   assembly
     DA1 EQU WORD PTR DA2
     DA2 DB OABH，OCDH
     SHL DA1，1
@@ -233,7 +233,7 @@ $Z = 2*（W-X）/（5*Y）$
   - 每一动都在最高位补充符号位,总共八位移位八位高位补齐了1 
 
 - 6.完成对CL寄存器的内容乘以4的正确操作是
-```
+```assembly
 SHL CL，1
 SHL CL，1 
 ```
@@ -266,7 +266,7 @@ SHL CL，1
 - 8.指令指针IP或者还包括代码段寄存器CS值的改变将引起程序流程的改变。
   - (√) 
 
---- 
+---
 ### 转移指令2
 - 1.转移指令JMP NEAR PTR PROCA的转移范围是?
   - 8000H～7FFFH
@@ -292,7 +292,7 @@ SHL CL，1
 ---
 ## 10.5课后练习题
 - ARRAY为数据段中定义的有符号字节数组，存放了100个字节数据。  试编写指令序列，统计ARRAY数组中正数、负数和0的个数，分别存放在PLUS、MINUS和ZERO三个字节变量中。
-```
+```assembly
 ;个人答案:
         LEA SI,ARRAY
         MOV CX,100    
@@ -309,7 +309,7 @@ BIGER:  JE OK
    OK:  INC ZERO
         RET
 ```
-```
+```assembly
 ;老师的答案
       ;先将要用的变量清零
       XOR AL,AL     
@@ -336,7 +336,7 @@ NEXT: INC SI
 ```
 > 最好不用BP(基址指针寄存器)
 
-```
+```assembly
 ;使用循环结构
       XOR AL,AL ;清零
       MOV PLUS,AL
@@ -395,7 +395,7 @@ NEXT: INC SI
 ---
 ### 子程序设计20201019
 - 1.内存中在以BLOCK为首地址处存放100个无符号字节数。试编写一程序，求出该数组中的最大数与最小数的差，并将其送入RESULT单元，要求调用子程序来完成对最大数和最小数的求解。
-```
+```assembly
 DATA SEGMENT
   BLOCK DB 46,37,29,56,25,35,11,27,66,42,82,61
   COUNT EQU $-BLOCK
@@ -433,7 +433,7 @@ CODEENDS
 
 
 - 2.某年级参加英语4级考试的有250名学生，试编写一程序完成60-69，70-79，80-89，90-100四个分数段的统计工作，要求用子程序完成每个分数段的统计工作。
-```
+```Assembly
 DATA SEGMENT
     BLOCK DB 66,75,89,62,77,82,95,73,99
     C60 DB 0  ; 60-70
@@ -536,7 +536,7 @@ CODE SEGMENT
 
 - 数据段定义
 
-```
+```assembly
 data segment
   DUANXUAN db 3FH, 06H, 5BH, 4FH, 66H, 6DH, 7DH, 07H  
   mesg1 db 0dh,0ah,'Input a num (0--9h):',0dh,0ah,'$'
@@ -565,7 +565,7 @@ data ends
 ---
 - 8255A端口地址为60H，61H，62H，63H,64H,65H,66H
 - 初始化的程序段：
-  ```
+  ```assembly
   mov dx,63h    ; 控制端口为63H
   mov al,90h    ; 方式控制字
   out dx,al     ; 或out 63h,al  送到控制端口
@@ -573,7 +573,7 @@ data ends
 
 ---
 - 参考答案
-```
+```assembly
 ; 数据段
 DATA SEGMENT
         DUANXUAN DB 3FH,06H,5BH,4FH,66H,7DH,07H
@@ -599,7 +599,7 @@ CODE ENDS
 
 ---
 - 完整程序
-```
+```assembly
 data segment
   DUANXUAN db 3FH, 06H, 5BH, 4FH, 66H, 6DH, 7DH, 07H  
   mesg1 db 0dh,0ah,'Input a num (0--9h):',0dh,0ah,'$'
@@ -649,7 +649,7 @@ code ends
 
 
 ---
-```
+```assembly
 data segment
   DUANXUAN db 3FH, 06H, 5BH, 4FH, 66H, 6DH, 7DH, 07H  
 data ends
@@ -681,7 +681,7 @@ code ends
 ```
 
 
-```
+```assembly
 data segment
 ioport equ 2400h-0280h
 io8255a equ ioport+288h
@@ -814,7 +814,7 @@ end start
 
 ----
 - 参考答案
-```
+```assembly
   MOV DX, 0FFFEH
   ; 00(计数器0)11(先读低字节再读高字节)010(方式2),1(BCD码4计数)
   MOV AL, 00110101B       ; 0#初始化,BCD计数
@@ -835,7 +835,7 @@ end start
 
 
 ---
-  ```
+  ```assembly
   ; 通道0初始化
   MOV DX, 0FFFEH
   ; 00(计数器0)01(只读写低字节)010(方式2),0(二进制)
@@ -881,7 +881,7 @@ end start
 
 ---
 - 个人
-```
+```assembly
 S0: MOV AL, 0     ; AL中置初值0
 S1: CALL OUTPUT   ; 输出三角波的上升段
     INC AL
@@ -922,7 +922,7 @@ OUTPUT ENDP
 
 
 ----
-```
+```assembly
 DATA SEGMENT
   COUNT DB 99
   MIN DB 00H
