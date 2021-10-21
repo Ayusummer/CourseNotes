@@ -326,3 +326,568 @@ START:  MOV AX, @DATA
     END START       ; 汇编结束
 ```
 
+---
+
+## 汇编指令客观题 2
+
+一. 单选题（共35题，100分）
+1. (单选题) 转移指令JMP NEAR PTR PROCA的转移范围是（   ）
+  - A 8000H～7FFFH
+  - B 7FFFH～0FFFH
+  - C 80H～7FH
+  - D 0FH～7FH
+
+> 
+
+
+
+2. (单选题) 循环控制指令LoopNZ/LoopNE控制循环继续执行的条件是（  ）
+  - A CX≠0且ZF=1
+  - B CX≠0且ZF=0
+  - C CX≠0或ZF=1
+  - D CX≠0或ZF=0
+
+> 
+
+3. (单选题) 完成对CL寄存器的内容乘以4的正确操作是（    ）
+A	ROL CL，1
+ROL CL，1
+
+B
+MUL 4
+
+C
+SHL CL，1
+SHL CL，1
+
+D
+MOV CL，2
+SHL CL，CL
+
+4. (单选题) 下面程序段完成测试DA-BYTE字节单元中数是否为负数，若是则将全1送DH中，否则全0送DH中，那么程序段中括号内应填的语句是（   ）
+MOV CH,0
+
+TEST DA-BYTE,80H
+
+      （                       ）
+
+MOV CH, 0FFH
+
+ZERO:  MOV DH, CH
+
+A
+JNZ ZERO
+
+B
+JS ZERO
+
+C
+JZ ZERO
+
+D
+JC ZERO
+
+5. (单选题) MOV AL，79
+ADD AL，0B1H
+上面指令执行后，设置的标志位 CF和OF的值是（ ）
+A
+CF=0，OF=0
+
+B
+CF=1，OF=1
+
+C
+CF=0，OF=1
+
+D
+CF=1，OF=0
+
+6. (单选题) call指令执行后，堆栈的栈顶内容为（   ）
+A
+子程序的入口地址
+
+B
+call指令的下一条指令
+
+C
+call指令所在地址
+
+D
+call指令的下一条指令的地址
+
+7. (单选题) 无论BH中原有的数是奇数或偶数，若要使BH中的数一定为奇数，应执行的指令是（ ）
+A
+ADD BH，01H
+
+B
+OR BH，01H
+
+C
+XOR BH，01H
+
+D
+TEST BH，01H
+
+8. (单选题) 执行“and al,80h”指令后，可以肯定的执行结果是AL寄存器的( )。
+A
+低7位均为0
+
+B
+最高位为0
+
+C
+最高位为1
+
+D
+低7位均为1
+
+9. (单选题) 已知again是一个标号，则指令”jmp again”中，again不包含(   )
+A
+byte或者dword类型
+
+B
+near或者far类型
+
+C
+逻辑地址
+
+D
+段内或者段间类型
+
+10. (单选题) 指令“INC BYTE PTR [SI]”的操作数来自（ ）。
+A
+寄存器
+
+B
+立即数
+
+C
+外设端口
+
+D
+存储器
+
+11. (单选题) 如果AX＝100、DX＝200时，执行“CMP AX, DX”指令，接着(   )条件转移指令会发生控制转移。
+A
+JA
+
+B
+JZ
+
+C
+JO
+
+D
+JB
+
+12. (单选题) 将AX中有符号数除以2的正确指令是（ ）
+A
+SHR AX，1
+
+B
+SAR AX，1
+
+C
+ROR AX，1
+
+D
+RCR AX，1
+
+13. (单选题) DA1 EQU WORD PTR DA2
+DA2 DB OABH，OCDH
+    ┇
+SHL DA1，1
+SHR DA2，1
+上述两条指令执行后，DA2中两字节单元内容分别是(    )
+A
+0ABH，0CDH
+
+B
+2BH，9BH
+
+C
+4DH，57H
+
+D
+56H，9BH
+
+14. (单选题) 指令（ ）实现对AX当中D15和D0位求反，其他位不变的功能。
+A
+and ax,7ffeh
+
+B
+xor ax,8001h
+
+C
+or ax,8001h
+
+D
+not ax
+
+15. (单选题) 设AL=0AH，下列指令执行后能使AL=05H的是（ ）
+A
+NOT AL
+
+B
+AND AL，0FH
+
+C
+XOR AL，0FH
+
+D
+OR AL，0FH
+
+16. (单选题) 下列指令执行后既能使AX=0同时又使CF=0,OF=0的是（ ）
+A
+XOR AX，AX
+
+B
+AND AX，AX
+
+C
+OR AX，AX
+
+D
+TEST AX，0
+
+17. (单选题) 检查2个无符号数的关系，若要实现AL≥BL时分支去LOP1处，那么在“CMP AL，BL”指令后应跟的分支指令是(   )
+A
+JNC LOP1
+
+B
+JA LOP1
+
+C
+JC LOP1
+
+D
+JGE LOP1
+
+18. (单选题) JCXZ指令发生转移的条件是(   )
+A
+CX≠0
+
+B
+CX＝0
+
+C
+ZF＝0
+
+D
+ZF＝1
+
+19. (单选题) 使用LOOP指令控制计数循环，循环次数应赋予的寄存器是（  ）
+A
+AX
+
+B
+BX
+
+C
+CX
+
+D
+DX
+
+20. (单选题) 已知AX，BX中均为带符号数，当进行字相除时，下面指令或指令序列正确的是( )
+A
+DIV BX
+
+B
+CWD
+IDIV BX
+
+C
+XOR DX，DX
+DIV BX
+
+D
+CBW
+IDIV BX
+
+21. (单选题) DA1 DW 2A05H
+DA2 DB 0FAH
+┇
+MOV AL，BYTE PTR DA1
+SUB DA2，AL
+上述指令执行后，DA2中的内容是（ ）
+A
+0DAH
+
+B
+0FAH
+
+C
+0F5H
+
+D
+0D0H
+
+22. (单选题) 若CX＝0，则语句“AGAIN: LOOP AGAIN”将会重复执行（  ）次。
+A
+ 2的15次方
+
+B
+0
+
+C
+1
+
+D
+2的16次方
+
+23. (单选题) 下面程序片段条件转移语句发生跳转的条件是AL＝（   ）
+cmp al,0fbh
+
+jnl next
+
+A
+80h
+
+B
+0ffh
+
+C
+8fh
+
+D
+0f0h
+
+24. (单选题) AND，OR，XOR，NOT为四条逻辑运算指令，下面的解释正确的是( )
+A
+指令XOR AX，AX执行后，AX内容不变，但设置了标志位.
+
+B
+指令OR DX，1000H执行后，将DX最高位置1，其余各位置0
+
+C
+指令AND AX，OFH执行后，分离出AL低四位
+
+D
+NOT AX，执行后，将AX清0
+
+25. (单选题) 将CX寄存器低4位清零的正确指令是（ ）
+A
+AND CX，0F0H
+
+B
+AND CX，0FFF0H
+
+C
+AND CX，1110H
+
+D
+MOV CX，0
+
+26. (单选题) 在一段顺序结构的程序中，不应该出现的指令是（   ）
+A
+div
+
+B
+add
+
+C
+mul
+
+D
+jz
+
+27. (单选题) 设（SP）=0028H，执行段内返回指令RET 8后，SP的内容是(  )
+A
+0036H
+
+B
+0038H
+
+C
+0032H
+
+D
+0020H
+
+28. (单选题) 已知（AX）= 0FF60H，CF = 1。
+                 MOV   DX, 96
+                 XOR   DH, 0FFH
+                 SBB   AX, DX
+    上述程序段执行后：（AX）=________，CF =________。
+    A
+    0FFFFH    0
+
+B
+0    0
+
+C
+0FFFFH    1
+
+D
+0     1
+
+29. (单选题) 若AX= - 15要得到AX=15应执行的指令是( )
+A
+NEG AX
+
+B
+NOT AX
+
+C
+INC AX
+
+D
+DEC AX
+
+30. (单选题) 下列指令执行后既能使AX=0同时又使CF=0,OF=0的是（ ）
+A
+XOR AX，AX
+
+B
+AND AX，AX
+
+C
+OR AX，AX
+
+D
+TEST AX，0
+
+31. (单选题) MASM中，实现段间转移的转移类型属性是（    ）
+A
+SHORT
+
+B
+NEAR
+
+C
+FAR
+
+D
+PTR
+
+32. (单选题) 使用CMP指令比较两个有符号数之后，程序希望“大于”时发生转移，则应该使用的条件转移指令是（    ）
+A
+JA
+
+B
+JG
+
+C
+JC
+
+D
+JB
+
+33. (单选题) 能将CF标志位移入AL最低位的指令是：( )。
+A
+rcr al, 1
+
+B
+ror al, 1
+
+C
+rol al, 1
+
+D
+rcl al, 1
+
+34. (单选题) 下列指令执行后影响CF值的是（ ）
+A
+DEC
+
+B
+XCHG
+
+C
+LEA
+
+D
+SHL
+
+35. (单选题) 执行指令“push ax”后、接着执行指令“pop dx”，其功能与（ ）相同。
+A
+mov ax, dx
+
+B
+mov dx, ax
+
+C
+xchg ax, dx
+
+D
+xchg dx, ax
+
+---
+
+## 分支程序设计 2
+
+试编程实现：从键盘输入一个字符，若是数字，放入 `DIGITAL` 单元，若是英文字母，放入 `ENGLISH` 单元，其它字符，则放入 `OTHER` 单元。
+
+分解题意:
+
+- 从键盘输入一个字符:  `AH = 01H` 输入字符以 ASCII 码的形式存入 `AL` 
+
+  ![image-20211021140956845](http://cdn.ayusummer233.top/img/202110211410241.png)	
+
+- 若是数字，放入 `DIGITAL` 单元，若是英文字母，放入 `ENGLISH` 单元，其它字符，则放入 `OTHER` 单元。
+
+  - 数据段定义 3 个包含一个数据的字节变量
+
+    -  `DIGITAL`   `ENGLISH`  `OTHER` 
+    - 字节变量: ASCII 码是一个字节
+    - 一个数据: 题设中键盘上只输入一个字符
+
+    ```assembly
+    DIGITAL DB ?
+    ENGLISH DB ?
+    OTHER DB ?
+    ```
+
+  - 输入的字符以 ASCII 码的形式传入 `AL`, 数字(0~9)的 ASCII 码为 `30H ~ 39H`, 英文字母为 `大写字母: 41H ~ 5AH`, `小写字母: 61H ~ 7AH` 
+
+    分支可以从 ASCII 码大小入手进行切分, 首先明确的是跳转到的分支总共有三个, 分别对应三类字符的存放, 然后就是判断何时进行分支跳转, 从上述 ASCII 码区别来看, 可以在 `30H 39H 41H 5AH 61H 7AH` 6 处利用 `CMP` 进行判断然后跳转相应分支
+
+- ![task312](http://cdn.ayusummer233.top/img/202110211500493.png)
+
+- ```assembly
+  ; 分支程序设计 2
+  ; 试编程实现：从键盘输入一个字符，若是数字，放入DIGITAL单元，
+  ;            若是英文字母，放入 ENGLISH 单元，其它字符，则放入 OTHER 单元。
+  .MODEL SMALL
+  .STACK
+  .DATA
+      DIGITAL DB ?
+      ENGLISH DB ?
+      OTHER DB ?
+  .CODE
+  START:  MOV AX, @DATA
+          MOV DS, AX
+  
+          MOV CX, 3       ; 为了方便调试所以一次性完成三次判断
+  
+  ONE:    MOV AH, 1
+          INT 21H         ; 输入一个字符以 ASCII 码形式送入 AL
+  
+          CMP AL, 30H
+          JB S_OTHER      ; AL BELOW 30H 说明其为其他字符
+          CMP AL, 3AH
+          JB S_DIGITAL    ; 30H <= AL BELOW 3AH 则其为数字
+          CMP AL, 41H
+          JB S_OTHER      ; 3AH <= AL < 41H 则其为其他字符
+          CMP AL, 5BH
+          JB S_ENGLISH    ; AL ∈ [41H, 5AH] 为大写字母
+          CMP AL, 61H
+          JB S_OTHER      ; AL ∈ [5BH, 60H] 为其他字符
+          CMP AL, 7BH     
+          JB S_ENGLISH    ; AL ∈ [61H, 7AH] 为小写字母
+          JMP S_OTHER     ; 除此之外都算其他字符
+  
+  S_DIGITAL:  MOV DIGITAL, AL
+              JMP NEXT    ; 三段分支是独立的, 所以要无条件跳转到 NEXT
+  S_ENGLISH:  MOV ENGLISH, AL
+              JMP NEXT
+  S_OTHER:    MOV OTHER, AL
+  
+  NEXT:   LOOP ONE
+          MOV AX, 4C00H
+          INT 21H
+  
+      END START
+  ```
+
