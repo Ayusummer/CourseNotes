@@ -1,4 +1,4 @@
-# WSL2 + Ubuntu 20.04LTS 安装 Cloudstack 4.15.2.0
+# WSL2 + Ubuntu 20.04LTS 安装 Cloudstack 4.15.2.0 [**abandoned**][网络配置有问题, 未完成, 已弃用 🗑️]
 
 先前在`CentOS7.6` 的腾讯云轻量上安装 Cloudstack 遇到了各种各样的问题, 在查资料的过程中发现实际情况是 Ubuntu 的资料要比 CentOS 的资料多得多, 所以就有了这篇文档记录
 
