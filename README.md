@@ -7,7 +7,7 @@
  * @FilePath: \JuniorLesson_SecondTerm\README.md
 -->
 [![wakatime](https://wakatime.com/badge/github/Ayusummer/JuniorLesson_SecondTerm.svg)](https://wakatime.com/badge/github/Ayusummer/JuniorLesson_SecondTerm)
-# JuniorLessons_beta
+# CourseNotes
 
 ## 介绍
 课程随笔
