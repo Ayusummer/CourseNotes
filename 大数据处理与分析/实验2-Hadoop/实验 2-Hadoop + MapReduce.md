@@ -40,6 +40,15 @@
 
 ## 实验设备与环境
 
+`Win11(dev) + WSL2 + Ubuntu 20.04 LTS + VSCode + Remote-SSH(VSCode扩展) + Terminal(VSCode扩展)`
+
+![image-20211024184047856](http://cdn.ayusummer233.top/img/202110241840353.png)
+
+![image-20210920183032515](http://cdn.ayusummer233.top/img/202110241842705.png)
+
+![image-20211024184349173](http://cdn.ayusummer233.top/img/202110241843423.png)
+
+![image-20211024184748477](http://cdn.ayusummer233.top/img/202110241847999.png)
 
 
 
@@ -47,8 +56,6 @@
 ---
 
 ## 设计正文
-
-
 
 ---
 
@@ -145,7 +152,7 @@
 
 #### 配置一个 `Single Node Cluster`(单一结点集群)
 
-
+见 [大数据处理与分析/实验2-Hadoop/配置一个单节点集群.md · 咸鱼型233/CourseNotes - 码云 - 开源中国 (gitee.com)](https://gitee.com/ayusummer233/JuniorLesson_SecondTerm/blob/master/大数据处理与分析/实验2-Hadoop/配置一个单节点集群.md)
 
 ---
 
@@ -231,6 +238,239 @@ MapReduce 其实是一种编程模型。这个模型的核心步骤主要分两�
 ---
 
 ## 课程实验结果与分析
+
+### 测试 Hadoop 性能
+
+> [【大数据实验2】note2：Hadoop测试工具_nosteglic-CSDN博客](https://blog.csdn.net/qq_44714521/article/details/109265442)
+
+#### 查看可用的测试工具
+
+![image-20211025133103848](http://cdn.ayusummer233.top/img/202110251331019.png)
+
+![image-20211025132735410](http://cdn.ayusummer233.top/img/202110251327573.png)
+
+![image-20211025134049481](http://cdn.ayusummer233.top/img/202110251340114.png)
+
+> [hadoop：未找到命令（bash:hadoop:command not found），配置环境变量_poppyCL的博客-CSDN博客_bash: hadoop: 未找到命令...](https://blog.csdn.net/poppyCL/article/details/108069428)
+>
+> 打开根目录下的 `.bashrc` 添加:
+>
+> ```shell
+> export HADOOP_HOME=/root/Hadoop/hadoop-3.3.1
+> export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+> ```
+>
+> ![image-20211025134751393](http://cdn.ayusummer233.top/img/202110251347102.png)
+>
+> 然后重载 `.bashrc`
+>
+> ```shell
+> source ~/.bashrc
+> ```
+>
+> 此时 `hadoop` 命令便可用了
+>
+> ![image-20211025134721549](http://cdn.ayusummer233.top/img/202110251347924.png)
+>
+> ![image-20211025135506182](http://cdn.ayusummer233.top/img/202110251355670.png)
+>
+> [[MAPREDUCE-7285\] Junit class missing from hadoop-mapreduce-client-jobclient-*-tests jar - ASF JIRA (apache.org)](https://issues.apache.org/jira/browse/MAPREDUCE-7285)
+>
+> [MAPREDUCE-7285. Junit class missing from hadoop-mapreduce-client-jobclient-*-tests jar. by iwasakims · Pull Request #2139 · apache/hadoop (github.com)](https://github.com/apache/hadoop/pull/2139)
+>
+> **这个报错解决不掉的话可以不用管, 不影响后续调试**
+>
+> > 锚点, 待更新
+
+---
+
+#### TestDFSIO
+
+```shell
+hadoop jar hadoop-mapreduce-client-jobclient-3.0.0-tests.jar TestDFSIO -write -nrFiles 5 -size 10MB
+```
+
+
+
+![image-20211025170924203](http://cdn.ayusummer233.top/img/202110251709343.png)
+
+```shell
+root@咸鱼型233のPC:/home/ayusummer/Hadoop/hadoop-3.3.0/share/hadoop/mapreduce# hadoop jar hadoop-mapreduce-client-jobclient-3.3.0-tests.jar TestDFSIO  -read -nrFiles 5 -size 10MB
+```
+
+
+
+![image-20211025175259692](http://cdn.ayusummer233.top/img/202110251753961.png)
+
+#### mrbench
+
+- mrbench会多次重复执行一个小作业
+  用于检查在机群上小作业的运行是否可重复以及运行是否高效
+
+- 使用3个mapper和3个reducer运行一个小作业20次，生成输入行数为5，降序排列
+
+```shell
+root@咸鱼型233のPC:/home/ayusummer/Hadoop/hadoop-3.3.0/share/hadoop/mapreduce# hadoop jar hadoop-mapreduce-client-jobclient-3.3.0-tests.jar mrbench -numRuns 20 -maps 3 -reduces 3 -inputLines 5 -inputType descending
+```
+
+
+
+![image-20211025175612116](http://cdn.ayusummer233.top/img/202110251756316.png)
+
+---
+
+#### nnbench
+
+- 测试NameNode的负载
+  这个测试能在HDFS上创建、读取、重命名和删除文件操作
+
+```shell
+root@咸鱼型233のPC:/home/ayusummer/Hadoop/hadoop-3.3.0/share/hadoop/mapreduce# hadoop jar hadoop-mapreduce-client-jobclient-3.3.0-tests.jar nnbench -operation create_write -maps 3 -reduces 3 -numberOfFiles 100 -replicationFactorPerFile 3 -readFileAfterOpen true
+```
+
+![image-20211025180114612](http://cdn.ayusummer233.top/img/202110251801820.png)
+
+![image-20211025180239685](http://cdn.ayusummer233.top/img/202110251802773.png)
+
+---
+
+### 词频统计
+
+> [hadoop自带示例wordcount_侠客小虎的博客-CSDN博客_hadoop wordcount](https://blog.csdn.net/xiakexiaohu/article/details/54580971)
+
+在 HDFS 中创建 input 目录
+
+```shell
+hadoop fs -mkdir /input
+# 查看下结果
+hadoop fs -ls /
+```
+
+![image-20211025181648676](http://cdn.ayusummer233.top/img/202110251816767.png)
+
+Hadoop 根目录下有个 License.txt 将它放到 input 目录下, 待会儿统计它里面的词频
+
+```shell
+hadoop fs -put LICENSE.txt /input
+hadoop fs -ls /input
+```
+
+ ![image-20211025181744802](http://cdn.ayusummer233.top/img/202110251817875.png)
+
+![image-20211025181859914](http://cdn.ayusummer233.top/img/202110251819533.png)
+
+接下来只需要将 /input 通过 hadoop 自带示例程序 wordcount 计算出其中各字母出现的次数便可，
+
+```shell
+root@咸鱼型233のPC:/home/ayusummer/Hadoop/hadoop-3.3.0# hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.0.jar wordcount /input /output
+```
+
+![image-20211025182752000](http://cdn.ayusummer233.top/img/202110251827261.png)
+
+查看 HDFS 目录
+
+```shell
+hadoop fs -ls /
+```
+
+![image-20211025182835572](http://cdn.ayusummer233.top/img/202110251828653.png)
+
+查看 output 目录
+
+```shell
+hadoop fs -ls /output
+```
+
+![image-20211025182948044](http://cdn.ayusummer233.top/img/202110251829110.png)
+
+可以看到里面有两个文件, 统计已经成功了
+
+查看词频统计结果:
+
+```shell
+hadoop fs -cat /output/part-r-00000
+```
+
+![image-20211025183137027](http://cdn.ayusummer233.top/img/202110251831279.png)
+
+![image-20211025183146791](http://cdn.ayusummer233.top/img/202110251831044.png)
+
+---
+
+### python 词频统计
+
+安装 python3.8
+
+```shell
+apt install python3.8
+```
+
+![image-20211025190133853](http://cdn.ayusummer233.top/img/202110251901011.png)
+
+```shell
+ python3.8 --version
+```
+
+![image-20211025190217920](http://cdn.ayusummer233.top/img/202110251902989.png)
+
+可以看到是 py3.8.0
+
+> 此时 python3.8 就安装成功了, 但是没有添加环境变量, 所以当执行 python 命令时会找不到 python 解释器, 此时只有将指令中的 `python` 换成 `python3.8` 才可以正确调用安装的 `python3.8` 解释器, 所以这里最好将 `python3.8` 添加到环境变量, 让 `python` 指向 `python3.8`
+>
+> > [ubuntu设置python2.5环境变量 - 云+社区 - 腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1396779#:~:text=关于ubuntu的环境变量的设置，是在目录：%2Fusr%2Fbin下，原先我们在命令行输入python，其实就是调用的这里的文件。 因为系统默认带的是python2.7，但为了统一，我还是要装成2.5的，所以就有了下面的一些步骤： 1、首先安装python2.5，怎么安装应该很简单吧。 sudo ln,-s %2Fusr%2Fbin%2Fpython2.5 %2Fusr%2Fbin%2Fpython %23这个命令的意思是建立一个python2.5文件的链接python（个人理解） 3、最后设置一下环境变量：export PATH%3D%2Fusr%2Fbin%2Fpython2.5%3A%24PATH%2C这样，你在命令行输入python，系统就会执行%2Fusr%2Fbin中的python文件。)
+> >
+> > [ubuntu下修改环境变量以及添加PYTHONPATH方法_jasonzzj的博客-CSDN博客](https://blog.csdn.net/jasonzzj/article/details/53941147)
+>
+> 首先使用 `python` 指令看下当前 `python` 指令指向的是哪个版本的 `python`
+>
+> ```shell
+> python
+> ```
+>
+> 找到后找到 `/usr/bin` 目录下的 `python` 然后删掉然后将 `python` 指向 `python3.8`
+>
+> ```shell
+> sudo rm /usr/bin/python
+> sudo ln -s /usr/bin/python3.8 /usr/bin/python
+> export PATH=/usr/bin/python3.8:$PATH	# 在当前终端中启用 python 3.8
+> ```
+>
+> 然后在使用 `python -V` 命令验证一下:
+>
+> ```shell
+> python -V
+> ```
+>
+> ![image-20211026224714199](http://cdn.ayusummer233.top/img/202110262247384.png)
+
+
+
+----
+
+> [原文链接: Python中的MapReduce以及在Hadoop环境下运行_秦哥的博客-CSDN博客](https://blog.csdn.net/tswc_byy/article/details/90645858)
+
+> **后面的只是运行时打的草稿(后面有空在重写下)**, 具体步骤可以参阅如上链接
+
+```shell
+more test.txt | python3.8 ./mapper.py
+```
+
+![image-20211025190435533](http://cdn.ayusummer233.top/img/202110251904629.png)
+
+```shell
+chmod 777 run.sh
+hdfs dfs -mkdir -p /tmp/py/input
+hdfs dfs -put test.txt /tmp/py/input
+source run.sh
+```
+
+> python 配置环境变量
+>
+> [ubuntu安装python3并设置默认版本 - 天际使徒 - 博客园 (cnblogs.com)](https://www.cnblogs.com/Horizon-asd/p/12595499.html)
+
+查看运行结果:
+
+![image-20211025192010110](http://cdn.ayusummer233.top/img/202110251920350.png)
 
 
 
