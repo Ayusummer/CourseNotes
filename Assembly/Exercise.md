@@ -942,3 +942,112 @@ score_lst = [90, 75, 26, 3, 8, 60, 86, 24, 93, 34, 60, 82, 16, 45, 74, 43, 88, 9
 
 ![task331_comment](http://cdn.ayusummer233.top/img/202110211816438.png)
 
+---
+
+## 查询式输入输出程序设计1
+
+1. (简答题)  试编制程序：以查询方式输入100 个字节数据存入内存 `INBUF` 区。查询输入接口电路参见上课的课件 PPT。
+
+![image-20211101211950832](http://cdn.ayusummer233.top/img/202111012119079.png)
+
+查询输入一个字节
+
+```assembly
+STATUS:	MOV DX, 102H 	; DX指向状态端口
+        IN AL, DX 		; 读状态端口
+        TEST AL, 80H 	; 测试标志位 D7
+        JZ STATUS 		; D7＝0，未就绪，继续查询
+        MOV DX, 100H 	; D7＝1，就绪，DX 指向数据端口
+        IN AL, DX 		; 从数据端口输入数据(存入 AL)
+```
+
+输入 100 个字节存入 `INBUF` 区, 所以要定义一个含 100 个数据的字节变量 `INBUF`
+
+```assembly
+INBUF DB 100 DUP(?)
+```
+
+定义一个指针 `BX` 指向 `INBUF` 的首地址, 每执行一次 `STATUS` 程序段查询输入一个字节便送 `AL` 给 `[BX]` 然后 `INC BX` , 将此程序循环执行 100 次即可完成题设
+
+```assembly
+.MODEL SMALL
+.STACK
+.DATA
+	INBUF DB 100 DUP(?)
+.CODE
+START:  MOV AX, @DATA
+        MOV DS, AX
+
+        LEA BX, INBUF
+        MOV CX, 100    	; 100 个数据, 循环 100 次完成输入
+
+STATUS:	MOV DX, 102H 	; DX指向状态端口
+        IN AL, DX 		; 读状态端口
+        TEST AL, 80H 	; 测试标志位 D7
+        JZ STATUS 		; D7＝0，未就绪，继续查询
+        MOV DX, 100H 	; D7＝1，就绪，DX 指向数据端口
+        IN AL, DX 		; 从数据端口输入数据(存入 AL)
+        
+        MOV	[BX], AL	; 送录入数据给 INBUF 下一个接收空间
+        INC BX			; BX+1 获得 INBUF 下一次录入数据的空间地址
+
+DONE:   LOOP STATUS		
+        MOV AX, 4C00H
+        INT 21H
+    END START
+```
+
+---
+
+2. (简答题)  试编制程序：以查询方式输出内存 `OUTBUF` 区以 `‘-1’` 结束的一串字节数据。查询输出接口电路参见上课的课件 PPT。
+
+![image-20211101214421209](http://cdn.ayusummer233.top/img/202111012144415.png)
+
+查询输出一个字节:
+
+```assembly
+STATUS: MOV DX, 102H 	; DX 指向状态端口
+        IN AL, DX 		; 读状态端口
+        TEST AL, 80H 	; 测试标志位 D7
+        JNZ STATUS 		; D7＝1，忙，继续查询
+        MOV DX, 100H 	; D7＝0，不忙，DX 指向数据端口
+        MOV AL, CHAR	
+        OUT DX, AL		; 向数据端口输出数据 CHAR
+```
+
+要查询方式输出内存 `OUTBUF` 区以 `‘-1’` 结束的一串字节数据, 则需要先定义一个 `BX` 指向 `OUTBUF` 的首地址, 每次取 `[BX]` 与 `-1` 比较, 是则结束程序, 否则调用
+
+```assembly
+.MODEL SMALL
+.STACK
+.DATA
+	OUTBUF DB 12H, 34H, 56H, -1;
+.CODE
+START:  MOV AX, @DATA
+        MOV DS, AX
+
+        LEA BX, OUTBUF
+        
+TAKE:   CMP [BX], -1
+        JZ DONE
+
+STATUS: MOV DX, 102H 	; DX 指向状态端口
+        IN AL, DX 		; 读状态端口
+        TEST AL, 80H 	; 测试标志位 D7
+        JNZ STATUS 		; D7＝1，忙，继续查询
+        MOV DX, 100H 	; D7＝0，不忙，DX 指向数据端口
+        MOV AL, CHAR	
+        OUT DX, AL		; 向数据端口输出数据 CHAR
+        
+        INC BX			; BX+1 获得 INBUF 下一次输出数据的空间地址
+        JMP TAKE
+
+DONE:   MOV AX, 4C00H
+        INT 21H
+    END START
+```
+
+
+
+
+
