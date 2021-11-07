@@ -1,4 +1,4 @@
-# 腾讯云轻量(上海) + CentOS 7.6 部署 Cloudstack
+腾讯云轻量(上海) + CentOS 7.6 部署 Cloudstack
 
 ## 前言(最后一步添加 Host 有些问题)
 
@@ -19,7 +19,7 @@ CentOS7.6 发行注记: [zh/Manuals/ReleaseNotes/CentOS7.1810 - CentOS Wiki](htt
 
 ![image-20210915110807525](http://cdn.ayusummer233.top/img/202109151108678.png)
 
-CentOS7.7 发行注记: [zh/Manuals/ReleaseNotes/CentOS7.1908 - CentOS Wiki](https://wiki.centos.org/zh/Manuals/ReleaseNotes/CentOS7.1908)\
+CentOS7.7 发行注记: [zh/Manuals/ReleaseNotes/CentOS7.1908 - CentOS Wiki](https://wiki.centos.org/zh/Manuals/ReleaseNotes/CentOS7.1908)
 
 ![image-20210915110824979](http://cdn.ayusummer233.top/img/202109151108077.png)
 
@@ -200,7 +200,7 @@ systemctl status ntpd
 要添加 CLoudstack repository, 需要创建 `/etc/yum.repos.d/cloudstack.repo` 并输入如下信息:
 
 ```shell
-# 创建边编辑配置
+# 创建并编辑配置
 vi /etc/yum.repos.d/cloudstack.repo
 ```
 
@@ -223,7 +223,7 @@ gpgcheck=0
 >
 > `.repo` 配置文件里不要打注释
 >
-> ![image-20210920110650042](http://cdn.ayusummer233.top/img/202109201106164.png)
+> ![image-20211107070641400](http://cdn.ayusummer233.top/img/202111070706567.png)
 
 ---
 
