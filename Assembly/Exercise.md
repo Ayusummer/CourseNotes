@@ -1036,8 +1036,8 @@ STATUS: MOV DX, 102H 	; DX 指向状态端口
         TEST AL, 80H 	; 测试标志位 D7
         JNZ STATUS 		; D7＝1，忙，继续查询
         MOV DX, 100H 	; D7＝0，不忙，DX 指向数据端口
-        MOV AL, CHAR	
-        OUT DX, AL		; 向数据端口输出数据 CHAR
+        MOV AL, [BX]	
+        OUT DX, AL		; 向数据端口输出数据 [BX]
         
         INC BX			; BX+1 获得 INBUF 下一次输出数据的空间地址
         JMP TAKE
