@@ -954,6 +954,21 @@ Spring MVC 是 Spring Framework 的一部分，是基于 Java 实现 MVC 的轻�
   6. `DispatchServlet` 将执视图对象中的数据，输出给服务器。
   7. 服务器将数据输出给客户端。
 
+---
+
+##### DispatcherServlet
+
+- `Spring` 的 `web` 框架围绕 `DispatcherServlet` 调度 `Servlet` 设计。
+- `DispatcherServlet` 的作用是将请求分发到不同的处理器。从 `Spring 2.5` 开始，使用 `Java 5` 或者以上版本的用户可以采用基于注解形式进行开发
+
+---
+
+##### SpringMVC 基于注解
+
+- `<mvc:default-servlet-handler />`: 让 `Spring MVC` 不处理静态资源
+- `<mvc:annotation-driven >`: 支持 `mvc` 注解驱动
+- `lnternalResourceViewResolver`: 视图解析器
+
 
 ---
 
@@ -1005,8 +1020,6 @@ IDEA 编辑虚拟机选项: `帮助->编辑自定义 VM 选项`
 ----
 
 ## 数据库
-
-
 
 ### jdbc
 
@@ -1147,6 +1160,7 @@ IDEA 编辑虚拟机选项: `帮助->编辑自定义 VM 选项`
 ---
 
 ![MySQL-日期和时间类型](http:cdn.ayusummer233.top/img/20211229213142.png)
+
 ---
 #### 字符串类型
 - 字符串类型指CHAR、VARCHAR、BINARY、VARBINARY、BLOB、TEXT、ENUM和SET。
@@ -1166,3 +1180,65 @@ IDEA 编辑虚拟机选项: `帮助->编辑自定义 VM 选项`
       - 它们区别在于可容纳存储范围不同。
     - 有 4 种 TEXT 类型：TINYTEXT、TEXT、MEDIUMTEXT 和 LONGTEXT。
       - 对应的这 4 种 BLOB 类型，可存储的最大长度不同，可根据实际情况选择。
+
+
+
+---
+
+## MyBatis
+
+> [MyBatis中文网](https://mybatis.net.cn/index.html)
+
+
+
+---
+
+MyBatis 是一款优秀的**持久层框架**，它支持自定义SQL、存储过程以及高级映射。MyBatis 免除了几乎所有的 JDBC 代码以及设置参数和获取结果集的工作。MyBatis 可以**通过简单的 XML 或注解来配置和映射原始类型、接口和 Java POJO ( Plain Old Java Objects，普通老式 Java 对象）为数据库中的记录**。MyBatis 本是 apache 的一个开源项目ibatis, 2010年这个项目由 apache 迁移到了 googlecode，并且改名为 MyBatis ORM对象关系映射
+
+---
+
+```mermaid
+graph LR
+A[管理员] --> manage{管理}  --> S[学生]
+S --> name((姓名))
+S --> id((学号))
+S --> sex((性别))
+S --> age((年龄))
+S --> insitute((学院))
+S --> majo((专业))
+S --> grade((年级))
+S --> clazz((班级))
+manage --> add((添加学生信息))
+manage --> delete((删除学生信息))
+manage --> update((修改学生信息))
+manage --> search((查询学生信息))
+A --> username((用户名))
+A --> email((邮箱))
+A --> passwd((密码))
+```
+
+---
+```plantuml
+@startuml
+left to right direction
+
+actor "管理员" as admin
+
+rectangle 学生信息管理系统{
+usecase "登录" as login
+usecase "注册" as register
+admin ..> login : include
+admin ..> register : include
+
+usecase "添加学生信息" as add
+usecase "删除学生信息" as delete
+usecase "修改学生信息" as update
+usecase "查询学生信息" as search
+login ..> add : exclude
+login ..> delete : exclude
+login ..> update : exclude
+login ..> search : exclude
+}
+
+@enduml
+```
