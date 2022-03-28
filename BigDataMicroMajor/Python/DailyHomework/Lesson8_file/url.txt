@@ -1,0 +1,5 @@
+www.python.org
+pypi.org
+mirrors.tuna.tsinghua.edu.cn
+www.anaconda.com
+www.jetbrains.com/pycharm

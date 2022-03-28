@@ -1,0 +1,6 @@
+Python  官网
+Python  第三文库
+清华大学开源软件镜像站
+Anaconda
+PyCharm
+
